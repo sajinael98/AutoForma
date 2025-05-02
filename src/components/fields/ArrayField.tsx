@@ -1,12 +1,9 @@
 import React, { Fragment } from 'react';
 import { Button } from '@mantine/core';
-import { FieldSchema } from '@/types/field';
+import { BaseFieldProps, FieldSchema } from '@/types/field';
 import FieldRender from '../FieldRender';
 
-interface ArrayFieldProps {
-  name: string;
-  value: Record<string, any>[];
-  onChange: (name: string, value: string) => void;
+interface ArrayFieldProps extends BaseFieldProps<Record<string, any>[]> {
   fields: FieldSchema[];
   options: {
     addElement: (val: Record<string, any>) => void;
@@ -14,7 +11,6 @@ interface ArrayFieldProps {
     removeElement: (index: number) => void;
   };
   error?: Record<string, React.ReactNode>;
-  readOnly?: true;
 }
 
 const ArrayField: React.FC<ArrayFieldProps> = (props) => {

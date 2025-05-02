@@ -15,3 +15,10 @@ export interface FieldSchema {
   // for object type only
   fields?: FieldSchema[];
 }
+
+export interface BaseFieldProps<T> {
+  name: string;
+  value: T;
+  onChange: (name: string, value: T) => void;
+  readOnly?: true;
+}

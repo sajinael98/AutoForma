@@ -1,16 +1,11 @@
 import React from 'react';
-import { FieldSchema } from '@/types/field';
+import { BaseFieldProps, FieldSchema } from '@/types/field';
 import FieldRender from '../FieldRender';
 
-
-interface ObjectFieldProps {
-  name: string;
-  value: Record<string, any>;
-  onChange: (name: string, value: Record<string, any>) => void;
+interface ObjectFieldProps extends BaseFieldProps<Record<string, any>> {
   fields: FieldSchema[];
   formValues: Record<string, any>;
   error?: Record<string, React.ReactNode>;
-  readOnly?: true;
 }
 
 const ObjectField: React.FC<ObjectFieldProps> = (props) => {
@@ -21,7 +16,7 @@ const ObjectField: React.FC<ObjectFieldProps> = (props) => {
     value,
     formValues,
     error = {},
-    readOnly
+    readOnly,
   } = props;
 
   const onChange = (name: string, value: any) => {

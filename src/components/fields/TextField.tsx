@@ -1,13 +1,8 @@
 import React from 'react';
 import { TextInput } from '@mantine/core';
+import { BaseFieldProps } from '@/types/field';
 
-
-interface TextFieldProps {
-  name: string;
-  value: string;
-  onChange: (name: string, value: string) => void;
-  readOnly?: true;
-}
+interface TextFieldProps extends BaseFieldProps<string> {}
 
 const TextField: React.FC<TextFieldProps> = (props) => {
   const { name, onChange, value, readOnly } = props;
