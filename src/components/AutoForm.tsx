@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { createFormContext, FormValidateInput } from '@mantine/form';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { FieldRenderCustomRender } from '@/types/custom-render';
@@ -44,16 +44,12 @@ const generateInitialValues = (schema: FieldSchema[]): Record<string, any> => {
 };
 
 const isValueEmpty = (value: any): boolean => {
-  if (value === null || value === undefined) {
-    return true;
-  }
-  if (typeof value === 'string' && value.trim() === '') {
-    return true;
-  }
-  if (Array.isArray(value) && value.length === 0) {
-    return true;
-  }
-  return false;
+  return (
+    value === null ||
+    value === undefined ||
+    (typeof value === 'string' && value.trim() === '') ||
+    (Array.isArray(value) && value.length === 0)
+  );
 };
 
 export const validateRequiredFields = (
@@ -68,26 +64,25 @@ export const validateRequiredFields = (
     const value = fullName.split('.').reduce((acc, key) => acc?.[key], values);
 
     if (field.type === 'object' && field.fields) {
-      const nestedErrors = validateRequiredFields(field.fields, values, fullName);
-      Object.assign(errors, nestedErrors);
-    } else if (field.required) {
-      if (isValueEmpty(value)) {
-        errors[fullName] = `${field.label ?? field.name} is required`;
-      }
+      Object.assign(errors, validateRequiredFields(field.fields, values, fullName));
+    } else if (field.required && isValueEmpty(value)) {
+      errors[fullName] = `${field.label ?? field.name} is required`;
     }
   }
 
   return errors;
 };
 
-const AutoForm: React.FC<AutoFormProps> = (props) => {
-  const { onSubmit, schema, container, fieldContainer, customRender, validate } = props;
-
+const AutoForm: React.FC<AutoFormProps> = ({
+  onSubmit,
+  schema,
+  container,
+  fieldContainer,
+  customRender,
+  validate,
+}) => {
   const form = useForm({
     mode: 'uncontrolled',
-    onValuesChange(values, previous) {
-      
-    },
     initialValues: generateInitialValues(schema),
     validate,
   });
@@ -96,23 +91,37 @@ const AutoForm: React.FC<AutoFormProps> = (props) => {
     form.setFieldValue(name, value);
   }, 0);
 
-  const getFieldError = (type: FieldType, name: string) => {
-    const errors = form.errors;
-    if (type === 'object' || type === "array") {
-      const matchingKey = Object.entries(errors).reduce<Record<string, React.ReactNode>>(
-        (err, [key, value]) => {
+  const formValues = useMemo(() => form.getValues(), [form.values]);
+
+  const getFieldError = useCallback(
+    (type: FieldType, name: string) => {
+      const errors = form.errors;
+
+      if (type === 'object' || type === 'array') {
+        return Object.entries(errors).reduce<Record<string, React.ReactNode>>((acc, [key, val]) => {
           if (key.startsWith(`${name}.`)) {
-            err[key] = value;
+            acc[key] = val;
           }
-          return err;
-        },
-        {}
-      );
-      return matchingKey;
+          return acc;
+        }, {});
+      }
+
+      return errors[name];
+    },
+    [form.errors]
+  );
+
+  const handleSubmit = useCallback(() => {
+    const currentValues = form.getValues();
+    const errors = validateRequiredFields(schema, currentValues);
+
+    if (Object.keys(errors).length > 0) {
+      form.setErrors(errors);
+      return;
     }
 
-    return errors[name];
-  };
+    form.onSubmit(onSubmit)();
+  }, [form, onSubmit, schema]);
 
   const content = (
     <FormProvider form={form}>
@@ -120,25 +129,17 @@ const AutoForm: React.FC<AutoFormProps> = (props) => {
         <FieldRender
           key={index}
           field={field}
-          formValues={form.getValues()}
+          formValues={formValues}
+          value={formValues[field.name]}
           error={getFieldError(field.type, field.name)}
           onChange={onChange}
-          value={form.getValues()[field.name]}
           fieldContainer={fieldContainer}
           customRender={customRender}
         />
       ))}
     </FormProvider>
   );
-  const handleSubmit = () => {
-    const errors = validateRequiredFields(schema, form.getValues());
-    if (Object.keys(errors).length > 0) {
-      form.setErrors(errors);
-      return;
-    }
 
-    form.onSubmit(onSubmit)();
-  };
   return container(content, handleSubmit);
 };
 
