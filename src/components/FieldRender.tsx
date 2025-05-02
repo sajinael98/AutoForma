@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Fieldset, Text } from '@mantine/core';
 import { FieldRenderCustomRender } from '@/types/custom-render';
 import { FieldSchema } from '@/types/field';
@@ -17,54 +17,73 @@ interface FieldRenderProps {
   customRender?: FieldRenderCustomRender;
 }
 
-const FieldRender: React.FC<FieldRenderProps> = (props) => {
-  const {
-    field,
-    formValues,
-    onChange,
-    value,
-    fieldContainer = (field) => <>{field}</>,
-    customRender,
-    error,
-  } = props;
+type ArrayFieldOptions = {
+  addElement: (value: Record<string, any>) => void;
+  replaceElement: (index: number, val: Record<string, any>) => void;
+  removeElement: (index: number) => void;
+};
 
-  const isVisible =
-    typeof field.visible === 'function' ? field.visible(formValues) : field.visible !== false;
+function getArrayOptions(
+  name: string,
+  onChange: (name: string, value: any) => void,
+  value: Record<string, any>[]
+): ArrayFieldOptions {
+  return {
+    addElement: (val) => {
+      onChange(name, [...value, val]);
+    },
+    replaceElement: (index, val) => {
+      const newValue = value.map((row, i) => (i === index ? val : row));
+      onChange(name, newValue);
+    },
+    removeElement: (index) => {
+      onChange(
+        name,
+        value.filter((_, i) => i !== index)
+      );
+    },
+  };
+}
 
-  const isDisabled =
-    typeof field.disabled === 'function' ? field.disabled(formValues) : field.disabled === true;
+const FieldRender: React.FC<FieldRenderProps> = ({
+  field,
+  value,
+  error,
+  onChange,
+  formValues,
+  fieldContainer = (field) => <>{field}</>,
+  customRender,
+}) => {
+  const isVisible = useMemo(() => {
+    return typeof field.visible === 'function'
+      ? field.visible(formValues)
+      : field.visible !== false;
+  }, [field.visible, formValues]);
+
+  const isDisabled = useMemo(() => {
+    return typeof field.disabled === 'function'
+      ? field.disabled(formValues)
+      : field.disabled === true;
+  }, [field.disabled, formValues]);
+
+  const arrayOptions = useMemo(() => {
+    if (field.type !== 'array') {
+      return undefined;
+    }
+    return getArrayOptions(field.name, onChange, value);
+  }, [field.type, field.name, onChange, value]);
+
+  const customField = useMemo(() => {
+    return customRender?.(field, value, error, onChange, formValues);
+  }, [customRender, field, value, error, onChange, formValues]);
 
   if (!isVisible) {
     return null;
   }
 
   const renderField = () => {
-    const options =
-      field.type === 'array'
-        ? {
-            addElement: (val: Record<string, any>) => {
-              const newValue = [...value, val];
-              onChange(field.name, newValue);
-            },
-            replaceElement: (index: number, val: Record<string, any>) => {
-              const newValue = value.map((row: Record<string, any>, i: number) => {
-                return i === index ? val : row;
-              });
-              onChange(field.name, newValue);
-            },
-
-            removeElement: (index: number) => {
-              const newValue = value.filter((_: Record<string, any>, i: number) => i !== index);
-              onChange(field.name, newValue);
-            },
-          }
-        : undefined;
-
-    if (customRender) {
-      const custom = customRender(field, value, error, onChange, formValues);
-      if (custom) {
-        return custom;
-      }
+    if (customField) {
+      return customField;
     }
 
     switch (field.type) {
@@ -90,13 +109,7 @@ const FieldRender: React.FC<FieldRenderProps> = (props) => {
             onChange={onChange}
             value={value}
             fields={field.fields as FieldSchema[]}
-            options={
-              options as {
-                addElement: (value: Record<string, any>) => void;
-                replaceElement: (index: number, val: Record<string, any>) => void;
-                removeElement: (index: number) => void;
-              }
-            }
+            options={arrayOptions!}
             error={error as Record<string, React.ReactNode>}
           />
         );
@@ -107,7 +120,7 @@ const FieldRender: React.FC<FieldRenderProps> = (props) => {
 
   const content = (
     <Fieldset
-      legend={field.label ?? undefined}
+      legend={field.label || undefined}
       variant="unstyled"
       disabled={isDisabled}
       styles={{
