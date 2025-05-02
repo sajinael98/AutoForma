@@ -22,3 +22,9 @@ export interface BaseFieldProps<T> {
   onChange: (name: string, value: T) => void;
   readOnly?: true;
 }
+
+export type ArrayFieldOptions = {
+  addElement: (value: Record<string, any>) => void;
+  replaceElement: (index: number, val: Record<string, any>) => void;
+  removeElement: (index: number) => void;
+};

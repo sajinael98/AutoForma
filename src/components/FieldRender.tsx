@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Fieldset, Text } from '@mantine/core';
 import { FieldRenderCustomRender } from '@/types/custom-render';
-import { FieldSchema } from '@/types/field';
+import { ArrayFieldOptions, FieldSchema } from '@/types/field';
 import ArrayField from './fields/ArrayField';
 import CheckField from './fields/CheckField';
 import NumberField from './fields/NumberField';
@@ -18,12 +18,6 @@ interface FieldRenderProps {
   customRender?: FieldRenderCustomRender;
   readOnly?: true;
 }
-
-type ArrayFieldOptions = {
-  addElement: (value: Record<string, any>) => void;
-  replaceElement: (index: number, val: Record<string, any>) => void;
-  removeElement: (index: number) => void;
-};
 
 function getArrayOptions(
   name: string,
