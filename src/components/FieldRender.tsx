@@ -96,11 +96,11 @@ const FieldRender: React.FC<FieldRenderProps> = ({
     return null;
   }
 
-  const renderField = () => {
-    if (customField) {
-      return customField;
-    }
+  if (customField) {
+    return customField;
+  }
 
+  const renderField = () => {
     switch (field.type) {
       case 'text':
         return (
