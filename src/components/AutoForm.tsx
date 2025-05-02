@@ -137,7 +137,7 @@ const AutoForm: React.FC<AutoFormProps> = ({
           onChange={onChange}
           fieldContainer={fieldContainer}
           customRender={customRender}
-          readOnly={readOnly}
+          readOnly={field.readOnly || readOnly}
         />
       ))}
     </FormProvider>

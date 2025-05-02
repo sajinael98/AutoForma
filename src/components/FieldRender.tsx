@@ -76,8 +76,26 @@ const FieldRender: React.FC<FieldRenderProps> = ({
   }, [field.type, field.name, onChange, value]);
 
   const customField = useMemo(() => {
-    return customRender?.(field, value, error, onChange, formValues);
-  }, [customRender, field, value, error, onChange, formValues]);
+    return customRender?.(
+      field,
+      value,
+      error,
+      onChange,
+      formValues,
+      arrayOptions,
+      readOnly || field.readOnly
+    );
+  }, [
+    customRender,
+    field,
+    value,
+    error,
+    onChange,
+    formValues,
+    arrayOptions,
+    readOnly,
+    field.readOnly,
+  ]);
 
   if (!isVisible) {
     return null;
@@ -140,7 +158,7 @@ const FieldRender: React.FC<FieldRenderProps> = ({
     <Fieldset
       legend={field.label || undefined}
       variant="unstyled"
-      disabled={isDisabled}
+      disabled={isDisabled || readOnly}
       styles={{
         legend: {
           fontWeight: 500,

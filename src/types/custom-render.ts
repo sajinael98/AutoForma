@@ -10,5 +10,6 @@ export type FieldRenderCustomRender = (
   options?: {
     addElement?: (val: Record<string, any>) => void;
     removeElement?: (index: number) => void;
-  }
+  },
+  readOnly?: true
 ) => React.ReactNode;

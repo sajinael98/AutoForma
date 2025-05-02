@@ -9,7 +9,7 @@ export function HomePage() {
   return (
     <>
       <AutoForm
-        readOnly
+        
         schema={[
           { label: 'First Name', type: 'text', name: 'firstName', initialValue: 'saji' },
           {
@@ -49,6 +49,7 @@ export function HomePage() {
             label: 'Phones',
             type: 'array',
             name: 'phones',
+            readOnly: true,
             fields: [
               {
                 label: 'Phone',
