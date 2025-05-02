@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'number' | 'object' | 'array' | 'check';
+export type FieldType = 'text' | 'number' | 'object' | 'array' | 'check' | 'select';
 
 export interface FieldSchema {
   name: string;
@@ -14,12 +14,14 @@ export interface FieldSchema {
   readOnly?: true;
   // for object type only
   fields?: FieldSchema[];
+  // for select type only
+  data?: { label: string; value: string }[];
 }
 
 export interface BaseFieldProps<T> {
   name: string;
   value: T;
-  onChange: (name: string, value: T) => void;
+  onChange: (name: string, value: T | null) => void;
   readOnly?: true;
 }
 

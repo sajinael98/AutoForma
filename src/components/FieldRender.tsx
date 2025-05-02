@@ -6,6 +6,7 @@ import ArrayField from './fields/ArrayField';
 import CheckField from './fields/CheckField';
 import NumberField from './fields/NumberField';
 import ObjectField from './fields/ObjectField';
+import SelectField from './fields/SelectField';
 import TextField from './fields/TextField';
 
 interface FieldRenderProps {
@@ -154,6 +155,17 @@ const FieldRender: React.FC<FieldRenderProps> = ({
             label={field.label}
           />
         );
+      case 'select':
+        return (
+          <SelectField
+            name={field.name}
+            value={value}
+            onChange={onChange}
+            readOnly={readOnly}
+            data={field.data}
+          />
+        );
+
       default:
         return null;
     }

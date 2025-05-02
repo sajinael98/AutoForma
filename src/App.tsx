@@ -48,6 +48,21 @@ const App = () => {
               },
             ],
           },
+          {
+            type: 'select',
+            label: 'Gender',
+            name: 'gender',
+            data: [
+              {
+                label: 'Male',
+                value: 'male',
+              },
+              {
+                label: 'Female',
+                value: 'female',
+              },
+            ],
+          },
         ]}
       />
     </MantineProvider>
