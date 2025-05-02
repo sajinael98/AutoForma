@@ -3,6 +3,7 @@ import { Fieldset, Text } from '@mantine/core';
 import { FieldRenderCustomRender } from '@/types/custom-render';
 import { FieldSchema } from '@/types/field';
 import ArrayField from './fields/ArrayField';
+import CheckField from './fields/CheckField';
 import NumberField from './fields/NumberField';
 import ObjectField from './fields/ObjectField';
 import TextField from './fields/TextField';
@@ -149,6 +150,16 @@ const FieldRender: React.FC<FieldRenderProps> = ({
             readOnly={readOnly}
           />
         );
+      case 'check':
+        return (
+          <CheckField
+            name={field.name}
+            value={value as boolean}
+            onChange={onChange}
+            readOnly={readOnly}
+            label={field.label}
+          />
+        );
       default:
         return null;
     }
@@ -156,7 +167,7 @@ const FieldRender: React.FC<FieldRenderProps> = ({
 
   const content = (
     <Fieldset
-      legend={field.label || undefined}
+      legend={field.type === 'check' ? undefined : field.label}
       variant="unstyled"
       disabled={isDisabled || readOnly}
       styles={{

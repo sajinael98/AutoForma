@@ -17,7 +17,7 @@ interface AutoFormProps {
 
 const [FormProvider, _, useForm] = createFormContext<Record<string, any>>();
 
-const getDefaultValueForField = (type: string): any => {
+const getDefaultValueForField = (type: FieldType): any => {
   switch (type) {
     case 'text':
       return '';
@@ -25,6 +25,8 @@ const getDefaultValueForField = (type: string): any => {
       return 0;
     case 'array':
       return [];
+    case 'check':
+      return false;
     default:
       return '';
   }
