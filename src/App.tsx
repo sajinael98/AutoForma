@@ -31,6 +31,23 @@ const App = () => {
             label: 'Enabled',
             name: 'enabled',
           },
+          {
+            type: 'object',
+            label: 'fullName',
+            name: 'fullName',
+            fields: [
+              {
+                type: 'text',
+                label: 'First Name',
+                name: 'firstName',
+              },
+              {
+                type: 'text',
+                label: 'Last Name',
+                name: 'lastName',
+              },
+            ],
+          },
         ]}
       />
     </MantineProvider>

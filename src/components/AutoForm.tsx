@@ -27,6 +27,8 @@ const getDefaultValueForField = (type: FieldType): any => {
       return [];
     case 'check':
       return false;
+    case 'object':
+      return {};
     default:
       return '';
   }
