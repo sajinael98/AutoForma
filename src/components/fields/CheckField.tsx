@@ -7,13 +7,15 @@ interface CheckFieldProps extends BaseFieldProps<boolean> {
 }
 
 const CheckField: React.FC<CheckFieldProps> = (props) => {
-  const { name, onChange, value, readOnly } = props;
+  const { name, onChange, value, readOnly, label } = props;
+
   return (
     <Checkbox
       name={name}
       checked={value}
       readOnly={readOnly}
       onChange={(e) => onChange(name, e.target.checked)}
+      label={label}
     />
   );
 };

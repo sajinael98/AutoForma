@@ -95,7 +95,7 @@ const AutoForm: React.FC<AutoFormProps> = ({
     form.setFieldValue(name, value);
   }, 0);
 
-  const formValues = useMemo(() => form.getValues(), [form.values]);
+  const formValues = useMemo(() => form.getValues(), [form.getValues()]);
 
   const getFieldError = useCallback(
     (type: FieldType, name: string) => {
