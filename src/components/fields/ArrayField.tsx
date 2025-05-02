@@ -42,7 +42,7 @@ const ArrayField: React.FC<ArrayFieldProps> = (props) => {
   return (
     <>
       {content}
-      <Button display='block' onClick={() => options.addElement({})}>Add {name}</Button>
+      <Button display='block' onClick={() => options.addElement({})}>Add</Button>
     </>
   );
 };
