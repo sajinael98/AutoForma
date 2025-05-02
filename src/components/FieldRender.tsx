@@ -15,6 +15,7 @@ interface FieldRenderProps {
   formValues: Record<string, any>;
   fieldContainer?: (field: React.ReactNode, fieldSchema: FieldSchema) => React.ReactNode;
   customRender?: FieldRenderCustomRender;
+  readOnly?: true;
 }
 
 type ArrayFieldOptions = {
@@ -53,6 +54,7 @@ const FieldRender: React.FC<FieldRenderProps> = ({
   formValues,
   fieldContainer = (field) => <>{field}</>,
   customRender,
+  readOnly,
 }) => {
   const isVisible = useMemo(() => {
     return typeof field.visible === 'function'
@@ -88,9 +90,23 @@ const FieldRender: React.FC<FieldRenderProps> = ({
 
     switch (field.type) {
       case 'text':
-        return <TextField name={field.name} value={value as string} onChange={onChange} />;
+        return (
+          <TextField
+            name={field.name}
+            value={value as string}
+            onChange={onChange}
+            readOnly={readOnly}
+          />
+        );
       case 'number':
-        return <NumberField name={field.name} value={value as number} onChange={onChange} />;
+        return (
+          <NumberField
+            name={field.name}
+            value={value as number}
+            onChange={onChange}
+            readOnly={readOnly}
+          />
+        );
       case 'object':
         return (
           <ObjectField
@@ -100,6 +116,7 @@ const FieldRender: React.FC<FieldRenderProps> = ({
             fields={field.fields ?? []}
             formValues={formValues}
             error={error as Record<string, React.ReactNode>}
+            readOnly={readOnly}
           />
         );
       case 'array':
@@ -111,6 +128,7 @@ const FieldRender: React.FC<FieldRenderProps> = ({
             fields={field.fields as FieldSchema[]}
             options={arrayOptions!}
             error={error as Record<string, React.ReactNode>}
+            readOnly={readOnly}
           />
         );
       default:

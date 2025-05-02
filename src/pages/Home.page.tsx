@@ -1,5 +1,5 @@
-import AutoForm from '@/components/AutoForm';
 import { Button, Grid, Group } from '@mantine/core';
+import AutoForm from '@/components/AutoForm';
 
 export function HomePage() {
   function submitHandler(values: Record<string, any>) {
@@ -9,6 +9,7 @@ export function HomePage() {
   return (
     <>
       <AutoForm
+        readOnly
         schema={[
           { label: 'First Name', type: 'text', name: 'firstName', initialValue: 'saji' },
           {
@@ -65,12 +66,14 @@ export function HomePage() {
             ],
           },
         ]}
-        container={(form, onSubmit) => (
+        container={(form, onSubmit, readOnly) => (
           <>
             <Grid mb="md">{form}</Grid>
-            <Group>
-              <Button onClick={onSubmit}>Save</Button>
-            </Group>
+            {!readOnly && (
+              <Group>
+                <Button onClick={onSubmit}>Save</Button>
+              </Group>
+            )}
           </>
         )}
         fieldContainer={(field, fieldSchema) => {

@@ -14,10 +14,12 @@ interface ArrayFieldProps {
     removeElement: (index: number) => void;
   };
   error?: Record<string, React.ReactNode>;
+  readOnly?: true;
 }
 
 const ArrayField: React.FC<ArrayFieldProps> = (props) => {
-  const { fields, options, value, error = {}, name: parentName } = props;
+  const { fields, options, value, error = {}, name: parentName, readOnly } = props;
+
   const content = value.map((row, rowIndex) => {
     const onChange = (name: string, value: any) => {
       row[name] = value;
@@ -32,8 +34,9 @@ const ArrayField: React.FC<ArrayFieldProps> = (props) => {
             onChange={onChange}
             value={row[field.name]}
             error={error[`${parentName}.${rowIndex}.${field.name}`]}
+            readOnly={readOnly}
           />
-          <Button onClick={() => options.removeElement(rowIndex)}>Remove</Button>
+          {!readOnly && <Button onClick={() => options.removeElement(rowIndex)}>Remove</Button>}
         </Fragment>
       );
     });
@@ -42,7 +45,11 @@ const ArrayField: React.FC<ArrayFieldProps> = (props) => {
   return (
     <>
       {content}
-      <Button display='block' onClick={() => options.addElement({})}>Add</Button>
+      {!readOnly && (
+        <Button display="block" onClick={() => options.addElement({})}>
+          Add
+        </Button>
+      )}
     </>
   );
 };

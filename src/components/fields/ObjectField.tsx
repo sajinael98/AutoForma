@@ -2,6 +2,7 @@ import React from 'react';
 import { FieldSchema } from '@/types/field';
 import FieldRender from '../FieldRender';
 
+
 interface ObjectFieldProps {
   name: string;
   value: Record<string, any>;
@@ -9,6 +10,7 @@ interface ObjectFieldProps {
   fields: FieldSchema[];
   formValues: Record<string, any>;
   error?: Record<string, React.ReactNode>;
+  readOnly?: true;
 }
 
 const ObjectField: React.FC<ObjectFieldProps> = (props) => {
@@ -19,12 +21,13 @@ const ObjectField: React.FC<ObjectFieldProps> = (props) => {
     value,
     formValues,
     error = {},
+    readOnly
   } = props;
 
   const onChange = (name: string, value: any) => {
     onParentChange(`${parentName}.${name}`, value);
   };
-  
+
   const content = fields.map((field, index) => (
     <FieldRender
       key={index}
@@ -33,6 +36,7 @@ const ObjectField: React.FC<ObjectFieldProps> = (props) => {
       onChange={onChange}
       value={value[field.name]}
       error={error[`${parentName}.${field.name}`]}
+      readOnly={readOnly}
     />
   ));
   return content;

@@ -8,10 +8,11 @@ import FieldRender from './FieldRender';
 interface AutoFormProps {
   schema: FieldSchema[];
   onSubmit: (values: Record<string, any>) => void;
-  container: (Form: React.ReactNode, onSubmit: VoidFunction) => React.ReactNode;
+  container: (Form: React.ReactNode, onSubmit: VoidFunction, readOnly?: true) => React.ReactNode;
   fieldContainer?: (field: React.ReactNode, fieldSchema: FieldSchema) => React.ReactNode;
   customRender?: FieldRenderCustomRender;
   validate?: FormValidateInput<Record<string, any>>;
+  readOnly?: true;
 }
 
 const [FormProvider, _, useForm] = createFormContext<Record<string, any>>();
@@ -80,6 +81,7 @@ const AutoForm: React.FC<AutoFormProps> = ({
   fieldContainer,
   customRender,
   validate,
+  readOnly,
 }) => {
   const form = useForm({
     mode: 'uncontrolled',
@@ -135,12 +137,13 @@ const AutoForm: React.FC<AutoFormProps> = ({
           onChange={onChange}
           fieldContainer={fieldContainer}
           customRender={customRender}
+          readOnly={readOnly}
         />
       ))}
     </FormProvider>
   );
 
-  return container(content, handleSubmit);
+  return container(content, handleSubmit, readOnly);
 };
 
 export default AutoForm;
