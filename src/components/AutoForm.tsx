@@ -30,6 +30,8 @@ const getDefaultValueForField = (type: FieldType): any => {
     case 'object':
       return {};
     case 'select':
+    case 'date':
+    case 'datetime':
       return null;
     default:
       return '';

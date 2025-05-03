@@ -4,11 +4,14 @@ import { FieldRenderCustomRender } from '@/types/custom-render';
 import { ArrayFieldOptions, FieldSchema } from '@/types/field';
 import ArrayField from './fields/ArrayField';
 import CheckField from './fields/CheckField';
+import DateField from './fields/DateField';
+import DateTimeField from './fields/DateTimeField';
 import NumberField from './fields/NumberField';
 import ObjectField from './fields/ObjectField';
 import SelectField from './fields/SelectField';
 import TextAreaField from './fields/TextAreaField';
 import TextField from './fields/TextField';
+import TimeField from './fields/TimeField';
 
 interface FieldRenderProps {
   field: FieldSchema;
@@ -169,6 +172,18 @@ const FieldRender: React.FC<FieldRenderProps> = ({
       case 'textarea':
         return (
           <TextAreaField name={field.name} value={value} onChange={onChange} readOnly={readOnly} />
+        );
+      case 'date':
+        return (
+          <DateField name={field.name} value={value} onChange={onChange} readOnly={readOnly} />
+        );
+      case 'datetime':
+        return (
+          <DateTimeField name={field.name} value={value} onChange={onChange} readOnly={readOnly} />
+        );
+      case 'time':
+        return (
+          <TimeField name={field.name} value={value} onChange={onChange} readOnly={readOnly} />
         );
 
       default:

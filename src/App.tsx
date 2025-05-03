@@ -1,6 +1,7 @@
 import { Button, Grid, MantineProvider } from '@mantine/core';
 
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 import AutoForm from './components/AutoForm';
 
@@ -67,6 +68,11 @@ const App = () => {
             type: 'textarea',
             label: 'Note',
             name: 'note',
+          },
+          {
+            type: 'time',
+            name: 'date',
+            label: 'Date',
           },
         ]}
       />

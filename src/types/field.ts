@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'number' | 'object' | 'array' | 'check' | 'select' | 'textarea';
+export type FieldType = 'text' | 'number' | 'object' | 'array' | 'check' | 'select' | 'textarea' | 'date' | 'datetime' | 'time';
 
 export interface FieldSchema {
   name: string;
