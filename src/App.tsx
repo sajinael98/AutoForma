@@ -63,6 +63,11 @@ const App = () => {
               },
             ],
           },
+          {
+            type: "textarea",
+            label: "Note",
+            name: "note"
+          }
         ]}
       />
     </MantineProvider>

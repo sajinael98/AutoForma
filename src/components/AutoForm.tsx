@@ -19,8 +19,6 @@ const [FormProvider, _, useForm] = createFormContext<Record<string, any>>();
 
 const getDefaultValueForField = (type: FieldType): any => {
   switch (type) {
-    case 'text':
-      return '';
     case 'number':
       return 0;
     case 'array':

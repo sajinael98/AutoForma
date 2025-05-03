@@ -7,6 +7,7 @@ import CheckField from './fields/CheckField';
 import NumberField from './fields/NumberField';
 import ObjectField from './fields/ObjectField';
 import SelectField from './fields/SelectField';
+import TextAreaField from './fields/TextAreaField';
 import TextField from './fields/TextField';
 
 interface FieldRenderProps {
@@ -162,8 +163,12 @@ const FieldRender: React.FC<FieldRenderProps> = ({
             value={value}
             onChange={onChange}
             readOnly={readOnly}
-            data={field.data}
+            data={field.data as { label: string; value: string }[]}
           />
+        );
+      case 'textarea':
+        return (
+          <TextAreaField name={field.name} value={value} onChange={onChange} readOnly={readOnly} />
         );
 
       default:
