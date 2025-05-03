@@ -2,14 +2,15 @@ import { Button, Grid, MantineProvider } from '@mantine/core';
 
 import '@mantine/core/styles.css';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AutoForm from './components/AutoForm';
 
 const App = () => {
+  const [values, setValues] = useState()
   const onSubmit = (values: Record<string, any>) => {
     alert(JSON.stringify(values));
   };
-
+  useEffect(() => {},])
   return (
     <MantineProvider>
       <AutoForm

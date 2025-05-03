@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { createFormContext, FormValidateInput } from '@mantine/form';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { FieldRenderCustomRender } from '@/types/custom-render';
@@ -6,6 +6,7 @@ import { FieldSchema, FieldType } from '@/types/field';
 import FieldRender from './FieldRender';
 
 interface AutoFormProps {
+  values?: Record<string, any>;
   schema: FieldSchema[];
   onSubmit: (values: Record<string, any>) => void;
   container: (Form: React.ReactNode, onSubmit: VoidFunction, readOnly?: true) => React.ReactNode;
@@ -86,6 +87,7 @@ const AutoForm: React.FC<AutoFormProps> = ({
   customRender,
   validate,
   readOnly,
+  values,
 }) => {
   const form = useForm({
     mode: 'uncontrolled',
@@ -129,6 +131,12 @@ const AutoForm: React.FC<AutoFormProps> = ({
     form.onSubmit(onSubmit)();
   }, [form, onSubmit, schema]);
 
+  useEffect(() => {
+    if (values) {
+      form.initialize(values);
+    }
+  }, [values]);
+  
   const content = (
     <FormProvider form={form}>
       {schema.map((field, index) => (
