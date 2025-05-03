@@ -14,6 +14,7 @@ interface AutoFormProps {
   customRender?: FieldRenderCustomRender;
   validate?: FormValidateInput<Record<string, any>>;
   readOnly?: true;
+  onFieldChange?: (name: string, value: any, values: Record<string, any>) => Record<string, any>;
 }
 
 const [FormProvider, _, useForm] = createFormContext<Record<string, any>>();
@@ -88,6 +89,7 @@ const AutoForm: React.FC<AutoFormProps> = ({
   validate,
   readOnly,
   values,
+  onFieldChange,
 }) => {
   const form = useForm({
     mode: 'uncontrolled',
@@ -95,11 +97,15 @@ const AutoForm: React.FC<AutoFormProps> = ({
     validate,
   });
 
+  const formValues = useMemo(() => form.getValues(), [form.getValues()]);
+
   const onChange = useDebouncedCallback((name: string, value: any) => {
     form.setFieldValue(name, value);
+    if (onFieldChange) {
+      const updates = onFieldChange(name, value, formValues);
+      form.setValues(updates);
+    }
   }, 0);
-
-  const formValues = useMemo(() => form.getValues(), [form.getValues()]);
 
   const getFieldError = useCallback(
     (type: FieldType, name: string) => {
@@ -136,7 +142,7 @@ const AutoForm: React.FC<AutoFormProps> = ({
       form.initialize(values);
     }
   }, [values]);
-  
+
   const content = (
     <FormProvider form={form}>
       {schema.map((field, index) => (

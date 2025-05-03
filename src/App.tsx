@@ -2,15 +2,13 @@ import { Button, Grid, MantineProvider } from '@mantine/core';
 
 import '@mantine/core/styles.css';
 
-import React, { useEffect, useState } from 'react';
 import AutoForm from './components/AutoForm';
 
 const App = () => {
-  const [values, setValues] = useState()
   const onSubmit = (values: Record<string, any>) => {
     alert(JSON.stringify(values));
   };
-  useEffect(() => {},])
+
   return (
     <MantineProvider>
       <AutoForm
@@ -53,6 +51,7 @@ const App = () => {
             type: 'select',
             label: 'Gender',
             name: 'gender',
+            required: true,
             data: [
               {
                 label: 'Male',
@@ -65,10 +64,10 @@ const App = () => {
             ],
           },
           {
-            type: "textarea",
-            label: "Note",
-            name: "note"
-          }
+            type: 'textarea',
+            label: 'Note',
+            name: 'note',
+          },
         ]}
       />
     </MantineProvider>
