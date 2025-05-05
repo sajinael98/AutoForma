@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
-import { Button } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
 import { BaseFieldProps, FieldSchema } from '@/types/field';
 import FieldRender from '../FieldRender';
+
 
 interface ArrayFieldProps extends BaseFieldProps<Record<string, any>[]> {
   fields: FieldSchema[];
@@ -29,7 +30,7 @@ const ArrayField: React.FC<ArrayFieldProps> = (props) => {
             formValues={row}
             onChange={onChange}
             value={row[field.name]}
-            error={error[`${parentName}.${rowIndex}.${field.name}`]}
+            error={field.name in (error[rowIndex] ?? {}) ? error[rowIndex][field.name] : undefined}
             readOnly={readOnly}
           />
           {!readOnly && <Button onClick={() => options.removeElement(rowIndex)}>Remove</Button>}
@@ -40,6 +41,11 @@ const ArrayField: React.FC<ArrayFieldProps> = (props) => {
 
   return (
     <>
+      {typeof error === 'string' && (
+        <Text c="red" fz="sm" fw={500}>
+          {error}
+        </Text>
+      )}
       {content}
       {!readOnly && (
         <Button display="block" onClick={() => options.addElement({})}>

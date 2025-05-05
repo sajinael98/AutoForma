@@ -5,6 +5,7 @@ import { FieldRenderCustomRender } from '@/types/custom-render';
 import { FieldSchema, FieldType } from '@/types/field';
 import FieldRender from './FieldRender';
 
+
 interface AutoFormProps {
   values?: Record<string, any>;
   schema: FieldSchema[];
@@ -82,6 +83,31 @@ export const validateRequiredFields = (
   return errors;
 };
 
+function buildErrorObject(flatErrors) {
+  const error = {};
+
+  Object.entries(flatErrors).forEach(([key, value]) => {
+    const keys = key.split('.');
+    let curr:Record<string, string> = error;
+
+    keys.forEach((subKey, index) => {
+      const isLast = index === keys.length - 1;
+      const nextKey = keys[index + 1];
+
+      if (isLast) {
+        curr[subKey] = value;
+      } else {
+        if (!(subKey in curr)) {
+          curr[subKey] = {};
+        }
+        curr = curr[subKey];
+      }
+    });
+  });
+
+  return error;
+}
+
 const AutoForm: React.FC<AutoFormProps> = ({
   onSubmit,
   schema,
@@ -112,14 +138,9 @@ const AutoForm: React.FC<AutoFormProps> = ({
   const getFieldError = useCallback(
     (type: FieldType, name: string) => {
       const errors = form.errors;
-
+      
       if (type === 'object' || type === 'array') {
-        return Object.entries(errors).reduce<Record<string, React.ReactNode>>((acc, [key, val]) => {
-          if (key.startsWith(`${name}.`)) {
-            acc[key] = val;
-          }
-          return acc;
-        }, {});
+        return buildErrorObject(errors)[name]
       }
 
       return errors[name];
