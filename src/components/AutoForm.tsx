@@ -71,12 +71,23 @@ export const validateRequiredFields = (
 
   for (const field of schema) {
     const fullName = parentPath ? `${parentPath}.${field.name}` : field.name;
-    const value = fullName.split('.').reduce((acc, key) => acc?.[key], values);
+    const fieldValue = values?.[field.name];
 
-    if (field.type === 'object' && field.fields) {
-      Object.assign(errors, validateRequiredFields(field.fields, values, fullName));
-    } else if (field.required && isValueEmpty(value)) {
-      errors[fullName] = `${field.label ?? field.name} is required`;
+    if (field.type === 'object') {
+      Object.assign(errors, validateRequiredFields(field.fields, fieldValue || {}, fullName));
+    } else if (field.type === 'array') {
+      if (field.required && (!Array.isArray(fieldValue) || fieldValue.length === 0)) {
+        errors[fullName] = field.name + ' is required';
+        continue;
+      }
+
+      if (Array.isArray(fieldValue)) {
+        fieldValue.forEach((item, index) => {
+          Object.assign(errors, validateRequiredFields(field.fields, item, `${fullName}.${index}`));
+        });
+      }
+    } else if (field.required && isValueEmpty(fieldValue)) {
+      errors[fullName] = field.name + ' is required';
     }
   }
 
@@ -88,7 +99,7 @@ function buildErrorObject(flatErrors) {
 
   Object.entries(flatErrors).forEach(([key, value]) => {
     const keys = key.split('.');
-    let curr:Record<string, string> = error;
+    let curr: Record<string, string> = error;
 
     keys.forEach((subKey, index) => {
       const isLast = index === keys.length - 1;
@@ -138,9 +149,9 @@ const AutoForm: React.FC<AutoFormProps> = ({
   const getFieldError = useCallback(
     (type: FieldType, name: string) => {
       const errors = form.errors;
-      
+
       if (type === 'object' || type === 'array') {
-        return buildErrorObject(errors)[name]
+        return buildErrorObject(errors)[name];
       }
 
       return errors[name];
