@@ -24,7 +24,7 @@ interface FieldRenderProps {
   readOnly?: true;
 }
 
-function getArrayOptions(
+export function getArrayOptions(
   name: string,
   onChange: (name: string, value: any) => void,
   value: Record<string, any>[]
