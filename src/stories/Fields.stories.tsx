@@ -1,7 +1,7 @@
+import { Meta, StoryObj } from '@storybook/react';
+import { Button, Grid, Group } from '@mantine/core';
 import AutoForm from '@/components/AutoForm';
 import { FieldSchema } from '@/types/field';
-import { Button, Grid, Group } from '@mantine/core';
-import { Meta, StoryObj } from '@storybook/react';
 
 
 // ------------------------------
@@ -96,7 +96,7 @@ const objectFieldSchema: FieldSchema[] = [
 // ------------------------------
 
 const meta: Meta<typeof AutoForm> = {
-  title: 'components/AutoForm Fields',
+  title: 'components/Fields',
   component: AutoForm,
   tags: ['autodocs'],
   args: {
@@ -132,12 +132,11 @@ const meta: Meta<typeof AutoForm> = {
       },
     },
     schema: {
-      table: {
-        disable: false,
-      },
+      description:
+        'Array of field definitions used to render the form. Each item defines one input field.',
+      control: false,
     },
   },
- 
 };
 
 export default meta;
