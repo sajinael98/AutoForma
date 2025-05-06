@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "version": "1.0.0",
+  "homepage": "http://sajinael98.github.io/AutoForma",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -18,7 +19,9 @@
     "test": "npm run typecheck && npm run prettier && npm run lint && npm run vitest && npm run build",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "build-storybook": "storybook build"
+    "predeploy": "npm run build-storybook",
+    "deploy-storybook": "gh-pages -d storybook-static",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@mantine/core": "7.17.5",
@@ -56,6 +59,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-storybook": "^0.12.0",
+    "gh-pages": "^6.3.0",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.0.0",
     "playwright": "^1.52.0",
