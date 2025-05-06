@@ -2,6 +2,9 @@ import React from 'react';
 import { Preview } from '@storybook/react';
 import { MantineProvider } from '@mantine/core';
 
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+
 const preview: Preview = {
   decorators: [
     (Story) => (
@@ -13,4 +16,3 @@ const preview: Preview = {
 };
 
 export default preview;
-
