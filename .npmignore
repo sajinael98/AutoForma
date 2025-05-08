@@ -1,0 +1,6 @@
+src/
+tests/
+.git/
+.github/
+.npmignore
+README.md

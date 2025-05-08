@@ -6,7 +6,7 @@ import { FieldSchema, FieldType } from '@/types/field';
 import FieldRender from './FieldRender';
 
 
-interface AutoFormProps {
+export interface AutoFormProps {
   values?: Record<string, any>;
   schema: FieldSchema[];
   onSubmit: (values: Record<string, any>) => void;
