@@ -1,41 +1,52 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { createFormContext, FormValidateInput } from '@mantine/form';
-import { useDebouncedCallback } from '@mantine/hooks';
-import { FieldRenderCustomRender } from '@/types/custom-render';
-import { FieldSchema, FieldType } from '@/types/field';
-import FieldRender from './FieldRender';
-
+import { FieldRenderCustomRender } from "@/types/custom-render";
+import { FieldSchema, FieldType } from "@/types/field";
+import { createFormContext, FormValidateInput } from "@mantine/form";
+import { useDebouncedCallback } from "@mantine/hooks";
+import React, { useCallback, useEffect, useMemo } from "react";
+import FieldRender from "./FieldRender";
 
 export interface AutoFormProps {
   values?: Record<string, any>;
   schema: FieldSchema[];
   onSubmit: (values: Record<string, any>) => void;
-  container: (Form: React.ReactNode, onSubmit: VoidFunction, readOnly?: true) => React.ReactNode;
-  fieldContainer?: (field: React.ReactNode, fieldSchema: FieldSchema) => React.ReactNode;
+  container: (
+    Form: React.ReactNode,
+    onSubmit: VoidFunction,
+    readOnly?: true
+  ) => React.ReactNode;
+  fieldContainer?: (
+    field: React.ReactNode,
+    fieldSchema: FieldSchema
+  ) => React.ReactNode;
   customRender?: FieldRenderCustomRender;
   validate?: FormValidateInput<Record<string, any>>;
   readOnly?: true;
-  onFieldChange?: (name: string, value: any, values: Record<string, any>) => Record<string, any>;
+  onFieldChange?: (
+    name: string,
+    oldValue: any,
+    newValue: any,
+    values: Record<string, any>
+  ) => Record<string, any> | Promise<Record<string, any>>;
 }
 
 const [FormProvider, _, useForm] = createFormContext<Record<string, any>>();
 
 const getDefaultValueForField = (type: FieldType): any => {
   switch (type) {
-    case 'number':
+    case "number":
       return 0;
-    case 'array':
+    case "array":
       return [];
-    case 'check':
+    case "check":
       return false;
-    case 'object':
+    case "object":
       return {};
-    case 'select':
-    case 'date':
-    case 'datetime':
+    case "select":
+    case "date":
+    case "datetime":
       return null;
     default:
-      return '';
+      return "";
   }
 };
 
@@ -43,10 +54,11 @@ const generateInitialValues = (schema: FieldSchema[]): Record<string, any> => {
   const result: Record<string, any> = {};
 
   for (const field of schema) {
-    if (field.type === 'object' && field.fields) {
+    if (field.type === "object" && field.fields) {
       result[field.name] = generateInitialValues(field.fields);
     } else {
-      result[field.name] = field.initialValue ?? getDefaultValueForField(field.type);
+      result[field.name] =
+        field.initialValue ?? getDefaultValueForField(field.type);
     }
   }
 
@@ -57,7 +69,7 @@ const isValueEmpty = (value: any): boolean => {
   return (
     value === null ||
     value === undefined ||
-    (typeof value === 'string' && value.trim() === '') ||
+    (typeof value === "string" && value.trim() === "") ||
     (Array.isArray(value) && value.length === 0)
   );
 };
@@ -65,7 +77,7 @@ const isValueEmpty = (value: any): boolean => {
 export const validateRequiredFields = (
   schema: FieldSchema[],
   values: Record<string, any>,
-  parentPath = ''
+  parentPath = ""
 ): Record<string, string> => {
   const errors: Record<string, string> = {};
 
@@ -73,21 +85,30 @@ export const validateRequiredFields = (
     const fullName = parentPath ? `${parentPath}.${field.name}` : field.name;
     const fieldValue = values?.[field.name];
 
-    if (field.type === 'object') {
-      Object.assign(errors, validateRequiredFields(field.fields, fieldValue || {}, fullName));
-    } else if (field.type === 'array') {
-      if (field.required && (!Array.isArray(fieldValue) || fieldValue.length === 0)) {
-        errors[fullName] = field.name + ' is required';
+    if (field.type === "object") {
+      Object.assign(
+        errors,
+        validateRequiredFields(field.fields, fieldValue || {}, fullName)
+      );
+    } else if (field.type === "array") {
+      if (
+        field.required &&
+        (!Array.isArray(fieldValue) || fieldValue.length === 0)
+      ) {
+        errors[fullName] = field.name + " is required";
         continue;
       }
 
       if (Array.isArray(fieldValue)) {
         fieldValue.forEach((item, index) => {
-          Object.assign(errors, validateRequiredFields(field.fields, item, `${fullName}.${index}`));
+          Object.assign(
+            errors,
+            validateRequiredFields(field.fields, item, `${fullName}.${index}`)
+          );
         });
       }
     } else if (field.required && isValueEmpty(fieldValue)) {
-      errors[fullName] = field.name + ' is required';
+      errors[fullName] = field.name + " is required";
     }
   }
 
@@ -98,7 +119,7 @@ function buildErrorObject(flatErrors) {
   const error = {};
 
   Object.entries(flatErrors).forEach(([key, value]) => {
-    const keys = key.split('.');
+    const keys = key.split(".");
     let curr: Record<string, string> = error;
 
     keys.forEach((subKey, index) => {
@@ -131,17 +152,20 @@ const AutoForm: React.FC<AutoFormProps> = ({
   onFieldChange,
 }) => {
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: "uncontrolled",
     initialValues: generateInitialValues(schema),
     validate,
   });
 
   const formValues = useMemo(() => form.getValues(), [form.getValues()]);
 
-  const onChange = useDebouncedCallback((name: string, value: any) => {
+  const onChange = useDebouncedCallback(async (name: string, value: any) => {
     form.setFieldValue(name, value);
     if (onFieldChange) {
-      const updates = onFieldChange(name, value, formValues);
+      const oldValue = formValues[name];
+      formValues[name] = value;
+      const result = onFieldChange(name, oldValue, value, formValues);
+      const updates = result instanceof Promise ? await result : result;
       form.setValues(updates);
     }
   }, 0);
@@ -150,7 +174,7 @@ const AutoForm: React.FC<AutoFormProps> = ({
     (type: FieldType, name: string) => {
       const errors = form.errors;
 
-      if (type === 'object' || type === 'array') {
+      if (type === "object" || type === "array") {
         return buildErrorObject(errors)[name];
       }
 

@@ -1,4 +1,14 @@
-export type FieldType = 'text' | 'number' | 'object' | 'array' | 'check' | 'select' | 'textarea' | 'date' | 'datetime' | 'time';
+export type FieldType =
+  | "text"
+  | "number"
+  | "object"
+  | "array"
+  | "check"
+  | "select"
+  | "textarea"
+  | "date"
+  | "datetime"
+  | "time";
 
 export interface FieldSchema {
   name: string;
@@ -16,6 +26,7 @@ export interface FieldSchema {
   fields?: FieldSchema[];
   // for select type only
   data?: { label: string; value: string }[];
+  meta?: Record<string, any>;
 }
 
 export interface BaseFieldProps<T> {
