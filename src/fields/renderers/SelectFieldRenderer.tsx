@@ -18,7 +18,12 @@ export function SelectFieldRenderer<
   const inputProps = form.getInputProps(field.name as any);
 
   return (
-    <Select data={field.data} placeholder={field.placeholder} {...inputProps} />
+    <Select
+      data={field.data}
+      placeholder={field.placeholder}
+      {...inputProps}
+      error={undefined}
+    />
   );
 }
 

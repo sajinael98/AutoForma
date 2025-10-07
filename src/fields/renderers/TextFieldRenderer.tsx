@@ -15,7 +15,13 @@ export function TextFieldRenderer<
 >({ field, form }: TextFieldRendererProps<TValues>) {
   const inputProps = form.getInputProps(field.name);
 
-  return <TextInput placeholder={field.placeholder} {...inputProps} />;
+  return (
+    <TextInput
+      placeholder={field.placeholder}
+      {...inputProps}
+      error={undefined}
+    />
+  );
 }
 
 export default TextFieldRenderer;
