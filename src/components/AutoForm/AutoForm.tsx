@@ -26,10 +26,13 @@ export function AutoForm<
     onSubmit,
     submitButton = true,
     transformBeforeSubmit = (values) => values,
+    validate,
   } = props;
 
   const form = useForm<TValues>({
     initialValues: (values ?? {}) as TValues,
+    validate,
+    mode: "uncontrolled",
   });
 
   const Layout = layoutStrategies[layout];
