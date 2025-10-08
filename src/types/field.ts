@@ -10,21 +10,19 @@ export type FieldType =
   | "datetime"
   | "time";
 
-export interface FieldSchema {
-  name: string;
+export interface FieldSchema<TValues extends Record<string, any> = Record<string, any>> {
+  name: keyof TValues & string;
   type: FieldType;
   label: string;
   description?: string;
   placeholder?: string;
   extra?: Record<string, any>;
-  disabled?: (values: Record<string, any>) => boolean | boolean;
-  visible?: (values: Record<string, any>) => boolean | boolean;
+  disabled?: ((values: TValues) => boolean) | boolean;
+  visible?: ((values: TValues) => boolean) | boolean;
   initialValue?: any;
-  required?: true;
-  readOnly?: true;
-  // for object type only
-  fields?: FieldSchema[];
-  // for select type only
+  required?: boolean;
+  readOnly?: boolean;
+  fields?: FieldSchema<TValues>[];
   data?: { label: string; value: string }[];
   meta?: Record<string, any>;
 }
