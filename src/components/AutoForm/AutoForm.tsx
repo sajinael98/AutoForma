@@ -1,8 +1,8 @@
+import FieldRenderer from "@/fields/FieldRenderer/FieldRenderer";
+import { Button, Grid, Group, Stack } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import React, { useMemo } from "react";
 import { AutoFormProps } from "./AutoForm.types";
-import { useForm } from "@mantine/form";
-import { Button, Grid, Group, Stack } from "@mantine/core";
-import FieldRenderer from "@/fields/FieldRenderer/FieldRenderer";
 
 export const layoutStrategies = {
   vertical: (children: React.ReactNode) => <Stack gap="md">{children}</Stack>,
@@ -16,36 +16,44 @@ export const layoutStrategies = {
 
 export function AutoForm<
   TValues extends Record<string, any> = Record<string, any>
->(props: AutoFormProps<TValues>) {
-  const {
-    values,
-    layout = "vertical",
-    schema,
-    columns = 1,
-    mode = "create",
-    onSubmit,
-    submitButton = true,
-    transformBeforeSubmit = (values) => values,
-    validate,
-  } = props;
-
+>({
+  values,
+  layout = "vertical",
+  schema,
+  columns = 1,
+  mode = "create",
+  onSubmit,
+  submitButton = true,
+  transformBeforeSubmit = (v) => v,
+  validate,
+  readOnly,
+  updateFieldSchema,
+}: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
     initialValues: (values ?? {}) as TValues,
     validate,
-    mode: "uncontrolled",
   });
 
   const Layout = layoutStrategies[layout];
 
-  const handleSubmit = form.onSubmit((values) =>
-    props.onSubmit(transformBeforeSubmit(values))
+  const resolvedSchema = useMemo(() => {
+    if (!updateFieldSchema) return schema;
+    const values = form.getValues();
+    return schema.map((field) => {
+      const updater = updateFieldSchema[field.name];
+      return updater ? updater(field, values) : field;
+    });
+  }, [schema, form.values, updateFieldSchema]);
+
+  const handleSubmit = form.onSubmit((vals) =>
+    onSubmit(transformBeforeSubmit(vals))
   );
 
   return (
     <form onSubmit={handleSubmit}>
       {Layout(
         <>
-          {schema.map((field) => (
+          {resolvedSchema.map((field) => (
             <FieldRenderer<TValues>
               key={field.name}
               field={field}
@@ -53,17 +61,21 @@ export function AutoForm<
               layout={layout}
               columns={columns}
               mode={mode}
-              readOnly={props.readOnly}
+              readOnly={readOnly}
             />
           ))}
         </>
       )}
-      {typeof submitButton === "boolean" && submitButton === true && (
-        <Group justify="flex-end" mt="md">
-          <Button type="submit">Submit</Button>
-        </Group>
+
+      {typeof submitButton === "boolean" ? (
+        submitButton ? (
+          <Group justify="flex-end" mt="md">
+            <Button type="submit">Submit</Button>
+          </Group>
+        ) : null
+      ) : (
+        submitButton
       )}
-      {typeof submitButton !== "boolean" && submitButton}
     </form>
   );
 }

@@ -48,4 +48,11 @@ export interface AutoFormProps<
   formRef?: React.RefObject<AutoFormHandle>;
   readOnly?: boolean;
   renderField?: FieldRenderCustomRender;
+
+  updateFieldSchema?: {
+    [key: string]: (
+      schema: FieldSchema<TValues>,
+      values: TValues
+    ) => FieldSchema<TValues>;
+  };
 }
