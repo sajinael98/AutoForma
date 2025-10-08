@@ -25,7 +25,12 @@ export function FieldRenderer<
   }
 
   return (
-    <DefaultFieldRender field={field} layout={layout} columns={props.columns} form={form}>
+    <DefaultFieldRender
+      field={field}
+      layout={layout}
+      columns={props.columns}
+      form={form}
+    >
       {InputNode}
     </DefaultFieldRender>
   );
