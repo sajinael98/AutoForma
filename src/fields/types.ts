@@ -22,8 +22,8 @@ export interface BaseFieldSchema<
   placeholder?: string;
   required?: boolean;
   readOnly?: boolean;
-  disabled?: ((values: TValues) => boolean) | boolean;
-  visible?: ((values: TValues) => boolean) | boolean;
+  disabled?: boolean;
+  visible?: boolean;
   meta?: Record<string, any>;
 }
 
