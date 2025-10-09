@@ -28,7 +28,12 @@ export function DefaultFieldRender<
     <Box>
       {field.label && (
         <Text fw={500} size="sm" mb="xs">
-          {field.label}
+          {field.label}{" "}
+          {field.required && (
+            <Text c="red" fz="sm" span>
+              &#42;
+            </Text>
+          )}
         </Text>
       )}
       {children}
