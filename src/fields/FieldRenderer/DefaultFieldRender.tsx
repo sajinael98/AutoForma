@@ -54,7 +54,7 @@ export function DefaultFieldRender<
     const span =
       (field.meta as any)?.colSpan === "full"
         ? 12
-        : (field.meta as any)?.colSpan ?? Math.floor(12 / columns);
+        : (field.meta as any)?.colSpan ?? Math.floor(6 / columns);
     return <Grid.Col span={span}>{content}</Grid.Col>;
   }
 
