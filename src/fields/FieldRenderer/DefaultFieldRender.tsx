@@ -1,30 +1,22 @@
 import React from "react";
-import { Box, Grid, Stack, Text } from "@mantine/core";
-import { FieldSchema } from "@/fields/types";
+import { Box, Text } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
+import { FieldSchema } from "@/fields/types";
 
-type DefaultFieldRenderProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = {
+type DefaultFieldRenderProps<TValues extends Record<string, any>> = {
   field: FieldSchema<TValues>;
-  layout: "vertical" | "horizontal" | "grid";
-  columns?: number;
-  children: React.ReactNode;
   form: UseFormReturnType<TValues>;
+  children: React.ReactNode;
 };
 
-export function DefaultFieldRender<
-  TValues extends Record<string, any> = Record<string, any>
->({
+export function DefaultFieldRender<TValues extends Record<string, any>>({
   field,
-  layout,
-  columns = 1,
-  children,
   form,
+  children,
 }: DefaultFieldRenderProps<TValues>) {
   const error = form.getInputProps(field.name).error;
 
-  const content = (
+  return (
     <Box>
       {field.label && (
         <Text fw={500} size="sm" mb="xs">
@@ -36,12 +28,15 @@ export function DefaultFieldRender<
           )}
         </Text>
       )}
+
       {children}
+
       {field.description && (
         <Text size="xs" c="dimmed" mt={5}>
           {field.description}
         </Text>
       )}
+
       {error && (
         <Text size="xs" c="red" mt={5}>
           {error}
@@ -49,24 +44,6 @@ export function DefaultFieldRender<
       )}
     </Box>
   );
-
-  if (layout === "grid") {
-    const span =
-      (field.meta as any)?.colSpan === "full"
-        ? 12
-        : (field.meta as any)?.colSpan ?? Math.floor(6 / columns);
-    return <Grid.Col span={span}>{content}</Grid.Col>;
-  }
-
-  if (layout === "horizontal") {
-    return (
-      <Box style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        {content}
-      </Box>
-    );
-  }
-
-  return <Stack gap="xs">{content}</Stack>;
 }
 
 export default DefaultFieldRender;
