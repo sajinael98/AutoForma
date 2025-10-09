@@ -24,19 +24,7 @@ export function FieldRenderer<
 
     case "object":
       InputNode = (
-        <>
-          {field.fields.map((innerField) => (
-            <FieldRenderer
-              key={`${field.name}.${innerField.name}`}
-              field={{
-                ...innerField,
-                name: `${field.name}.${innerField.name}`,
-              }}
-              form={form}
-              layout={layout}
-            />
-          ))}
-        </>
+        <ObjectFieldRenderer field={field} form={form} layout={layout} />
       );
       break;
 

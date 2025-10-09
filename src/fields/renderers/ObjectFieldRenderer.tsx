@@ -1,43 +1,32 @@
-import React from "react";
-import { TextInput } from "@mantine/core";
+import { ObjectFieldSchema } from "@/fields/types";
 import { UseFormReturnType } from "@mantine/form";
-import { FieldSchema } from "../types";
+import FieldRenderer from "../FieldRenderer/FieldRenderer";
 
-type ObjectFieldRendererProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = {
-  field: FieldSchema<TValues>;
+type ObjectFieldRendererProps<TValues extends Record<string, any>> = {
+  field: ObjectFieldSchema<TValues>;
   form: UseFormReturnType<TValues>;
+  layout?: "vertical" | "horizontal" | "grid";
 };
 
-export function ObjectFieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->({ field, form }: ObjectFieldRendererProps<TValues>) {
-  const inputProps = form.getInputProps(field.name);
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
-
-  if (isReadOnly || isDisabled) {
-    return (
-      <TextInput
-        value={inputProps.value}
-        readOnly={isReadOnly}
-        disabled={isDisabled}
-        required={field.required}
-        placeholder={field.placeholder}
-        variant={isReadOnly ? "filled" : "default"}
-        error={undefined}
-      />
-    );
-  }
-
+export function ObjectFieldRenderer<TValues extends Record<string, any>>({
+  field,
+  form,
+  layout = "vertical",
+}: ObjectFieldRendererProps<TValues>) {
   return (
-    <TextInput
-      {...inputProps}
-      required={field.required}
-      placeholder={field.placeholder}
-      error={undefined}
-    />
+    <>
+      {field.fields?.map((innerField) => (
+        <FieldRenderer
+          key={`${field.name}.${innerField.name}`}
+          field={{
+            ...innerField,
+            name: `${field.name}.${innerField.name}`,
+          }}
+          form={form}
+          layout={layout}
+        />
+      ))}
+    </>
   );
 }
 
