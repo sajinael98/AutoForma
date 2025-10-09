@@ -1,6 +1,6 @@
 import { UseFormReturnType } from "@mantine/form";
 import { FieldSchema } from "../types";
-import { FieldRenderCustomRender } from "@/types/custom-render";
+import { UseCustomRendererFieldReturnType } from "../renderer.types";
 
 export interface FieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
@@ -11,7 +11,7 @@ export interface FieldRendererProps<
   columns?: number;
   mode?: "create" | "edit" | "view";
   readOnly?: boolean;
-  renderField?: FieldRenderCustomRender;
+  customRenderers?: UseCustomRendererFieldReturnType<TValues>;
   fieldOverrides?: Record<
     string,
     (

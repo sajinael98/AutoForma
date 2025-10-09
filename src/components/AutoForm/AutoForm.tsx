@@ -65,6 +65,7 @@ export function AutoForm<
   validate,
   readOnly,
   updateFieldSchema,
+  customRenderers,
 }: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
     initialValues: generateInitialValues(schema),
@@ -105,6 +106,7 @@ export function AutoForm<
               columns={columns}
               mode={mode}
               readOnly={readOnly}
+              customRenderers={customRenderers?.[field.name]}
             />
           ))}
         </>

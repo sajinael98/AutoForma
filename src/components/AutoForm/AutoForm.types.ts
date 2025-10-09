@@ -1,6 +1,6 @@
+import { CustomRenderersMap } from "@/fields/renderer.types";
 import { FieldSchema } from "@/fields/types";
 import { AutoFormHandle } from "@/types/AutoFormHandle";
-import { FieldRenderCustomRender } from "@/types/custom-render";
 import { FormValidateInput } from "@mantine/form";
 
 export interface AutoFormProps<
@@ -47,8 +47,7 @@ export interface AutoFormProps<
   actions?: React.ReactNode;
   formRef?: React.RefObject<AutoFormHandle>;
   readOnly?: boolean;
-  renderField?: FieldRenderCustomRender;
-
+  customRenderers?: CustomRenderersMap<TValues>;
   updateFieldSchema?: {
     [key: string]: (
       schema: FieldSchema<TValues>,
