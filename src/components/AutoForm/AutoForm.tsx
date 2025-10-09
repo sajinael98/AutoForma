@@ -1,8 +1,10 @@
 import FieldRenderer from "@/fields/FieldRenderer/FieldRenderer";
 import { Button, Grid, Group, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { AutoFormProps } from "./AutoForm.types";
+import { FieldType } from "@/fields/types";
+import { FieldSchema } from "@/types/field";
 
 export const layoutStrategies = {
   vertical: (children: React.ReactNode) => <Stack gap="md">{children}</Stack>,
@@ -13,6 +15,42 @@ export const layoutStrategies = {
   ),
   grid: (children: React.ReactNode) => <Grid gutter="md">{children}</Grid>,
 };
+
+const getDefaultValueForField = (type: FieldType): any => {
+  switch (type) {
+    case "number":
+      return 0;
+    case "array":
+      return [];
+    case "checkbox":
+      return false;
+    case "object":
+      return {};
+    case "select":
+    case "date":
+    case "datetime":
+      return null;
+    default:
+      return "";
+  }
+};
+
+function generateInitialValues<
+  TValues extends Record<string, any> = Record<string, any>
+>(schema: FieldSchema<TValues>[]): TValues {
+  const result: Record<string, any> = {};
+
+  for (const field of schema) {
+    if (field.type === "object" && field.fields) {
+      result[field.name] = generateInitialValues(field.fields);
+    } else {
+      result[field.name] =
+        field.initialValue ?? getDefaultValueForField(field.type);
+    }
+  }
+
+  return result as TValues;
+}
 
 export function AutoForm<
   TValues extends Record<string, any> = Record<string, any>
@@ -30,7 +68,7 @@ export function AutoForm<
   updateFieldSchema,
 }: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
-    initialValues: (values ?? {}) as TValues,
+    initialValues: generateInitialValues(schema),
     validate,
   });
 
@@ -48,6 +86,12 @@ export function AutoForm<
   const handleSubmit = form.onSubmit((vals) =>
     onSubmit(transformBeforeSubmit(vals))
   );
+
+  useEffect(() => {
+    if (values) {
+      form.initialize(values);
+    }
+  }, [values]);
 
   return (
     <form onSubmit={handleSubmit}>
