@@ -15,7 +15,7 @@ export const layoutStrategies = {
   grid: (children: React.ReactNode) => <Grid gutter="md">{children}</Grid>,
 };
 
-const getDefaultValueForField = (type: FieldType): any => {
+export const getDefaultValueForField = (type: FieldType): any => {
   switch (type) {
     case "number":
       return 0;
@@ -34,7 +34,7 @@ const getDefaultValueForField = (type: FieldType): any => {
   }
 };
 
-function generateInitialValues<
+export function generateInitialValues<
   TValues extends Record<string, any> = Record<string, any>
 >(schema: FieldSchema<TValues>[]): TValues {
   const result: Record<string, any> = {};

@@ -79,10 +79,11 @@ export interface ObjectFieldSchema<
 }
 
 export interface ArrayFieldSchema<
-  TValues extends Record<string, any> = Record<string, any>
+  TValues extends Record<string, any> = Record<string, any>,
+  TInner extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
   type: "array";
-  of: FieldSchema<TValues>;
+  fields: FieldSchema<TInner>[];
 }
 
 export type FieldSchema<

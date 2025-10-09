@@ -1,3 +1,4 @@
+import ArrayFieldRenderer from "../renderers/ArrayFieldRenderer";
 import ObjectFieldRenderer from "../renderers/ObjectFieldRenderer";
 import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
 import TextFieldRenderer from "../renderers/TextFieldRenderer";
@@ -25,6 +26,12 @@ export function FieldRenderer<
     case "object":
       InputNode = (
         <ObjectFieldRenderer field={field} form={form} layout={layout} />
+      );
+      break;
+
+    case "array":
+      InputNode = (
+        <ArrayFieldRenderer field={field} form={form} layout={layout} />
       );
       break;
 
