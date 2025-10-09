@@ -1,6 +1,6 @@
+import { FieldSchema } from "@/fields/types";
 import { AutoFormHandle } from "@/types/AutoFormHandle";
 import { FieldRenderCustomRender } from "@/types/custom-render";
-import { FieldSchema } from "@/types/field";
 import { FormValidateInput } from "@mantine/form";
 
 export interface AutoFormProps<

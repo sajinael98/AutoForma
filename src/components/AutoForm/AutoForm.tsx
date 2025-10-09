@@ -3,8 +3,7 @@ import { Button, Grid, Group, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { useEffect, useMemo } from "react";
 import { AutoFormProps } from "./AutoForm.types";
-import { FieldType } from "@/fields/types";
-import { FieldSchema } from "@/types/field";
+import { FieldSchema, FieldType } from "@/fields/types";
 
 export const layoutStrategies = {
   vertical: (children: React.ReactNode) => <Stack gap="md">{children}</Stack>,
