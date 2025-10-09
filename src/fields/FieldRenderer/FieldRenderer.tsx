@@ -1,3 +1,4 @@
+import ObjectFieldRenderer from "../renderers/ObjectFieldRenderer";
 import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
 import TextFieldRenderer from "../renderers/TextFieldRenderer";
 import DefaultFieldRender from "./DefaultFieldRender";
@@ -18,6 +19,24 @@ export function FieldRenderer<
 
     case "select":
       InputNode = <SelectFieldRenderer field={field} form={props.form} />;
+      break;
+
+    case "object":
+      InputNode = (
+        <>
+          {field.fields.map((innerField) => (
+            <FieldRenderer
+              key={`${field.name}.${innerField.name}`}
+              field={{
+                ...innerField,
+                name: `${field.name}.${innerField.name}`
+              }}
+              form={form}
+              layout={layout}
+            />
+          ))}
+        </>
+      );
       break;
 
     default:

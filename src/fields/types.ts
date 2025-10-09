@@ -70,10 +70,11 @@ export interface DateFieldSchema<
 }
 
 export interface ObjectFieldSchema<
-  TValues extends Record<string, any> = Record<string, any>
+  TValues extends Record<string, any> = Record<string, any>,
+  TInner extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
   type: "object";
-  fields: FieldSchema<TValues>[];
+  fields: FieldSchema<TInner>[];
 }
 
 export interface ArrayFieldSchema<
