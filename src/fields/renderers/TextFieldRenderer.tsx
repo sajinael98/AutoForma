@@ -29,6 +29,7 @@ export function TextFieldRenderer<
   return (
     <TextInput
       {...inputProps}
+      onChange={(e) => inputProps.onFieldChange(e.target.value)}
       required={field.required}
       placeholder={field.placeholder}
       error={undefined}

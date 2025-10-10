@@ -66,10 +66,20 @@ export function AutoForm<
   readOnly,
   updateFieldSchema,
   customRenderers,
+  onFieldChange,
 }: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
     initialValues: generateInitialValues(schema),
     validate,
+    enhanceGetInputProps(payload) {
+      return {
+        onFieldChange: async (value: any) => {
+          payload.inputProps.onChange(value);
+
+          await onFieldChange?.[payload.field]?.(value, form);
+        },
+      };
+    },
   });
 
   const Layout = layoutStrategies[layout];

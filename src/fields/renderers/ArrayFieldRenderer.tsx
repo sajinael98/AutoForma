@@ -25,14 +25,14 @@ export function ArrayFieldRenderer<
   const isDisabled = arrayField.disabled === true;
 
   function handleAddRow() {
-    inputProps.onChange([
+    inputProps.onFieldChange([
       ...arrayValue,
       generateInitialValues(arrayField.fields),
     ]);
   }
 
   function handleRemoveRow(index: number) {
-    inputProps.onChange(arrayValue.filter((_, i) => i !== index));
+    inputProps.onFieldChange(arrayValue.filter((_, i) => i !== index));
   }
 
   return (
