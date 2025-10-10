@@ -6,7 +6,7 @@ export interface AutoFormProps<
   TValues extends Record<string, any> = Record<string, any>
 > {
   schema: FieldSchema<TValues>[];
-  values?: Partial<TValues>;
+  values?: TValues;
 
   onSubmit: (values: TValues) => void | Promise<void>;
   transformBeforeSubmit?: (values: TValues) => TValues;

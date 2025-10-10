@@ -99,7 +99,8 @@ export function AutoForm<
 
   useEffect(() => {
     if (values) {
-      form.initialize(values);
+      form.setValues(values);
+      form.resetDirty(values);
     }
   }, [values]);
 
