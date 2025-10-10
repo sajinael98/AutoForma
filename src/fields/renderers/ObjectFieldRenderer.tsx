@@ -1,11 +1,11 @@
-import { ObjectFieldSchema } from "@/fields/types";
-import { UseFormReturnType } from "@mantine/form";
 import FieldRenderer from "../FieldRenderer/FieldRenderer";
+import { FieldRendererProps } from "../renderer.types";
+import { ObjectFieldSchema } from "../types";
 
-type ObjectFieldRendererProps<TValues extends Record<string, any>> = {
-  field: ObjectFieldSchema<TValues>;
-  form: UseFormReturnType<TValues>;
-  layout?: "vertical" | "horizontal" | "grid";
+type ObjectFieldRendererProps<
+  TValues extends Record<string, any> = Record<string, any>
+> = FieldRendererProps<TValues> & {
+  layout: "vertical" | "horizontal" | "grid";
 };
 
 export function ObjectFieldRenderer<TValues extends Record<string, any>>({
@@ -13,9 +13,11 @@ export function ObjectFieldRenderer<TValues extends Record<string, any>>({
   form,
   layout = "vertical",
 }: ObjectFieldRendererProps<TValues>) {
+  const objectField = field as ObjectFieldSchema<TValues>;
+
   return (
     <>
-      {field.fields?.map((innerField) => (
+      {objectField.fields?.map((innerField) => (
         <FieldRenderer
           key={`${field.name}.${innerField.name}`}
           field={{

@@ -1,31 +1,29 @@
-import React from "react";
 import { Select } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { FieldSchema, SelectFieldSchema } from "../types";
+import { FieldRendererProps } from "../renderer.types";
+import { SelectFieldSchema } from "../types";
 
 type SelectFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
-> = {
-  field: SelectFieldSchema<TValues>;
-  form: UseFormReturnType<TValues>;
-};
+> = FieldRendererProps<TValues>;
 
 export function SelectFieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >({ field, form }: SelectFieldRendererProps<TValues>) {
-  const inputProps = form.getInputProps(field.name as any);
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
+  const selectField = field as SelectFieldSchema<TValues>;
+
+  const inputProps = form.getInputProps(selectField.name as any);
+  const isReadOnly = selectField.readOnly === true;
+  const isDisabled = selectField.disabled === true;
 
   if (isReadOnly || isDisabled) {
     return (
       <Select
-        data={field.data}
+        data={selectField.data}
         value={inputProps.value}
         disabled={isDisabled || isReadOnly}
         readOnly={isReadOnly}
-        placeholder={field.placeholder}
-        required={field.required}
+        placeholder={selectField.placeholder}
+        required={selectField.required}
         variant={isReadOnly ? "filled" : "default"}
         error={undefined}
       />
@@ -34,8 +32,8 @@ export function SelectFieldRenderer<
 
   return (
     <Select
-      data={field.data}
-      placeholder={field.placeholder}
+      data={selectField.data}
+      placeholder={selectField.placeholder}
       error={undefined}
       {...inputProps}
     />

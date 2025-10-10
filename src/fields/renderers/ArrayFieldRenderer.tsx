@@ -1,32 +1,34 @@
-import React from "react";
-import { Button, Divider, Stack, Paper, Group } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { ArrayFieldSchema } from "../types";
-import FieldRenderer from "../FieldRenderer/FieldRenderer";
 import {
   generateInitialValues,
   layoutStrategies,
 } from "@/components/AutoForm/AutoForm";
+import { Button, Divider, Group, Paper, Stack } from "@mantine/core";
+import FieldRenderer from "../FieldRenderer/FieldRenderer";
+import { FieldRendererProps } from "../renderer.types";
+import { ArrayFieldSchema } from "../types";
 
 type ArrayFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
-> = {
-  field: ArrayFieldSchema<TValues>;
-  form: UseFormReturnType<TValues>;
+> = FieldRendererProps<TValues> & {
   layout: "vertical" | "horizontal" | "grid";
 };
 
 export function ArrayFieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >({ field, form, layout }: ArrayFieldRendererProps<TValues>) {
-  const inputProps = form.getInputProps(field.name);
+  const arrayField = field as ArrayFieldSchema<TValues>;
+
+  const inputProps = form.getInputProps(arrayField.name);
   const arrayValue: Record<string, any>[] = inputProps.value ?? [];
 
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
+  const isReadOnly = arrayField.readOnly === true;
+  const isDisabled = arrayField.disabled === true;
 
   function handleAddRow() {
-    inputProps.onChange([...arrayValue, generateInitialValues(field.fields)]);
+    inputProps.onChange([
+      ...arrayValue,
+      generateInitialValues(arrayField.fields),
+    ]);
   }
 
   function handleRemoveRow(index: number) {
@@ -37,14 +39,14 @@ export function ArrayFieldRenderer<
     <Stack gap="md">
       {arrayValue.map((row, rowIndex) => (
         <Paper
-          key={`${field.name}.${rowIndex}`}
+          key={`${arrayField.name}.${rowIndex}`}
           withBorder
           radius="md"
           p="md"
           shadow="xs"
         >
           {layoutStrategies[layout](
-            field.fields?.map((innerField) => (
+            arrayField.fields?.map((innerField) => (
               <FieldRenderer
                 key={`${field.name}.${rowIndex}.${innerField.name}`}
                 field={{

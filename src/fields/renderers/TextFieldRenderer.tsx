@@ -1,14 +1,9 @@
-import React from "react";
 import { TextInput } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { FieldSchema } from "../types";
+import { FieldRendererProps } from "../renderer.types";
 
 type TextFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
-> = {
-  field: FieldSchema<TValues>;
-  form: UseFormReturnType<TValues>;
-};
+> = FieldRendererProps<TValues>;
 
 export function TextFieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
