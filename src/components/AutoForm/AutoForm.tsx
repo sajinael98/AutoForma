@@ -1,73 +1,29 @@
-import FieldRenderer from "@/fields/FieldRenderer/FieldRenderer";
 import { Button, Grid, Group, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { useEffect, useMemo } from "react";
+
+import FieldRenderer from "@/fields/FieldRenderer/FieldRenderer";
 import { AutoFormProps } from "./AutoForm.types";
-import { FieldSchema, FieldType } from "@/fields/types";
-
-export const layoutStrategies = {
-  vertical: (children: React.ReactNode) => <Stack gap="md">{children}</Stack>,
-  horizontal: (children: React.ReactNode) => (
-    <Group wrap="wrap" gap="md">
-      {children}
-    </Group>
-  ),
-  grid: (children: React.ReactNode) => <Grid gutter="md">{children}</Grid>,
-};
-
-export const getDefaultValueForField = (type: FieldType): any => {
-  switch (type) {
-    case "number":
-      return 0;
-    case "array":
-      return [];
-    case "checkbox":
-      return false;
-    case "object":
-      return {};
-    case "select":
-    case "date":
-    case "datetime":
-      return null;
-    default:
-      return "";
-  }
-};
-
-export function generateInitialValues<
-  TValues extends Record<string, any> = Record<string, any>
->(schema: FieldSchema<TValues>[]): TValues {
-  const result: Record<string, any> = {};
-
-  for (const field of schema) {
-    if (field.type === "object" && field.fields) {
-      result[field.name] = generateInitialValues(field.fields);
-    } else {
-      result[field.name] =
-        field.initialValue ?? getDefaultValueForField(field.type);
-    }
-  }
-
-  return result as TValues;
-}
+import { generateInitialValues } from "@/fields/utils/values.utils";
+import { layoutStrategies } from "@/fields/utils/layout.utils";
 
 export function AutoForm<
   TValues extends Record<string, any> = Record<string, any>
 >({
+  schema,
   values,
   layout = "vertical",
-  schema,
   columns = 1,
   mode = "create",
-  onSubmit,
-  submitButton = true,
-  transformBeforeSubmit = (v) => v,
-  validate,
   readOnly,
-  updateFieldSchema,
-  customRenderers,
+  validate,
+  onSubmit,
   onFieldChange,
-  transformAfterSubmit = (v) => {},
+  customRenderers,
+  updateFieldSchema,
+  transformBeforeSubmit = (v) => v,
+  transformAfterSubmit = () => {},
+  submitButton = true,
 }: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
     initialValues: generateInitialValues(schema),
@@ -77,7 +33,6 @@ export function AutoForm<
       return {
         onFieldChange: async (value: any) => {
           payload.inputProps.onChange(value);
-
           await onFieldChange?.[payload.field]?.(value, form);
         },
       };
