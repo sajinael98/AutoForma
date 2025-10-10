@@ -1,11 +1,9 @@
-import {
-  generateInitialValues,
-  layoutStrategies,
-} from "@/components/AutoForm/AutoForm";
 import { Button, Divider, Group, Paper, Stack } from "@mantine/core";
 import FieldRenderer from "../FieldRenderer/FieldRenderer";
 import { FieldRendererProps } from "../renderer.types";
 import { ArrayFieldSchema } from "../types";
+import { generateInitialValues } from "../utils/values.utils";
+import { layoutStrategies } from "../utils/layout.utils";
 
 type ArrayFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
