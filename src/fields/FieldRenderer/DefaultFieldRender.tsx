@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text } from "@mantine/core";
+import { Box, Text, Stack } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { FieldSchema } from "@/fields/types";
 
@@ -14,35 +14,42 @@ export function DefaultFieldRender<TValues extends Record<string, any>>({
   form,
   children,
 }: DefaultFieldRenderProps<TValues>) {
-  const error = form.getInputProps(field.name).error;
+  const { error } = form.getInputProps(field.name);
 
   return (
-    <Box>
+    <Stack gap={4}>
       {field.label && (
-        <Text fw={500} size="sm" mb="xs">
+        <Text
+          fw={500}
+          size="sm"
+          mb={2}
+          component="label"
+          htmlFor={field.name}
+          style={{ display: "block" }}
+        >
           {field.label}{" "}
           {field.required && (
-            <Text c="red" fz="sm" span>
-              &#42;
+            <Text component="span" c="red" fz="sm">
+              *
             </Text>
           )}
         </Text>
       )}
 
-      {children}
+      <Box>{children}</Box>
 
       {field.description && (
-        <Text size="xs" c="dimmed" mt={5}>
+        <Text size="xs" c="dimmed" mt={2} style={{ lineHeight: 1.4 }}>
           {field.description}
         </Text>
       )}
 
       {error && (
-        <Text size="xs" c="red" mt={5}>
+        <Text size="xs" c="red" mt={2} style={{ fontWeight: 500 }}>
           {error}
         </Text>
       )}
-    </Box>
+    </Stack>
   );
 }
 
