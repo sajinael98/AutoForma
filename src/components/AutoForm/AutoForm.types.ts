@@ -10,6 +10,7 @@ export interface AutoFormProps<
 
   onSubmit: (values: TValues) => void | Promise<void>;
   transformBeforeSubmit?: (values: TValues) => TValues;
+  transformAfterSubmit?: (values: TValues) => void | Promise<void>;
 
   validate?: FormValidateInput<TValues>;
   mode?: "create" | "edit" | "view";

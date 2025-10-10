@@ -67,10 +67,12 @@ export function AutoForm<
   updateFieldSchema,
   customRenderers,
   onFieldChange,
+  transformAfterSubmit = (v) => {},
 }: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
     initialValues: generateInitialValues(schema),
     validate,
+    transformValues: transformBeforeSubmit,
     enhanceGetInputProps(payload) {
       return {
         onFieldChange: async (value: any) => {
@@ -93,9 +95,10 @@ export function AutoForm<
     });
   }, [schema, form.values, updateFieldSchema]);
 
-  const handleSubmit = form.onSubmit((vals) =>
-    onSubmit(transformBeforeSubmit(vals))
-  );
+  const handleSubmit = form.onSubmit(async (vals) => {
+    await onSubmit(vals);
+    transformAfterSubmit(vals);
+  });
 
   useEffect(() => {
     if (values) {
