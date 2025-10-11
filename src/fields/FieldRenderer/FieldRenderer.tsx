@@ -1,4 +1,8 @@
 import ArrayFieldRenderer from "../renderers/ArrayFieldRenderer";
+import CheckBoxFieldRenderer from "../renderers/CheckBoxFieldRenderer";
+import DateFieldRenderer from "../renderers/DateFieldRenderer";
+import DateTimeFieldRenderer from "../renderers/DateTimeFieldRenderer";
+import NumberFieldRenderer from "../renderers/NumberFieldRenderer";
 import ObjectFieldRenderer from "../renderers/ObjectFieldRenderer";
 import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
 import TextFieldRenderer from "../renderers/TextFieldRenderer";
@@ -44,6 +48,22 @@ export function FieldRenderer<
       InputNode = (
         <ArrayFieldRenderer field={field} form={form} layout={layout} />
       );
+      break;
+
+    case "checkbox":
+      InputNode = <CheckBoxFieldRenderer field={field} form={form} />;
+      break;
+
+    case "number":
+      InputNode = <NumberFieldRenderer field={field} form={form} />;
+      break;
+
+    case "date":
+      InputNode = <DateFieldRenderer field={field} form={form} />;
+      break;
+
+    case "datetime":
+      InputNode = <DateTimeFieldRenderer field={field} form={form} />;
       break;
 
     default:
