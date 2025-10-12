@@ -17,81 +17,82 @@ import { FieldRendererProps } from "./FieldRenderer.types";
 export function FieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >(props: FieldRendererProps<TValues>) {
-  const { layout, field, form, customRenderers } = props;
+  const { layout, field, form, customRenderers, readOnly } = props;
+  const effectiveField = { ...field, readOnly: field.readOnly || readOnly };
 
   let InputNode: React.ReactNode = null;
 
   if (customRenderers) {
-    const customNode = customRenderers(form, field);
+    const customNode = customRenderers(form, effectiveField);
     if (customNode) {
       return (
-        <FieldLayoutWrapper field={field} layout={layout}>
+        <FieldLayoutWrapper field={effectiveField} layout={layout}>
           {customNode}
         </FieldLayoutWrapper>
       );
     }
   }
 
-  switch (field.type) {
+  switch (effectiveField.type) {
     case "text":
-      InputNode = <TextFieldRenderer field={field} form={props.form} />;
+      InputNode = <TextFieldRenderer field={effectiveField} form={props.form} />;
       break;
 
     case "select":
-      InputNode = <SelectFieldRenderer field={field} form={props.form} />;
+      InputNode = <SelectFieldRenderer field={effectiveField} form={props.form} />;
       break;
 
     case "object":
       InputNode = (
-        <ObjectFieldRenderer field={field} form={form} layout={layout} />
+        <ObjectFieldRenderer field={effectiveField} form={form} layout={layout} />
       );
       break;
 
     case "array":
       InputNode = (
-        <ArrayFieldRenderer field={field} form={form} layout={layout} />
+        <ArrayFieldRenderer field={effectiveField} form={form} layout={layout} />
       );
       break;
 
     case "checkbox":
-      InputNode = <CheckBoxFieldRenderer field={field} form={form} />;
+      InputNode = <CheckBoxFieldRenderer field={effectiveField} form={form} />;
       break;
 
     case "number":
-      InputNode = <NumberFieldRenderer field={field} form={form} />;
+      InputNode = <NumberFieldRenderer field={effectiveField} form={form} />;
       break;
 
     case "date":
-      InputNode = <DateFieldRenderer field={field} form={form} />;
+      InputNode = <DateFieldRenderer field={effectiveField} form={form} />;
       break;
 
     case "datetime":
-      InputNode = <DateTimeFieldRenderer field={field} form={form} />;
+      InputNode = <DateTimeFieldRenderer field={effectiveField} form={form} />;
       break;
 
     case "switch":
-      InputNode = <SwitchFieldRenderer field={field} form={form} />;
+      InputNode = <SwitchFieldRenderer field={effectiveField} form={form} />;
       break;
 
     case "texteditor":
-      InputNode = <RichTextEditorFieldRenderer field={field} form={form} />;
+      InputNode = <RichTextEditorFieldRenderer field={effectiveField} form={form} />;
       break;
 
     case "time":
-      InputNode = <TimeFieldRenderer field={field} form={form} />;
+      InputNode = <TimeFieldRenderer field={effectiveField} form={form} />;
       break;
 
     case "tags":
-      InputNode = <TagsInputFieldRenderer field={field} form={form} />;
+      InputNode = <TagsInputFieldRenderer field={effectiveField} form={form} />;
       break;
 
     default:
-      InputNode = <div>Unsupported field type: {field.type}</div>;
+      InputNode = <div>Unsupported field type: {effectiveField.type}</div>;
   }
 
   return (
-    <FieldLayoutWrapper field={field} layout={layout}>
-      <DefaultFieldRender field={field} form={form}>
+    <FieldLayoutWrapper field={effectiveField} layout={layout}>
+      <DefaultFieldRender field={effectiveField} form={form}>
         {InputNode}
       </DefaultFieldRender>
     </FieldLayoutWrapper>

@@ -10,12 +10,4 @@ export interface FieldRendererProps<
   layout: "vertical" | "horizontal" | "grid";
   readOnly?: boolean;
   customRenderers?: UseCustomRendererFieldReturnType<TValues>;
-  fieldOverrides?: Record<
-    string,
-    (
-      schema: FieldSchema<TValues>,
-      value: any,
-      onChange: (v: any) => void
-    ) => React.ReactNode
-  >;
 }
