@@ -1,157 +1,191 @@
 
-# AutoForm
+# AutoForm (React + Mantine)
 
-AutoForm is a dynamic form builder component for React applications, using **Mantine**. It generates forms dynamically based on a schema definition. This allows for faster form creation and less repetitive code when working with forms in your React applications.
+AutoForm is a dynamic form engine built with **React**, **Mantine**, and **@mantine/form**.  
+It allows you to generate complete forms from a single JSON schema — with support for validation, layouts, dynamic field updates, conditional rendering, and custom renderers.
 
-## Features
+---
 
-- **Dynamic Form Rendering**: AutoForm renders fields based on the provided schema, making form generation easy.
-- **Field Types Support**: Supports various input types like `text`, `number`, `password`, `select`, `checkbox`, etc.
-- **Validation Support**: Integrates with form validation mechanisms.
-- **Custom Layout**: Supports custom layout rendering via the `container` and `fieldContainer` props.
-- **Read-Only Mode**: Option to set the form in read-only mode.
-- **Field Customization**: Easily customize field rendering for different input types.
-- **Conditional Rendering**: Hide fields or conditionally render based on certain conditions.
+## 📦 Requirements
 
-## Installation
+- React 18+
+- Mantine v7 or v8
+- @mantine/form
+- (Optional) @mantine/dates and @mantine/tiptap for date/time & rich text fields
 
-To install `AutoForm`, you can use npm or yarn:
+---
+
+## ⚙️ Installation & Setup
+
+Install dependencies:
 
 ```bash
-npm install @mantine/core react
+npm install @mantine/core @mantine/form @mantine/dates @mantine/tiptap
 ```
 
-## Usage
+Import styles:
 
-### Example Usage
-
-```tsx
-import React from 'react';
-import AutoForm from './AutoForm';  // Path to your AutoForm component
-import { Button, Grid, Group } from '@mantine/core';
-
-const schema = [
-  { name: 'firstName', label: 'First Name', type: 'text' },
-  { name: 'age', label: 'Age', type: 'number' },
-  { name: 'subscribe', label: 'Subscribe?', type: 'checkbox' },
-  { name: 'role', label: 'Role', type: 'select', options: ['User', 'Admin'] },
-];
-
-const MyForm = () => {
-  const onSubmit = (values) => {
-    alert(JSON.stringify(values, null, 2));
-  };
-
-  return (
-    <AutoForm
-      schema={schema}
-      onSubmit={onSubmit}
-      container={(form, onSubmit, readOnly) => (
-        <>
-          <Grid>{form}</Grid>
-          {!readOnly && (
-            <Group justify="flex-end">
-              <Button onClick={onSubmit}>Submit</Button>
-            </Group>
-          )}
-        </>
-      )}
-    />
-  );
-};
+```ts
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import "@mantine/tiptap/styles.css";
 ```
 
-### Props
-
-| Prop             | Type                                                                           | Description                                                                 |
-|------------------|--------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| `schema`         | `FieldSchema[]`                                                                | List of field definitions to render. Each field specifies `name`, `type`, etc. |
-| `values`         | `Record<string, any>`                                                          | Initial values for the form fields. Optional.                              |
-| `onSubmit`       | `(values: Record<string, any>) => void`                                        | Callback triggered on form submission with current form values.            |
-| `container`      | `(form: ReactNode, onSubmit: () => void, readOnly?: true) => ReactNode`        | Custom render wrapper around the form and submit button.                   |
-| `fieldContainer` | `(field: ReactNode, fieldSchema: FieldSchema) => ReactNode`                    | Optional. Custom layout for each field (e.g., grid wrappers).              |
-| `customRender`   | `FieldRenderCustomRender`                                                      | Optional. Override how specific field types are rendered.                  |
-| `validate`       | `FormValidateInput<Record<string, any>>`                                       | Optional validation logic. Uses Mantine-compatible validation.             |
-| `readOnly`       | `true`                                                                         | Optional. When true, disables all inputs (read-only mode).                 |
-| `onFieldChange`  | `(name: string, value: any, values: Record<string, any>) => Record<string, any>` | Optional. Modify or transform values when a field changes.                 |
-
-### Custom Layout
-
-You can customize the layout of the entire form or specific fields by using the `container` and `fieldContainer` props.
-
-#### Example: Customizing the Form Layout
+Wrap your app:
 
 ```tsx
-const customLayout = (form, onSubmit, readOnly) => (
-  <>
-    <div className="form-container">{form}</div>
-    {!readOnly && <button onClick={onSubmit}>Submit</button>}
-  </>
+import { MantineProvider } from "@mantine/core";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <MantineProvider>
+    <App />
+  </MantineProvider>
 );
 ```
 
-#### Example: Customizing Field Layout
+---
 
-```tsx
-const customFieldLayout = (field, fieldSchema) => (
-  <div className="custom-field">{field}</div>
-);
-```
-
-### Validation
-
-AutoForm supports validation through the `validate` prop. You can pass a validation function that returns an object of validation errors.
-
-Example:
-
-```tsx
-const validateForm = (values) => {
-  const errors = {};
-  if (!values.firstName) errors.firstName = 'First name is required';
-  if (!values.age) errors.age = 'Age is required';
-  return errors;
-};
-
-<AutoForm
-  schema={schema}
-  validate={validateForm}
-  onSubmit={(values) => console.log(values)}
-  container={(form, onSubmit) => (
-    <>
-      <Grid>{form}</Grid>
-      <Button onClick={onSubmit}>Submit</Button>
-    </>
-  )}
-/>
-```
-
-### Hide Fields
-
-To hide a field from rendering, you can set the `hidden` property in the schema.
-
-Example:
+## 🚀 Quick Start
 
 ```tsx
 const schema = [
-  { name: 'firstName', label: 'First Name', type: 'text' },
-  { name: 'internalCode', label: 'Internal Code', type: 'text', hidden: true },
+  { name: "fullName", label: "Full Name", type: "text", required: true },
+  { name: "age", label: "Age", type: "number" },
+  {
+    name: "gender",
+    label: "Gender",
+    type: "select",
+    data: [
+      { label: "Male", value: "M" },
+      { label: "Female", value: "F" },
+    ]
+  }
 ];
+
+<AutoForm schema={schema} layout="grid" onSubmit={(values) => console.log(values)} />
 ```
 
-This will ensure the "Internal Code" field is not rendered.
+---
+
+## 📑 Field Schema
+
+Supported `type` values:
+```
+"text", "number", "select", "checkbox", "date", "datetime", "time", "object", "array", "switch", "texteditor", "tags"
+```
+
+Common field properties:
+
+| Property | Type | Description |
+|---------|------|-------------|
+| name | string | Unique field name |
+| label | string | Field label |
+| type | FieldType | One of the supported field types |
+| description | string | Optional field description |
+| placeholder | string | Input placeholder |
+| required | boolean | Whether field is required |
+| readOnly | boolean | Make field read-only |
+| disabled | boolean | Disable field |
+| visible | boolean | Show or hide field |
+| meta | Record<string, any> | Extra renderer props |
+| initialValue | any | Initial value for this field |
+| column | number | Column span when using `grid` layout |
 
 ---
 
-## Contributing
+## 🔧 `<AutoForm />` Props
 
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature-branch`)
-3. Commit your changes (`git commit -am 'Add feature'`)
-4. Push to the branch (`git push origin feature-branch`)
-5. Create a new Pull Request
+| Prop | Type | Description |
+|------|------|-------------|
+| `schema` | FieldSchema[] | The full schema definition |
+| `values` | object | Initial values |
+| `onSubmit` | function | Submit handler |
+| `transformBeforeSubmit` | function | Modify values before submit |
+| `transformAfterSubmit` | function | Post-submit hook |
+| `validate` | object | Mantine validation rules |
+| `mode` | "create" \| "edit" \| "view" | Form mode |
+| `readOnly` | boolean | Make the entire form read-only |
+| `onFieldChange` | object | Watch field changes |
+| `layout` | "vertical" \| "horizontal" \| "grid" | Form layout |
+| `columns` | number | Used with grid layout |
+| `customRenderers` | object | Replace renderer for a field |
+| `updateFieldSchema` | object | Dynamically change field definition |
+| `submitButton` | boolean \| ReactNode | Control submit button |
+| `actions` | ReactNode | Extra action buttons |
 
 ---
 
-## License
+## ⚡ Dynamic Features
 
-Distributed under the MIT License. See `LICENSE` for more information.
+- **onFieldChange**: React to field changes instantly.
+- **updateFieldSchema**: Modify label, options, visibility, etc. based on form values.
+- **transformBeforeSubmit / transformAfterSubmit**: Pre/post-process the data.
+- **customRenderers**: Fully override rendering logic for a field.
+
+---
+
+## 📌 Example: Dynamic Select
+
+```tsx
+updateFieldSchema={{
+  gender: (schema, values) => {
+    if (values.fullName === "saji") {
+      return {
+        ...schema,
+        label: "Custom Gender",
+        data: [
+          { label: "Male 1", value: "male1" },
+          { label: "Female 1", value: "female1" },
+        ]
+      };
+    }
+    return schema;
+  }
+}}
+```
+
+---
+
+## 📌 Example: onFieldChange
+
+```tsx
+onFieldChange={{
+  fullName: (value, form) => {
+    if (value === "saji") form.setFieldError("gender", "Invalid");
+    else form.setFieldError("gender", null);
+  },
+  "profile.website": (v, form) => {
+    if (v && !v.startsWith("https://")) {
+      form.setFieldValue("profile.website", `https://${v}`);
+    }
+  }
+}}
+```
+
+---
+
+## 💡 Tips & Best Practices
+
+- Keep your schema **pure** and stateless. Use `updateFieldSchema` for dynamic behavior.
+- Use `meta` instead of adding custom keys for renderer-specific props.
+- Use nested paths (e.g., `profile.website`, `contacts.0.value`) for deeply nested fields.
+- Use `transformBeforeSubmit` to clean up the payload before sending it to your backend.
+
+---
+
+## 📚 Advanced Features Roadmap
+
+- Conditional field dependencies
+- Dynamic schema merging
+- Async options loading
+- Multi-step form support
+
+---
+
+## 🧠 Summary
+
+AutoForm is designed to give you **maximum flexibility** with minimal boilerplate.  
+Define your schema once and enjoy a fully functional, dynamic, and reactive form system.
+
+---
+MIT © 2025
