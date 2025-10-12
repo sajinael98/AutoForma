@@ -19,19 +19,38 @@
 
 ## 📦 Installation
 
+Install AutoForma **and the exact peer dependencies** required for it to work properly:
+
 ```bash
-npm install autoforma
-# or
-yarn add autoforma
+npm install autoforma @mantine/core@^7.17.5 @mantine/hooks@^7.17.5 @mantine/form@^7.17.5 @mantine/dates@^7.17.5 @mantine/tiptap@^7.17.5 @tiptap/react@^3.6.6 react@^18.0.0 react-dom@^18.0.0
 ```
 
-> ✅ AutoForma includes everything you need — no need to manually install Mantine or other dependencies.
+---
+
+## ⚙️ Requirements
+
+Before using `AutoForma`, make sure to wrap your application with `MantineProvider` and import Mantine's base styles:
+
+```tsx
+import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import "@mantine/tiptap/styles.css";
+
+const Root = () => (
+  <MantineProvider>
+    <App />
+  </MantineProvider>
+);
+```
+
+> ✅ Without `MantineProvider`, the components might not render or style correctly.
 
 ---
 
 ## 🛠️ Usage
 
-Here's a simple example of how to use **AutoForma** in your React project:
+Here's a complete example showing how to use **AutoForma** in your React project:
 
 ```tsx
 import { MantineProvider } from "@mantine/core";
