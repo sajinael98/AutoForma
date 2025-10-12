@@ -1,40 +1,137 @@
+# 🚀 AutoForma
 
-# AutoForm (React + Mantine)
-
-AutoForm is a dynamic form engine built with **React**, **Mantine**, and **@mantine/form**.  
-It allows you to generate complete forms from a single JSON schema — with support for validation, layouts, dynamic field updates, conditional rendering, and custom renderers.
+**AutoForma** is a powerful and flexible **dynamic form builder** for React. It allows developers to build complex forms from simple schema definitions without writing repetitive boilerplate code. With AutoForma, you can focus on the logic and behavior of your forms — not the UI details.
 
 ---
 
-## 📦 Requirements
+## ✨ Features
 
-- React 18+
-- Mantine v7 or v8
-- @mantine/form
-- (Optional) @mantine/dates and @mantine/tiptap for date/time & rich text fields
+- ⚡ **Fast form building:** Generate forms instantly from JSON schema.
+- 🧩 **Rich field types:** Text, Select, Checkbox, Date, Time, Switch, Tags, Array, Object, and more.
+- 🎨 **Full UI control:** Customize how each field looks and behaves.
+- 🔄 **Dynamic behavior:** Show/hide fields, enable/disable them, or update their properties based on form values.
+- 🪄 **Custom renderers:** Replace any field’s renderer with your own component.
+- 🧠 **Validation support:** Built-in and custom validation supported out of the box.
+- 📐 **Multiple layouts:** Vertical, horizontal, or grid layouts with column configuration.
+- 🧪 **Extendable:** Easily integrate with any backend and add your own field types.
 
 ---
 
-## ⚙️ Installation & Setup
-
-Install dependencies:
+## 📦 Installation
 
 ```bash
-npm install @mantine/core @mantine/form @mantine/dates @mantine/tiptap
+npm install autoforma
+# or
+yarn add autoforma
 ```
 
-Import styles:
+> ✅ AutoForma includes everything you need — no need to manually install Mantine or other dependencies.
 
-```ts
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
-import "@mantine/tiptap/styles.css";
-```
+---
 
-Wrap your app:
+## 🛠️ Usage
+
+Here's a simple example of how to use **AutoForma** in your React project:
 
 ```tsx
 import { MantineProvider } from "@mantine/core";
+import ReactDOM from "react-dom/client";
+import AutoForm from "autoforma";
+import { FieldSchema } from "autoforma/fields/types";
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import "@mantine/tiptap/styles.css";
+
+interface DemoFormValues {
+  fullName: string;
+  email: string;
+  age: number;
+  subscribe: boolean;
+  birthDate: string | null;
+  appointment: string | null;
+  contacts: { type: string; value: string }[];
+  gender: string;
+  bio: string;
+}
+
+const schema: FieldSchema[] = [
+  {
+    name: "fullName",
+    label: "Full Name",
+    type: "text",
+    placeholder: "Enter your full name",
+    required: true,
+  },
+  {
+    name: "age",
+    label: "Age",
+    type: "number",
+    placeholder: "Enter your age",
+  },
+  {
+    name: "gender",
+    label: "Gender",
+    type: "select",
+    placeholder: "Select your gender",
+    data: [
+      { label: "Male", value: "M" },
+      { label: "Female", value: "F" },
+      { label: "Prefer not to say", value: "N" },
+    ],
+  },
+  {
+    name: "subscribe",
+    label: "Subscribe to newsletter",
+    type: "checkbox",
+    description: "Receive updates by email",
+  },
+  {
+    name: "birthDate",
+    label: "Birth Date",
+    type: "date",
+  },
+  {
+    name: "appointment",
+    label: "Appointment",
+    type: "datetime",
+  },
+  {
+    name: "contacts",
+    label: "Contacts",
+    type: "array",
+    fields: [
+      {
+        name: "type",
+        label: "Contact Type",
+        type: "select",
+        data: [
+          { label: "Email", value: "email" },
+          { label: "Phone", value: "phone" },
+        ],
+      },
+      {
+        name: "value",
+        label: "Contact Value",
+        type: "text",
+      },
+    ],
+  },
+  {
+    name: "bio",
+    label: "Bio",
+    type: "text",
+  },
+];
+
+const App = () => {
+  return (
+    <AutoForm<DemoFormValues>
+      layout="grid"
+      schema={schema}
+      onSubmit={(values) => alert(JSON.stringify(values))}
+    />
+  );
+};
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <MantineProvider>
@@ -45,147 +142,96 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
 ---
 
-## 🚀 Quick Start
-
-```tsx
-const schema = [
-  { name: "fullName", label: "Full Name", type: "text", required: true },
-  { name: "age", label: "Age", type: "number" },
-  {
-    name: "gender",
-    label: "Gender",
-    type: "select",
-    data: [
-      { label: "Male", value: "M" },
-      { label: "Female", value: "F" },
-    ]
-  }
-];
-
-<AutoForm schema={schema} layout="grid" onSubmit={(values) => console.log(values)} />
-```
-
----
-
-## 📑 Field Schema
-
-Supported `type` values:
-```
-"text", "number", "select", "checkbox", "date", "datetime", "time", "object", "array", "switch", "texteditor", "tags"
-```
-
-Common field properties:
-
-| Property | Type | Description |
-|---------|------|-------------|
-| name | string | Unique field name |
-| label | string | Field label |
-| type | FieldType | One of the supported field types |
-| description | string | Optional field description |
-| placeholder | string | Input placeholder |
-| required | boolean | Whether field is required |
-| readOnly | boolean | Make field read-only |
-| disabled | boolean | Disable field |
-| visible | boolean | Show or hide field |
-| meta | Record<string, any> | Extra renderer props |
-| initialValue | any | Initial value for this field |
-| column | number | Column span when using `grid` layout |
-
----
-
-## 🔧 `<AutoForm />` Props
+## 🔧 Props / API Reference
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `schema` | FieldSchema[] | The full schema definition |
-| `values` | object | Initial values |
-| `onSubmit` | function | Submit handler |
-| `transformBeforeSubmit` | function | Modify values before submit |
-| `transformAfterSubmit` | function | Post-submit hook |
-| `validate` | object | Mantine validation rules |
-| `mode` | "create" \| "edit" \| "view" | Form mode |
-| `readOnly` | boolean | Make the entire form read-only |
-| `onFieldChange` | object | Watch field changes |
-| `layout` | "vertical" \| "horizontal" \| "grid" | Form layout |
-| `columns` | number | Used with grid layout |
-| `customRenderers` | object | Replace renderer for a field |
-| `updateFieldSchema` | object | Dynamically change field definition |
-| `submitButton` | boolean \| ReactNode | Control submit button |
-| `actions` | ReactNode | Extra action buttons |
+| `schema` | `FieldSchema[]` | The form schema definition. |
+| `values` | `TValues` | Initial form values. |
+| `onSubmit` | `(values: TValues) => void` | Callback triggered when the form is submitted. |
+| `validate` | `FormValidateInput<TValues>` | Validation configuration. |
+| `mode` | `"create" \| "edit" \| "view"` | Controls form mode (read-only, editable, etc.). |
+| `layout` | `"vertical" \| "horizontal" \| "grid"` | Form layout type. |
+| `columns` | `number` | Number of columns (for grid layout). |
+| `updateFieldSchema` | `UpdateFieldSchemaMap` | Dynamically update field definitions based on values. |
+| `onFieldChange` | `OnFieldChangeMap` | Trigger callbacks when specific fields change. |
+| `customRenderers` | `CustomRenderersMap` | Override default field renderers. |
+| `submitButton` | `boolean \| ReactNode` | Show or customize the submit button. |
+| `actions` | `ReactNode` | Custom actions area under the form. |
 
 ---
 
-## ⚡ Dynamic Features
+## 🧩 Field Types
 
-- **onFieldChange**: React to field changes instantly.
-- **updateFieldSchema**: Modify label, options, visibility, etc. based on form values.
-- **transformBeforeSubmit / transformAfterSubmit**: Pre/post-process the data.
-- **customRenderers**: Fully override rendering logic for a field.
+AutoForma supports a variety of field types:
+
+- `text`
+- `number`
+- `select`
+- `checkbox`
+- `date`
+- `datetime`
+- `time`
+- `object`
+- `array`
+- `switch`
+- `texteditor`
+- `tags`
 
 ---
 
-## 📌 Example: Dynamic Select
+## ⚙️ Advanced Usage
 
-```tsx
+You can control the behavior of fields dynamically based on form values:
+
+```ts
 updateFieldSchema={{
-  gender: (schema, values) => {
-    if (values.fullName === "saji") {
-      return {
-        ...schema,
-        label: "Custom Gender",
-        data: [
-          { label: "Male 1", value: "male1" },
-          { label: "Female 1", value: "female1" },
-        ]
-      };
+  gender: (field, values) => {
+    if (values.age && values.age < 18) {
+      return { ...field, data: [{ label: "Prefer not to say", value: "N" }] };
     }
-    return schema;
-  }
-}}
-```
-
----
-
-## 📌 Example: onFieldChange
-
-```tsx
-onFieldChange={{
-  fullName: (value, form) => {
-    if (value === "saji") form.setFieldError("gender", "Invalid");
-    else form.setFieldError("gender", null);
+    return field;
   },
-  "profile.website": (v, form) => {
-    if (v && !v.startsWith("https://")) {
-      form.setFieldValue("profile.website", `https://${v}`);
-    }
-  }
+  appointment: (field, values) => ({
+    ...field,
+    disabled: !values.birthDate,
+  }),
 }}
 ```
 
 ---
 
-## 💡 Tips & Best Practices
+## 🧪 Development
 
-- Keep your schema **pure** and stateless. Use `updateFieldSchema` for dynamic behavior.
-- Use `meta` instead of adding custom keys for renderer-specific props.
-- Use nested paths (e.g., `profile.website`, `contacts.0.value`) for deeply nested fields.
-- Use `transformBeforeSubmit` to clean up the payload before sending it to your backend.
+If you want to contribute or run AutoForma locally:
 
----
-
-## 📚 Advanced Features Roadmap
-
-- Conditional field dependencies
-- Dynamic schema merging
-- Async options loading
-- Multi-step form support
+```bash
+git clone https://github.com/your-username/AutoForma.git
+cd AutoForma
+npm install
+npm run dev
+```
 
 ---
 
-## 🧠 Summary
+## 🤝 Contributing
 
-AutoForm is designed to give you **maximum flexibility** with minimal boilerplate.  
-Define your schema once and enjoy a fully functional, dynamic, and reactive form system.
+Contributions are welcome! 🎉  
+If you'd like to help improve AutoForma:
+
+1. Fork the repository  
+2. Create a new feature branch  
+3. Commit your changes  
+4. Submit a pull request 🚀
 
 ---
-MIT © 2025
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## ⭐ Support
+
+If you find AutoForma helpful, please consider giving it a ⭐ on [GitHub](https://github.com/your-username/AutoForma) — it helps the project grow!
