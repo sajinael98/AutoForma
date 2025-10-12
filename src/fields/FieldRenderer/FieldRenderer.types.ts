@@ -8,7 +8,6 @@ export interface FieldRendererProps<
   field: FieldSchema<TValues>;
   form: UseFormReturnType<TValues>;
   layout: "vertical" | "horizontal" | "grid";
-  columns?: number;
   mode?: "create" | "edit" | "view";
   readOnly?: boolean;
   customRenderers?: UseCustomRendererFieldReturnType<TValues>;

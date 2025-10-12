@@ -13,7 +13,7 @@ import { FieldRendererProps } from "./FieldRenderer.types";
 export function FieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >(props: FieldRendererProps<TValues>) {
-  const { layout, field, form, columns, customRenderers } = props;
+  const { layout, field, form, customRenderers } = props;
 
   let InputNode: React.ReactNode = null;
 
@@ -21,7 +21,7 @@ export function FieldRenderer<
     const customNode = customRenderers(form, field);
     if (customNode) {
       return (
-        <FieldLayoutWrapper field={field} layout={layout} columns={columns}>
+        <FieldLayoutWrapper field={field} layout={layout}>
           {customNode}
         </FieldLayoutWrapper>
       );
@@ -71,7 +71,7 @@ export function FieldRenderer<
   }
 
   return (
-    <FieldLayoutWrapper field={field} layout={layout} columns={columns}>
+    <FieldLayoutWrapper field={field} layout={layout}>
       <DefaultFieldRender field={field} form={form}>
         {InputNode}
       </DefaultFieldRender>

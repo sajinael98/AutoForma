@@ -26,6 +26,7 @@ export interface BaseFieldSchema<
   visible?: boolean;
   meta?: Record<string, any>;
   initialValue?: any;
+  column?: number;
 }
 
 export interface TextFieldSchema<
