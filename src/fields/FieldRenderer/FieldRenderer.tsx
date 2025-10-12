@@ -7,6 +7,7 @@ import ObjectFieldRenderer from "../renderers/ObjectFieldRenderer";
 import RichTextEditorFieldRenderer from "../renderers/RichTextEditorFieldRenderer";
 import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
 import SwitchFieldRenderer from "../renderers/SwitchFieldRenderer";
+import TagsInputFieldRenderer from "../renderers/TagsFieldRenderer";
 import TextFieldRenderer from "../renderers/TextFieldRenderer";
 import TimeFieldRenderer from "../renderers/TimeFieldRenderer";
 import DefaultFieldRender from "./DefaultFieldRender";
@@ -78,6 +79,10 @@ export function FieldRenderer<
 
     case "time":
       InputNode = <TimeFieldRenderer field={field} form={form} />;
+      break;
+
+    case "tags":
+      InputNode = <TagsInputFieldRenderer field={field} form={form} />;
       break;
 
     default:

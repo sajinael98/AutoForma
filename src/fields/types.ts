@@ -11,7 +11,8 @@ export type FieldType =
   | "object"
   | "array"
   | "switch"
-  | "texteditor";
+  | "texteditor"
+  | "tags";
 
 export interface BaseFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
@@ -107,6 +108,11 @@ export interface DateTimeFieldSchema<
   type: "datetime";
 }
 
+export interface TagsFieldSchema<
+  TValues extends Record<string, any> = Record<string, any>
+> extends BaseFieldSchema<TValues> {
+  type: "tags";
+}
 
 export type FieldSchema<
   TValues extends Record<string, any> = Record<string, any>
@@ -121,4 +127,5 @@ export type FieldSchema<
   | RichTextEditorFieldSchema
   | TimeFieldSchema
   | NumberFieldSchema
-  | DateTimeFieldSchema;
+  | DateTimeFieldSchema
+  | TagsFieldSchema;
