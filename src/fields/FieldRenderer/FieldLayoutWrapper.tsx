@@ -15,7 +15,16 @@ export function FieldLayoutWrapper({
 }: FieldLayoutWrapperProps) {
   if (layout === "grid") {
     const span = field.column ?? 6;
-    return <Grid.Col span={span}>{children}</Grid.Col>;
+    return (
+      <Grid.Col
+        span={{
+          base: 12,
+          md: span,
+        }}
+      >
+        {children}
+      </Grid.Col>
+    );
   }
 
   if (layout === "horizontal") {
