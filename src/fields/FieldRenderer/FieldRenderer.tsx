@@ -4,8 +4,11 @@ import DateFieldRenderer from "../renderers/DateFieldRenderer";
 import DateTimeFieldRenderer from "../renderers/DateTimeFieldRenderer";
 import NumberFieldRenderer from "../renderers/NumberFieldRenderer";
 import ObjectFieldRenderer from "../renderers/ObjectFieldRenderer";
+import RichTextEditorFieldRenderer from "../renderers/RichTextEditorFieldRenderer";
 import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
+import SwitchFieldRenderer from "../renderers/SwitchFieldRenderer";
 import TextFieldRenderer from "../renderers/TextFieldRenderer";
+import TimeFieldRenderer from "../renderers/TimeFieldRenderer";
 import DefaultFieldRender from "./DefaultFieldRender";
 import FieldLayoutWrapper from "./FieldLayoutWrapper";
 import { FieldRendererProps } from "./FieldRenderer.types";
@@ -30,7 +33,6 @@ export function FieldRenderer<
 
   switch (field.type) {
     case "text":
-    case "textarea":
       InputNode = <TextFieldRenderer field={field} form={props.form} />;
       break;
 
@@ -64,6 +66,18 @@ export function FieldRenderer<
 
     case "datetime":
       InputNode = <DateTimeFieldRenderer field={field} form={form} />;
+      break;
+
+    case "switch":
+      InputNode = <SwitchFieldRenderer field={field} form={form} />;
+      break;
+
+    case "texteditor":
+      InputNode = <RichTextEditorFieldRenderer field={field} form={form} />;
+      break;
+
+    case "time":
+      InputNode = <TimeFieldRenderer field={field} form={form} />;
       break;
 
     default:

@@ -5,12 +5,13 @@ export type FieldType =
   | "number"
   | "select"
   | "checkbox"
-  | "textarea"
   | "date"
   | "datetime"
   | "time"
   | "object"
-  | "array";
+  | "array"
+  | "switch"
+  | "texteditor";
 
 export interface BaseFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
@@ -32,7 +33,7 @@ export interface BaseFieldSchema<
 export interface TextFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "text" | "textarea" | "number";
+  type: "text";
   extra?: {
     maxLength?: number;
     min?: number;
@@ -87,6 +88,30 @@ export interface ArrayFieldSchema<
   fields: FieldSchema<TInner>[];
 }
 
+export interface SwitchFieldSchema<
+  TValues extends Record<string, any> = Record<string, any>
+> extends BaseFieldSchema<TValues> {
+  type: "switch";
+}
+
+export interface RichTextEditorFieldSchema<
+  TValues extends Record<string, any> = Record<string, any>
+> extends BaseFieldSchema<TValues> {
+  type: "texteditor";
+}
+
+export interface RichTextEditorFieldSchema<
+  TValues extends Record<string, any> = Record<string, any>
+> extends BaseFieldSchema<TValues> {
+  type: "texteditor";
+}
+
+export interface TimeFieldSchema<
+  TValues extends Record<string, any> = Record<string, any>
+> extends BaseFieldSchema<TValues> {
+  type: "time";
+}
+
 export type FieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > =
@@ -95,4 +120,7 @@ export type FieldSchema<
   | CheckboxFieldSchema<TValues>
   | DateFieldSchema<TValues>
   | ObjectFieldSchema<TValues>
-  | ArrayFieldSchema<TValues>;
+  | ArrayFieldSchema<TValues>
+  | SwitchFieldSchema<TValues>
+  | RichTextEditorFieldSchema
+  | TimeFieldSchema;
