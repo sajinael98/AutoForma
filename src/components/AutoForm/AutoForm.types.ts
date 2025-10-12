@@ -13,19 +13,16 @@ export interface AutoFormProps<
   transformAfterSubmit?: (values: TValues) => void | Promise<void>;
 
   validate?: FormValidateInput<TValues>;
-  mode?: "create" | "edit" | "view";
   readOnly?: boolean;
 
   onFieldChange?: OnFieldChangeMap<TValues>;
 
   layout?: "vertical" | "horizontal" | "grid";
-  columns?: number;
 
   customRenderers?: CustomRenderersMap<TValues>;
   updateFieldSchema?: UpdateFieldSchemaMap<TValues>;
 
   submitButton?: boolean | React.ReactNode;
-  actions?: React.ReactNode;
 }
 
 export type UpdateFieldSchemaMap<

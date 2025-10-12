@@ -13,7 +13,6 @@ export function AutoForm<
   schema,
   values,
   layout = "vertical",
-  mode = "create",
   readOnly,
   validate,
   onSubmit,
@@ -71,7 +70,6 @@ export function AutoForm<
               field={field}
               form={form}
               layout={layout}
-              mode={mode}
               readOnly={readOnly}
               customRenderers={customRenderers?.[field.name]}
             />
