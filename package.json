@@ -15,10 +15,28 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "type": "module",
-  "homepage": "http://sajinael98.github.io/AutoForma",
+  "homepage": "https://sajinael98.github.io/AutoForma",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sajinael98/AutoForma.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sajinael98/AutoForma/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "form",
+    "autoform",
+    "dynamic-form",
+    "mantine",
+    "form-builder",
+    "react-forms",
+    "typescript"
+  ],
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
@@ -33,11 +51,23 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "predeploy": "npm run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static"
+    "deploy-storybook": "gh-pages -d storybook-static",
+    "dev": "vite --config vite.config.dev.ts"
   },
   "dependencies": {
     "@mantine/dates": "^7.17.5",
     "@mantine/form": "^7.17.5",
+    "@mantine/hooks": "^7.17.5",
+    "@mantine/tiptap": "^7.17.5",
+    "@tiptap/extension-highlight": "^3.6.6",
+    "@tiptap/extension-link": "^3.6.6",
+    "@tiptap/extension-subscript": "^3.6.6",
+    "@tiptap/extension-superscript": "^3.6.6",
+    "@tiptap/extension-text-align": "^3.6.6",
+    "@tiptap/extension-underline": "^3.6.6",
+    "@tiptap/pm": "^3.6.6",
+    "@tiptap/react": "^3.6.6",
+    "@tiptap/starter-kit": "^3.6.6",
     "dayjs": "^1.11.13",
     "react-router-dom": "^7.4.0"
   },

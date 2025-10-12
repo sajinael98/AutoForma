@@ -12,7 +12,7 @@
 - 🔄 **Dynamic behavior:** Show/hide fields, enable/disable them, or update their properties based on form values.
 - 🪄 **Custom renderers:** Replace any field’s renderer with your own component.
 - 🧠 **Validation support:** Built-in and custom validation supported out of the box.
-- 📐 **Multiple layouts:** Vertical, horizontal, or grid layouts with column configuration.
+- 📐 **Multiple layouts:** Vertical, horizontal, or grid layouts.
 - 🧪 **Extendable:** Easily integrate with any backend and add your own field types.
 
 ---
@@ -36,8 +36,8 @@ Here's a simple example of how to use **AutoForma** in your React project:
 ```tsx
 import { MantineProvider } from "@mantine/core";
 import ReactDOM from "react-dom/client";
-import AutoForm from "autoforma";
-import { FieldSchema } from "autoforma/fields/types";
+import { AutoForm } from "autoforma";
+import { FieldSchema } from "autoforma";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/tiptap/styles.css";
@@ -54,7 +54,7 @@ interface DemoFormValues {
   bio: string;
 }
 
-const schema: FieldSchema[] = [
+const schema: FieldSchema<DemoFormValues>[] = [
   {
     name: "fullName",
     label: "Full Name",
@@ -149,15 +149,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 | `schema` | `FieldSchema[]` | The form schema definition. |
 | `values` | `TValues` | Initial form values. |
 | `onSubmit` | `(values: TValues) => void` | Callback triggered when the form is submitted. |
+| `transformBeforeSubmit` | `(values: TValues) => TValues` | Optional function to transform form values before submit. |
+| `transformAfterSubmit` | `(values: TValues) => void \| Promise<void>` | Optional function called after form submission. |
 | `validate` | `FormValidateInput<TValues>` | Validation configuration. |
-| `mode` | `"create" \| "edit" \| "view"` | Controls form mode (read-only, editable, etc.). |
+| `readOnly` | `boolean` | Makes the entire form read-only. |
+| `onFieldChange` | `OnFieldChangeMap<TValues>` | Trigger callbacks when specific fields change. |
 | `layout` | `"vertical" \| "horizontal" \| "grid"` | Form layout type. |
-| `columns` | `number` | Number of columns (for grid layout). |
-| `updateFieldSchema` | `UpdateFieldSchemaMap` | Dynamically update field definitions based on values. |
-| `onFieldChange` | `OnFieldChangeMap` | Trigger callbacks when specific fields change. |
-| `customRenderers` | `CustomRenderersMap` | Override default field renderers. |
+| `customRenderers` | `CustomRenderersMap<TValues>` | Override default field renderers. |
+| `updateFieldSchema` | `UpdateFieldSchemaMap<TValues>` | Dynamically update field definitions based on values. |
 | `submitButton` | `boolean \| ReactNode` | Show or customize the submit button. |
-| `actions` | `ReactNode` | Custom actions area under the form. |
 
 ---
 
