@@ -9,5 +9,8 @@ export interface FieldRendererProps<
   form: UseFormReturnType<TValues>;
   layout: "vertical" | "horizontal" | "grid";
   readOnly?: boolean;
-  customRenderers?: RendererProps<TValues>;
+  customRenderers?: (
+    field: FieldSchema<TValues>,
+    form: UseFormReturnType<TValues>
+  ) => React.ReactNode;
 }

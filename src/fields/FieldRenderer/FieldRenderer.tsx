@@ -23,7 +23,7 @@ export function FieldRenderer<
   let InputNode: React.ReactNode = null;
 
   if (customRenderers) {
-    const customNode = customRenderers(form, effectiveField);
+    const customNode = customRenderers(effectiveField, form);
     if (customNode) {
       return (
         <FieldLayoutWrapper field={effectiveField} layout={layout}>
@@ -35,22 +35,34 @@ export function FieldRenderer<
 
   switch (effectiveField.type) {
     case "text":
-      InputNode = <TextFieldRenderer field={effectiveField} form={props.form} />;
+      InputNode = (
+        <TextFieldRenderer field={effectiveField} form={props.form} />
+      );
       break;
 
     case "select":
-      InputNode = <SelectFieldRenderer field={effectiveField} form={props.form} />;
+      InputNode = (
+        <SelectFieldRenderer field={effectiveField} form={props.form} />
+      );
       break;
 
     case "object":
       InputNode = (
-        <ObjectFieldRenderer field={effectiveField} form={form} layout={layout} />
+        <ObjectFieldRenderer
+          field={effectiveField}
+          form={form}
+          layout={layout}
+        />
       );
       break;
 
     case "array":
       InputNode = (
-        <ArrayFieldRenderer field={effectiveField} form={form} layout={layout} />
+        <ArrayFieldRenderer
+          field={effectiveField}
+          form={form}
+          layout={layout}
+        />
       );
       break;
 
@@ -75,7 +87,9 @@ export function FieldRenderer<
       break;
 
     case "texteditor":
-      InputNode = <RichTextEditorFieldRenderer field={effectiveField} form={form} />;
+      InputNode = (
+        <RichTextEditorFieldRenderer field={effectiveField} form={form} />
+      );
       break;
 
     case "time":
