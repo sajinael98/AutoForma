@@ -1,3 +1,4 @@
+
 # 🚀 AutoForma
 
 **AutoForma** is a powerful and flexible **dynamic form builder** for React. It allows developers to build complex forms from simple schema definitions without writing repetitive boilerplate code. With AutoForma, you can focus on the logic and behavior of your forms — not the UI details.
@@ -50,16 +51,16 @@ const Root = () => (
 
 ## 🛠️ Usage
 
-Here's a complete example showing how to use **AutoForma** in your React project:
+Here's a complete example showing how to use **AutoForma** with a custom field type (`newText`):
 
 ```tsx
 import { MantineProvider } from "@mantine/core";
-import ReactDOM from "react-dom/client";
-import { AutoForm } from "autoforma";
-import { FieldSchema } from "autoforma";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/tiptap/styles.css";
+import ReactDOM from "react-dom/client";
+import AutoForm from "autoforma";
+import { FieldSchema } from "autoforma";
 
 interface DemoFormValues {
   fullName: string;
@@ -73,11 +74,11 @@ interface DemoFormValues {
   bio: string;
 }
 
-const schema: FieldSchema<DemoFormValues>[] = [
+const schema: FieldSchema[] = [
   {
     name: "fullName",
     label: "Full Name",
-    type: "text",
+    type: "newText",
     placeholder: "Enter your full name",
     required: true,
   },
@@ -108,11 +109,13 @@ const schema: FieldSchema<DemoFormValues>[] = [
     name: "birthDate",
     label: "Birth Date",
     type: "date",
+    placeholder: "Pick your birth date",
   },
   {
     name: "appointment",
     label: "Appointment",
     type: "datetime",
+    placeholder: "Select date and time",
   },
   {
     name: "contacts",
@@ -139,6 +142,7 @@ const schema: FieldSchema<DemoFormValues>[] = [
     name: "bio",
     label: "Bio",
     type: "text",
+    placeholder: "Tell us about yourself",
   },
 ];
 
@@ -147,6 +151,14 @@ const App = () => {
     <AutoForm<DemoFormValues>
       layout="grid"
       schema={schema}
+      customFieldTypes={{
+        newText: (field, form) => (
+          <div>
+            <label htmlFor={field.name}>{field.label}</label>
+            <input {...form.getInputProps(field.name)} />
+          </div>
+        ),
+      }}
       onSubmit={(values) => alert(JSON.stringify(values))}
     />
   );
@@ -175,6 +187,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 | `onFieldChange` | `OnFieldChangeMap<TValues>` | Trigger callbacks when specific fields change. |
 | `layout` | `"vertical" \| "horizontal" \| "grid"` | Form layout type. |
 | `customRenderers` | `CustomRenderersMap<TValues>` | Override default field renderers. |
+| `customFieldTypes` | `CustomFieldTypes<TValues>` | Add new field types dynamically and render them. |
 | `updateFieldSchema` | `UpdateFieldSchemaMap<TValues>` | Dynamically update field definitions based on values. |
 | `submitButton` | `boolean \| ReactNode` | Show or customize the submit button. |
 
@@ -182,7 +195,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
 ## 🧩 Field Types
 
-AutoForma supports a variety of field types:
+AutoForma supports a variety of field types out-of-the-box:
 
 - `text`
 - `number`
@@ -197,26 +210,43 @@ AutoForma supports a variety of field types:
 - `texteditor`
 - `tags`
 
+✅ **Plus any custom type** you add through `customFieldTypes`.
+
 ---
 
 ## ⚙️ Advanced Usage
 
-You can control the behavior of fields dynamically based on form values:
+You can control the behavior of fields dynamically based on form values **and** extend the form with new field types:
 
-```ts
-updateFieldSchema={{
-  gender: (field, values) => {
-    if (values.age && values.age < 18) {
-      return { ...field, data: [{ label: "Prefer not to say", value: "N" }] };
-    }
-    return field;
-  },
-  appointment: (field, values) => ({
-    ...field,
-    disabled: !values.birthDate,
-  }),
-}}
+```tsx
+<AutoForm
+  schema={schema}
+  updateFieldSchema={{
+    gender: (field, values) => {
+      if (values.age && values.age < 18) {
+        return { ...field, data: [{ label: "Prefer not to say", value: "N" }] };
+      }
+      return field;
+    },
+    appointment: (field, values) => ({
+      ...field,
+      disabled: !values.birthDate,
+    }),
+  }}
+  customFieldTypes={{
+    newText: (field, form) => (
+      <div>
+        <label htmlFor={field.name}>{field.label}</label>
+        <input {...form.getInputProps(field.name)} />
+      </div>
+    ),
+  }}
+/>
 ```
+
+✅ This gives you full power to:  
+- Dynamically adjust schema behavior.  
+- Inject custom field types without touching the library core.  
 
 ---
 
