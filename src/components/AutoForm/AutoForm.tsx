@@ -22,6 +22,7 @@ export function AutoForm<
   transformBeforeSubmit = (v) => v,
   transformAfterSubmit = () => {},
   submitButton = true,
+  customFieldTypes
 }: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
     initialValues: generateInitialValues(schema),
@@ -72,6 +73,7 @@ export function AutoForm<
               layout={layout}
               readOnly={readOnly}
               customRenderers={customRenderers?.[field.name]}
+              customFieldTypes={customFieldTypes}
             />
           ))}
         </>

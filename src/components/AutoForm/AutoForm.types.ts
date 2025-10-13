@@ -1,3 +1,4 @@
+import { CustomFieldTypes } from "@/fields/FieldRenderer/FieldRenderer.types";
 import { CustomRenderersMap } from "@/fields/renderer.types";
 import { FieldSchema } from "@/fields/types";
 import { FormValidateInput, UseFormReturnType } from "@mantine/form";
@@ -23,6 +24,8 @@ export interface AutoFormProps<
   updateFieldSchema?: UpdateFieldSchemaMap<TValues>;
 
   submitButton?: boolean | React.ReactNode;
+
+  customFieldTypes?: CustomFieldTypes<TValues>
 }
 
 export type UpdateFieldSchemaMap<

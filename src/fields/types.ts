@@ -1,6 +1,6 @@
 // src/fields/types.ts
 
-export type FieldType =
+export type FieldType<TCustom extends string = never>  =
   | "text"
   | "number"
   | "select"
@@ -12,7 +12,8 @@ export type FieldType =
   | "array"
   | "switch"
   | "texteditor"
-  | "tags";
+  | "tags"
+  | TCustom;
 
 export interface BaseFieldSchema<
   TValues extends Record<string, any> = Record<string, any>

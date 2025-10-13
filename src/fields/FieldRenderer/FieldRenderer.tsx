@@ -17,7 +17,8 @@ import { FieldRendererProps } from "./FieldRenderer.types";
 export function FieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >(props: FieldRendererProps<TValues>) {
-  const { layout, field, form, customRenderers, readOnly } = props;
+  const { layout, field, form, customRenderers, readOnly, customFieldTypes } =
+    props;
   const effectiveField = { ...field, readOnly: field.readOnly || readOnly };
 
   let InputNode: React.ReactNode = null;
@@ -101,7 +102,12 @@ export function FieldRenderer<
       break;
 
     default:
-      InputNode = <div>Unsupported field type: {effectiveField.type}</div>;
+      if (customFieldTypes && customFieldTypes[effectiveField.type]) {
+        InputNode = customFieldTypes[effectiveField.type](effectiveField, form);
+      } else {
+        InputNode = <div>Unsupported field type: {effectiveField.type}</div>;
+      }
+      break;
   }
 
   return (
