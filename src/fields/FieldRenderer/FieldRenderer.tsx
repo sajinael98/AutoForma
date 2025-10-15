@@ -17,22 +17,16 @@ import { FieldRendererProps } from "./FieldRenderer.types";
 export function FieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >(props: FieldRendererProps<TValues>) {
-  const { layout, field, form, customRenderers, readOnly, customFieldTypes } =
-    props;
+  const {
+    layout,
+    field,
+    form,
+    readOnly,
+    customFieldTypes,
+  } = props;
   const effectiveField = { ...field, readOnly: field.readOnly || readOnly };
 
   let InputNode: React.ReactNode = null;
-
-  if (customRenderers) {
-    const customNode = customRenderers(effectiveField, form);
-    if (customNode) {
-      return (
-        <FieldLayoutWrapper field={effectiveField} layout={layout}>
-          {customNode}
-        </FieldLayoutWrapper>
-      );
-    }
-  }
 
   switch (effectiveField.type) {
     case "text":

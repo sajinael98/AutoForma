@@ -20,12 +20,12 @@ export interface AutoFormProps<
 
   layout?: "vertical" | "horizontal" | "grid";
 
-  customRenderers?: CustomRenderersMap<TValues>;
+  customFieldRenderers?: CustomRenderersMap<TValues>;
   updateFieldSchema?: UpdateFieldSchemaMap<TValues>;
 
   submitButton?: boolean | React.ReactNode;
 
-  customFieldTypes?: CustomFieldTypes<TValues>
+  customFieldTypes?: CustomFieldTypes<TValues>;
 }
 
 export type UpdateFieldSchemaMap<
