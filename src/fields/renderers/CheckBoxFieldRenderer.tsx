@@ -31,7 +31,7 @@ export function CheckBoxFieldRenderer<
     <Checkbox
       {...inputProps}
       checked={inputProps.value}
-      onChange={(e) => inputProps.onFieldChange(e.target.value)}
+      onChange={(e) => inputProps.onFieldChange(e.target.checked)}
       required={field.required}
       placeholder={field.placeholder}
       error={undefined}
