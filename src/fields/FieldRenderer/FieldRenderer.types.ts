@@ -6,5 +6,5 @@ export interface FieldRendererProps<
 > {
   field: FieldSchema<TValues>;
   form: UseFormReturnType<TValues>;
-  layout: "vertical" | "horizontal" | "grid";
+  layout?: "vertical" | "horizontal" | "grid";
 }
