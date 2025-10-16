@@ -1,11 +1,12 @@
-import { Button, Grid, Group, Stack } from "@mantine/core";
+import { Button, Group } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
-import FieldRenderer from "@/fields/FieldRenderer/FieldRenderer";
-import { AutoFormProps } from "./AutoForm.types";
-import { generateInitialValues } from "@/fields/utils/values.utils";
 import { layoutStrategies } from "@/fields/utils/layout.utils";
+import { generateInitialValues } from "@/fields/utils/values.utils";
+import { AutoFormProps } from "./AutoForm.types";
+import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
+import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
 
 export function AutoForm<
   TValues extends Record<string, any> = Record<string, any>
@@ -17,12 +18,13 @@ export function AutoForm<
   validate,
   onSubmit,
   onFieldChange,
-  customFieldRenderers,
   updateFieldSchema,
   transformBeforeSubmit = (v) => v,
   transformAfterSubmit = () => {},
   submitButton = true,
+  customFieldRenderers,
   customFieldTypes,
+  customTypeRenderers,
 }: AutoFormProps<TValues>) {
   const form = useForm<TValues>({
     initialValues: generateInitialValues(schema),
@@ -65,16 +67,29 @@ export function AutoForm<
     <form onSubmit={handleSubmit}>
       {Layout(
         <>
-          {resolvedSchema.map((field) => (
-            <FieldRenderer<TValues>
-              key={field.name}
-              field={field}
-              form={form}
-              layout={layout}
-              readOnly={readOnly}
-              customFieldTypes={customFieldTypes}
-            />
-          ))}
+          {resolvedSchema.map((field) => {
+            const effectiveField = {
+              ...field,
+              readOnly: field.readOnly || readOnly,
+            };
+
+            return (
+              <FieldLayoutWrapper
+                field={effectiveField}
+                layout={layout}
+                key={effectiveField.name}
+              >
+                <FieldRendererResolver
+                  field={effectiveField}
+                  form={form}
+                  customFieldRenderers={customFieldRenderers}
+                  customTypeRenderers={customTypeRenderers}
+                  customFieldTypes={customFieldTypes}
+                  layout={layout}
+                />
+              </FieldLayoutWrapper>
+            );
+          })}
         </>
       )}
 

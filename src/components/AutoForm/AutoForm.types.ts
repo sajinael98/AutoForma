@@ -1,11 +1,10 @@
-import { CustomFieldTypes } from "@/fields/FieldRenderer/FieldRenderer.types";
-import { CustomRenderersMap } from "@/fields/renderer.types";
+import { CustomRenderersConfig } from "@/fields/renderer.types";
 import { FieldSchema } from "@/fields/types";
 import { FormValidateInput, UseFormReturnType } from "@mantine/form";
 
-export interface AutoFormProps<
+export type AutoFormProps<
   TValues extends Record<string, any> = Record<string, any>
-> {
+> = CustomRenderersConfig<TValues> & {
   schema: FieldSchema<TValues>[];
   values?: TValues;
 
@@ -20,13 +19,10 @@ export interface AutoFormProps<
 
   layout?: "vertical" | "horizontal" | "grid";
 
-  customFieldRenderers?: CustomRenderersMap<TValues>;
   updateFieldSchema?: UpdateFieldSchemaMap<TValues>;
 
   submitButton?: boolean | React.ReactNode;
-
-  customFieldTypes?: CustomFieldTypes<TValues>;
-}
+};
 
 export type UpdateFieldSchemaMap<
   TValues extends Record<string, any> = Record<string, any>
