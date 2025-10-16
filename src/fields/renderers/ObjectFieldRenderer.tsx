@@ -1,3 +1,4 @@
+import FieldLayoutWrapper from "../FieldRenderer/FieldLayoutWrapper";
 import FieldRenderer from "../FieldRenderer/FieldRenderer";
 import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { ObjectFieldSchema } from "../types";
@@ -16,15 +17,17 @@ export function ObjectFieldRenderer<TValues extends Record<string, any>>({
   return (
     <>
       {objectField.fields?.map((innerField) => (
-        <FieldRenderer
-          key={`${field.name}.${innerField.name}`}
-          field={{
-            ...innerField,
-            name: `${field.name}.${innerField.name}`,
-          }}
-          form={form}
-          layout={layout}
-        />
+        <FieldLayoutWrapper field={innerField} layout={layout}>
+          <FieldRenderer
+            key={`${field.name}.${innerField.name}`}
+            field={{
+              ...innerField,
+              name: `${field.name}.${innerField.name}`,
+            }}
+            form={form}
+            layout={layout}
+          />
+        </FieldLayoutWrapper>
       ))}
     </>
   );

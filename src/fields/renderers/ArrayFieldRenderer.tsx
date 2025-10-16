@@ -1,9 +1,10 @@
 import { Button, Divider, Group, Paper, Stack } from "@mantine/core";
+import FieldLayoutWrapper from "../FieldRenderer/FieldLayoutWrapper";
 import FieldRenderer from "../FieldRenderer/FieldRenderer";
-import { ArrayFieldSchema } from "../types";
-import { generateInitialValues } from "../utils/values.utils";
-import { layoutStrategies } from "../utils/layout.utils";
 import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
+import { ArrayFieldSchema } from "../types";
+import { layoutStrategies } from "../utils/layout.utils";
+import { generateInitialValues } from "../utils/values.utils";
 
 type ArrayFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
@@ -43,17 +44,19 @@ export function ArrayFieldRenderer<
         >
           {layoutStrategies[layout](
             arrayField.fields?.map((innerField) => (
-              <FieldRenderer
-                key={`${field.name}.${rowIndex}.${innerField.name}`}
-                field={{
-                  ...innerField,
-                  name: `${field.name}.${rowIndex}.${innerField.name}`,
-                  disabled: isDisabled || innerField.disabled,
-                  readOnly: isReadOnly || innerField.readOnly,
-                }}
-                form={form}
-                layout={layout}
-              />
+              <FieldLayoutWrapper field={innerField} layout={layout}>
+                <FieldRenderer
+                  key={`${field.name}.${rowIndex}.${innerField.name}`}
+                  field={{
+                    ...innerField,
+                    name: `${field.name}.${rowIndex}.${innerField.name}`,
+                    disabled: isDisabled || innerField.disabled,
+                    readOnly: isReadOnly || innerField.readOnly,
+                  }}
+                  form={form}
+                  layout={layout}
+                />
+              </FieldLayoutWrapper>
             ))
           )}
 
