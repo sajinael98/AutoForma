@@ -1,6 +1,6 @@
 {
   "name": "autoforma",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "AutoForma is a dynamic form builder based on Mantine and React",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -55,10 +55,10 @@
     "dev": "vite --config vite.config.dev.ts"
   },
   "dependencies": {
-    "@mantine/dates": "^7.17.5",
-    "@mantine/form": "^7.17.5",
-    "@mantine/hooks": "^7.17.5",
-    "@mantine/tiptap": "^7.17.5",
+    "@mantine/dates": "^8.3.2",
+    "@mantine/form": "^8.3.2",
+    "@mantine/hooks": "^8.3.2",
+    "@mantine/tiptap": "^8.3.2",
     "@tiptap/extension-highlight": "^3.6.6",
     "@tiptap/extension-link": "^3.6.6",
     "@tiptap/extension-subscript": "^3.6.6",
@@ -75,14 +75,18 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "postcss-preset-mantine": "^1.17.0",
+    "postcss-preset-mantine": "^1.18.0",
     "typescript": "^5.8.2",
     "vite": "^6.2.2",
     "vite-plugin-dts": "^4.5.3",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "peerDependencies": {
-    "@mantine/core": "^7.17.5",
+    "@mantine/core": "^8.3.2",
+    "@mantine/dates": "^8.3.2",
+    "@mantine/form": "^8.3.2",
+    "@mantine/hooks": "^8.3.2",
+    "@mantine/tiptap": "^8.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
