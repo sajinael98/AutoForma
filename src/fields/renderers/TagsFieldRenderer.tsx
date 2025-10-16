@@ -1,5 +1,5 @@
 import { TagsInput } from "@mantine/core";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
 type TagsInputFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>

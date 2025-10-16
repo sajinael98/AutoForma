@@ -7,7 +7,7 @@ import Superscript from "@tiptap/extension-superscript";
 import SubScript from "@tiptap/extension-subscript";
 import Link from "@tiptap/extension-link";
 import { RichTextEditor } from "@mantine/tiptap";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
 type RichTextEditorFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>

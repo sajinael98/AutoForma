@@ -1,5 +1,5 @@
 import { Select } from "@mantine/core";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { SelectFieldSchema } from "../types";
 
 type SelectFieldRendererProps<

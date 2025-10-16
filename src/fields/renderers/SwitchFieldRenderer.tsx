@@ -1,5 +1,5 @@
 import { Switch } from "@mantine/core";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
 type SwitchFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>

@@ -1,12 +1,10 @@
 import FieldRenderer from "../FieldRenderer/FieldRenderer";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { ObjectFieldSchema } from "../types";
 
 type ObjectFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues> & {
-  layout: "vertical" | "horizontal" | "grid";
-};
+> = FieldRendererProps<TValues>;
 
 export function ObjectFieldRenderer<TValues extends Record<string, any>>({
   field,

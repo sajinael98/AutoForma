@@ -1,15 +1,13 @@
 import { Button, Divider, Group, Paper, Stack } from "@mantine/core";
 import FieldRenderer from "../FieldRenderer/FieldRenderer";
-import { FieldRendererProps } from "../renderer.types";
 import { ArrayFieldSchema } from "../types";
 import { generateInitialValues } from "../utils/values.utils";
 import { layoutStrategies } from "../utils/layout.utils";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
 type ArrayFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues> & {
-  layout: "vertical" | "horizontal" | "grid";
-};
+> = FieldRendererProps<TValues>;
 
 export function ArrayFieldRenderer<
   TValues extends Record<string, any> = Record<string, any>

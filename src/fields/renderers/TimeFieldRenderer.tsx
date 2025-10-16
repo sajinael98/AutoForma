@@ -1,5 +1,5 @@
 import { TimeInput } from "@mantine/dates";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { useRef } from "react";
 import { ActionIcon } from "@mantine/core";
 

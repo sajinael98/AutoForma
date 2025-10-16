@@ -1,5 +1,5 @@
 import { DateTimePicker } from "@mantine/dates";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
 type DateTimeFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>

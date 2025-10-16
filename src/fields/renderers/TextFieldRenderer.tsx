@@ -1,5 +1,5 @@
 import { TextInput } from "@mantine/core";
-import { FieldRendererProps } from "../renderer.types";
+import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
 type TextFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
