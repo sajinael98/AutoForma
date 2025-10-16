@@ -7,6 +7,7 @@ import { generateInitialValues } from "@/fields/utils/values.utils";
 import { AutoFormProps } from "./AutoForm.types";
 import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
 import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
+import { RenderersProvider } from "@/fields/context/RenderersContext";
 
 export function AutoForm<
   TValues extends Record<string, any> = Record<string, any>
@@ -64,45 +65,49 @@ export function AutoForm<
   }, [values]);
 
   return (
-    <form onSubmit={handleSubmit}>
-      {Layout(
-        <>
-          {resolvedSchema.map((field) => {
-            const effectiveField = {
-              ...field,
-              readOnly: field.readOnly || readOnly,
-            };
+    <RenderersProvider
+      value={{ customFieldRenderers, customTypeRenderers, customFieldTypes }}
+    >
+      <form onSubmit={handleSubmit}>
+        {Layout(
+          <>
+            {resolvedSchema.map((field) => {
+              const effectiveField = {
+                ...field,
+                readOnly: field.readOnly || readOnly,
+              };
 
-            return (
-              <FieldLayoutWrapper
-                field={effectiveField}
-                layout={layout}
-                key={effectiveField.name}
-              >
-                <FieldRendererResolver
+              return (
+                <FieldLayoutWrapper
                   field={effectiveField}
-                  form={form}
-                  customFieldRenderers={customFieldRenderers}
-                  customTypeRenderers={customTypeRenderers}
-                  customFieldTypes={customFieldTypes}
                   layout={layout}
-                />
-              </FieldLayoutWrapper>
-            );
-          })}
-        </>
-      )}
+                  key={effectiveField.name}
+                >
+                  <FieldRendererResolver
+                    field={effectiveField}
+                    form={form}
+                    customFieldRenderers={customFieldRenderers}
+                    customTypeRenderers={customTypeRenderers}
+                    customFieldTypes={customFieldTypes}
+                    layout={layout}
+                  />
+                </FieldLayoutWrapper>
+              );
+            })}
+          </>
+        )}
 
-      {typeof submitButton === "boolean" ? (
-        submitButton ? (
-          <Group justify="flex-end" mt="md">
-            <Button type="submit">Submit</Button>
-          </Group>
-        ) : null
-      ) : (
-        submitButton
-      )}
-    </form>
+        {typeof submitButton === "boolean" ? (
+          submitButton ? (
+            <Group justify="flex-end" mt="md">
+              <Button type="submit">Submit</Button>
+            </Group>
+          ) : null
+        ) : (
+          submitButton
+        )}
+      </form>
+    </RenderersProvider>
   );
 }
 

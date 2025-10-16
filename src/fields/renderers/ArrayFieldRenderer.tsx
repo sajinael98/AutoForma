@@ -1,10 +1,10 @@
 import { Button, Divider, Group, Paper, Stack } from "@mantine/core";
 import FieldLayoutWrapper from "../FieldRenderer/FieldLayoutWrapper";
-import FieldRenderer from "../FieldRenderer/FieldRenderer";
 import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { ArrayFieldSchema } from "../types";
 import { layoutStrategies } from "../utils/layout.utils";
 import { generateInitialValues } from "../utils/values.utils";
+import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
 
 type ArrayFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
@@ -12,7 +12,7 @@ type ArrayFieldRendererProps<
 
 export function ArrayFieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
->({ field, form, layout }: ArrayFieldRendererProps<TValues>) {
+>({ field, form, layout = "grid" }: ArrayFieldRendererProps<TValues>) {
   const arrayField = field as ArrayFieldSchema<TValues>;
 
   const inputProps = form.getInputProps(arrayField.name);
@@ -44,9 +44,12 @@ export function ArrayFieldRenderer<
         >
           {layoutStrategies[layout](
             arrayField.fields?.map((innerField) => (
-              <FieldLayoutWrapper field={innerField} layout={layout}>
-                <FieldRenderer
-                  key={`${field.name}.${rowIndex}.${innerField.name}`}
+              <FieldLayoutWrapper
+                key={`${field.name}.${rowIndex}.${innerField.name}`}
+                field={innerField}
+                layout={layout}
+              >
+                <FieldRendererResolver
                   field={{
                     ...innerField,
                     name: `${field.name}.${rowIndex}.${innerField.name}`,
