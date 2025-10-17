@@ -24,7 +24,7 @@ export type AutoFormProps<
 
   submitButton?: boolean | React.ReactNode;
 
-  loading: boolean
+  loading?: boolean
 };
 
 export type UpdateFieldSchemaMap<

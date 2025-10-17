@@ -63,7 +63,7 @@ export function AutoForm<
       form.setErrors(requiredFields);
       return;
     }
-    
+
     const transformValuesBeforeSubmit = await transformBeforeSubmit(vals);
     await onSubmit(transformValuesBeforeSubmit);
     transformAfterSubmit(transformValuesBeforeSubmit);
@@ -124,7 +124,9 @@ export function AutoForm<
         {typeof submitButton === "boolean" ? (
           submitButton ? (
             <Group justify="flex-end" mt="md">
-              <Button type="submit">Submit</Button>
+              <Button type="submit" loading={loading}>
+                Submit
+              </Button>
             </Group>
           ) : null
         ) : (
