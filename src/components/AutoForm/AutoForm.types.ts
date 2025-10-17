@@ -23,6 +23,8 @@ export type AutoFormProps<
   updateFieldSchema?: UpdateFieldSchemaMap<TValues>;
 
   submitButton?: boolean | React.ReactNode;
+
+  loading: boolean
 };
 
 export type UpdateFieldSchemaMap<

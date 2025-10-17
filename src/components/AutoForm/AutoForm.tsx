@@ -27,6 +27,7 @@ export function AutoForm<
   customFieldRenderers,
   customFieldTypes,
   customTypeRenderers,
+  loading
 }: AutoFormProps<TValues>) {
   const [isFormLoading, setIsFormLoading] = useState(true);
 
@@ -82,7 +83,7 @@ export function AutoForm<
       value={{ customFieldRenderers, customTypeRenderers, customFieldTypes }}
     >
       <form onSubmit={handleSubmit} style={{ position: "relative" }}>
-        <LoadingOverlay visible={isFormLoading} />
+        <LoadingOverlay visible={isFormLoading || loading} />
         {Layout(
           <>
             {resolvedSchema.map((field) => {
