@@ -10,7 +10,7 @@ export type AutoFormProps<
   getInitialValues?: () => Partial<TValues> | Promise<Partial<TValues>>;
 
   onSubmit: (values: TValues) => void | Promise<void>;
-  transformBeforeSubmit?: (values: TValues) => TValues;
+  transformBeforeSubmit?: (values: TValues) => TValues | Promise<TValues>;
   transformAfterSubmit?: (values: TValues) => void | Promise<void>;
 
   validate?: FormValidateInput<TValues>;

@@ -36,7 +36,6 @@ export function AutoForm<
 
   const form = useForm<TValues>({
     validate,
-    transformValues: transformBeforeSubmit,
     enhanceGetInputProps(payload) {
       return {
         onFieldChange: async (value: any) => {
@@ -65,8 +64,9 @@ export function AutoForm<
       return;
     }
     
-    await onSubmit(vals);
-    transformAfterSubmit(vals);
+    const transformValuesBeforeSubmit = await transformBeforeSubmit(vals);
+    await onSubmit(transformValuesBeforeSubmit);
+    transformAfterSubmit(transformValuesBeforeSubmit);
   });
 
   useEffect(() => {
