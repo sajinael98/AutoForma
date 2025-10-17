@@ -27,7 +27,6 @@ export interface BaseFieldSchema<
   readOnly?: boolean;
   disabled?: boolean;
   visible?: boolean;
-  meta?: Record<string, any>;
   initialValue?: any;
   column?: number;
 }

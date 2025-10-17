@@ -16,7 +16,11 @@ import { FieldRendererProps } from "./FieldRenderer.types";
 export function FieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >(props: FieldRendererProps<TValues>) {
-  const { layout, field, form } = props;
+  const {
+    layout,
+    field: { required, ...field },
+    form,
+  } = props;
 
   let InputNode: React.ReactNode = null;
 

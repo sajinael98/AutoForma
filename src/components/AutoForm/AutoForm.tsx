@@ -3,7 +3,10 @@ import { useForm } from "@mantine/form";
 import { useEffect, useMemo, useState } from "react";
 
 import { layoutStrategies } from "@/fields/utils/layout.utils";
-import { generateInitialValues } from "@/fields/utils/values.utils";
+import {
+  generateInitialValues,
+  validateRequiredFields,
+} from "@/fields/utils/values.utils";
 import { AutoFormProps } from "./AutoForm.types";
 import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
 import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
@@ -27,7 +30,7 @@ export function AutoForm<
   customFieldRenderers,
   customFieldTypes,
   customTypeRenderers,
-  loading
+  loading,
 }: AutoFormProps<TValues>) {
   const [isFormLoading, setIsFormLoading] = useState(true);
 
@@ -56,6 +59,12 @@ export function AutoForm<
   }, [schema, form.values, updateFieldSchema]);
 
   const handleSubmit = form.onSubmit(async (vals) => {
+    const requiredFields = validateRequiredFields(schema, vals);
+    if (requiredFields) {
+      form.setErrors(requiredFields);
+      return;
+    }
+    
     await onSubmit(vals);
     transformAfterSubmit(vals);
   });
