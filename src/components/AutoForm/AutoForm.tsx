@@ -1,6 +1,6 @@
-import { Button, Group } from "@mantine/core";
+import { Button, Group, LoadingOverlay } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { layoutStrategies } from "@/fields/utils/layout.utils";
 import { generateInitialValues } from "@/fields/utils/values.utils";
@@ -14,6 +14,7 @@ export function AutoForm<
 >({
   schema,
   values,
+  getInitialValues,
   layout = "vertical",
   readOnly,
   validate,
@@ -27,8 +28,9 @@ export function AutoForm<
   customFieldTypes,
   customTypeRenderers,
 }: AutoFormProps<TValues>) {
+  const [isFormLoading, setIsFormLoading] = useState(true);
+
   const form = useForm<TValues>({
-    initialValues: generateInitialValues(schema),
     validate,
     transformValues: transformBeforeSubmit,
     enhanceGetInputProps(payload) {
@@ -59,16 +61,28 @@ export function AutoForm<
 
   useEffect(() => {
     if (values) {
-      form.setValues(values);
-      form.resetDirty(values);
+      const fullValues = generateInitialValues(schema, values);
+      form.setValues(fullValues);
+      form.resetDirty(fullValues);
     }
-  }, [values]);
+  }, [values, schema]);
+
+  useEffect(() => {
+    async function loadInitialValues() {
+      const values = getInitialValues ? await getInitialValues() : {};
+
+      form.initialize(generateInitialValues(schema, values));
+      setIsFormLoading(false);
+    }
+    loadInitialValues();
+  }, [schema]);
 
   return (
     <RenderersProvider
       value={{ customFieldRenderers, customTypeRenderers, customFieldTypes }}
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
+        <LoadingOverlay visible={isFormLoading} />
         {Layout(
           <>
             {resolvedSchema.map((field) => {

@@ -21,15 +21,23 @@ export const getDefaultValueForField = (type: FieldType): any => {
 
 export function generateInitialValues<
   TValues extends Record<string, any> = Record<string, any>
->(schema: FieldSchema<TValues>[]): TValues {
+>(
+  schema: FieldSchema<TValues>[],
+  initialValues: Partial<TValues> = {}
+): TValues {
   const result: Record<string, any> = {};
 
   for (const field of schema) {
     if (field.type === "object" && field.fields) {
-      result[field.name] = generateInitialValues(field.fields);
+      result[field.name] = generateInitialValues(
+        field.fields,
+        initialValues?.[field.name]
+      );
     } else {
       result[field.name] =
-        field.initialValue ?? getDefaultValueForField(field.type);
+        initialValues?.[field.name] ??
+        field.initialValue ??
+        getDefaultValueForField(field.type);
     }
   }
 

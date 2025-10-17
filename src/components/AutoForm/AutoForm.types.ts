@@ -6,7 +6,8 @@ export type AutoFormProps<
   TValues extends Record<string, any> = Record<string, any>
 > = CustomRenderersConfig<TValues> & {
   schema: FieldSchema<TValues>[];
-  values?: TValues;
+  values?: Partial<TValues>;
+  getInitialValues?: () => Partial<TValues> | Promise<Partial<TValues>>;
 
   onSubmit: (values: TValues) => void | Promise<void>;
   transformBeforeSubmit?: (values: TValues) => TValues;
