@@ -2,6 +2,7 @@ import FieldLayoutWrapper from "../FieldRenderer/FieldLayoutWrapper";
 import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { ObjectFieldSchema } from "../types";
 import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
+import { layoutStrategies } from "../utils/layout.utils";
 
 type ObjectFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
@@ -14,7 +15,7 @@ export function ObjectFieldRenderer<TValues extends Record<string, any>>({
 }: ObjectFieldRendererProps<TValues>) {
   const objectField = field as ObjectFieldSchema<TValues>;
 
-  return (
+  return layoutStrategies[layout](
     <>
       {objectField.fields?.map((innerField) => (
         <FieldLayoutWrapper
