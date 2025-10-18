@@ -24,7 +24,7 @@ export type AutoFormProps<
 
   submitButton?: boolean | React.ReactNode;
 
-  loading?: boolean
+  loading?: boolean;
 };
 
 export type UpdateFieldSchemaMap<
@@ -44,3 +44,19 @@ export type OnFieldChangeMap<
     form: UseFormReturnType<TValues>
   ) => void | Promise<void>;
 };
+
+export interface AutoFormRef<
+  TValues extends Record<string, any> = Record<string, any>
+> {
+  submit: () => void;
+  reset: (values?: Partial<TValues>) => void;
+  validate: () => boolean;
+  getValues: () => TValues;
+  setValues: (values: Partial<TValues>) => void;
+
+  getFieldValue: (path: string) => any;
+  setFieldValue: (path: string, value: any) => void;
+
+  isValid: () => boolean;
+  isDirty: () => boolean;
+}

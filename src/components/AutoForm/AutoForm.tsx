@@ -1,37 +1,46 @@
 import { Button, Group, LoadingOverlay } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect, useMemo, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 
 import { layoutStrategies } from "@/fields/utils/layout.utils";
 import {
   generateInitialValues,
   validateRequiredFields,
 } from "@/fields/utils/values.utils";
-import { AutoFormProps } from "./AutoForm.types";
+import { AutoFormProps, AutoFormRef } from "./AutoForm.types";
 import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
 import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
 import { RenderersProvider } from "@/fields/context/RenderersContext";
 
-export function AutoForm<
+export const AutoForm = forwardRef(function AutoForm<
   TValues extends Record<string, any> = Record<string, any>
->({
-  schema,
-  values,
-  getInitialValues,
-  layout = "vertical",
-  readOnly,
-  validate,
-  onSubmit,
-  onFieldChange,
-  updateFieldSchema,
-  transformBeforeSubmit = (v) => v,
-  transformAfterSubmit = () => {},
-  submitButton = true,
-  customFieldRenderers,
-  customFieldTypes,
-  customTypeRenderers,
-  loading,
-}: AutoFormProps<TValues>) {
+>(
+  {
+    schema,
+    values,
+    getInitialValues,
+    layout = "vertical",
+    readOnly,
+    validate,
+    onSubmit,
+    onFieldChange,
+    updateFieldSchema,
+    transformBeforeSubmit = (v) => v,
+    transformAfterSubmit = () => {},
+    submitButton = true,
+    customFieldRenderers,
+    customFieldTypes,
+    customTypeRenderers,
+    loading,
+  }: AutoFormProps<TValues>,
+  ref: React.Ref<AutoFormRef<TValues>>
+) {
   const [isFormLoading, setIsFormLoading] = useState(true);
 
   const form = useForm<TValues>({
@@ -59,15 +68,33 @@ export function AutoForm<
 
   const handleSubmit = form.onSubmit(async (vals) => {
     const requiredFields = validateRequiredFields(schema, vals);
-    if (requiredFields) {
+    if (Object.keys(requiredFields).length) {
       form.setErrors(requiredFields);
       return;
     }
-
     const transformValuesBeforeSubmit = await transformBeforeSubmit(vals);
     await onSubmit(transformValuesBeforeSubmit);
     transformAfterSubmit(transformValuesBeforeSubmit);
   });
+
+  useImperativeHandle(ref, () => ({
+    submit: () => handleSubmit(),
+    reset: (v) => {
+      const fullValues = generateInitialValues(schema, v);
+      form.setValues(fullValues);
+      form.setDirty(fullValues);
+    },
+    validate: () => {
+      const res = form.validate();
+      return Object.keys(res.errors).length === 0;
+    },
+    getValues: () => form.getValues(),
+    setValues: (v) => form.setValues(v),
+    getFieldValue: (path) => form.getInputProps(path).value,
+    setFieldValue: (path, value) => form.setFieldValue(path, value),
+    isValid: () => Object.keys(form.validate().errors).length === 0,
+    isDirty: () => form.isDirty(),
+  }));
 
   useEffect(() => {
     if (values) {
@@ -80,7 +107,6 @@ export function AutoForm<
   useEffect(() => {
     async function loadInitialValues() {
       const values = getInitialValues ? await getInitialValues() : {};
-
       form.initialize(generateInitialValues(schema, values));
       setIsFormLoading(false);
     }
@@ -100,7 +126,6 @@ export function AutoForm<
                 ...field,
                 readOnly: field.readOnly || readOnly,
               };
-
               return (
                 <FieldLayoutWrapper
                   field={effectiveField}
@@ -135,6 +160,6 @@ export function AutoForm<
       </form>
     </RenderersProvider>
   );
-}
+});
 
 export default AutoForm;
