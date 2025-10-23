@@ -126,6 +126,11 @@ export const AutoForm = forwardRef(function AutoForm<
                 ...field,
                 readOnly: field.readOnly || readOnly,
               };
+
+              if (!effectiveField.visible) {
+                return null;
+              }
+
               return (
                 <FieldLayoutWrapper
                   field={effectiveField}
