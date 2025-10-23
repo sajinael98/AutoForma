@@ -127,7 +127,7 @@ export const AutoForm = forwardRef(function AutoForm<
                 readOnly: field.readOnly || readOnly,
               };
 
-              if (!effectiveField.visible) {
+              if (effectiveField.visible === false) {
                 return null;
               }
 
