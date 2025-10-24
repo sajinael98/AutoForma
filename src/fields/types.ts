@@ -1,6 +1,6 @@
 // src/fields/types.ts
 
-export type FieldType<TCustom extends string = never>  =
+export type FieldType<TCustom extends string = never> =
   | "text"
   | "number"
   | "select"
@@ -29,6 +29,7 @@ export interface BaseFieldSchema<
   visible?: boolean;
   initialValue?: any;
   column?: number;
+  meta?: Record<string, string>;
 }
 
 export interface TextFieldSchema<
