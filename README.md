@@ -19,13 +19,7 @@ Install **AutoForma** along with its required Mantine and React peer dependencie
 
 ```bash
 npm install autoforma   @mantine/core@^8.3.2   @mantine/hooks@^8.3.2   @mantine/form@^8.3.2   @mantine/dates@^8.3.2   @mantine/tiptap@^8.3.2   @tiptap/react@^3.6.6   react@^19.0.0   react-dom@^19.0.0
-```
 
-or using Yarn:
-
-```bash
-yarn add autoforma   @mantine/core@^8.3.2   @mantine/hooks@^8.3.2   @mantine/form@^8.3.2   @mantine/dates@^8.3.2   @mantine/tiptap@^8.3.2   @tiptap/react@^3.6.6   react@^19.0.0   react-dom@^19.0.0
-```
 
 ---
 
