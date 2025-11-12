@@ -65,6 +65,19 @@ const App = () => (
   <AutoForm
     schema={userFormSchema}
     onSubmit={(values) => console.log("Submitted:", values)}
+    updateFieldSchema={{
+      address: {
+        city: (field, values) => ({
+          ...field,
+          disabled: !values?.address?.country,
+        }),
+      },
+    }}
+    customFieldTypes={{
+      text: (field, form) => (
+        <input {...form.getInputProps(field.name)} />
+      ),
+    }}
   />
 );
 ```
@@ -173,31 +186,6 @@ export type AutoFormProps<
 | `updateFieldSchema` | `UpdateFieldSchemaMap<TValues>` | Dynamically modify schema based on values. |
 | `submitButton` | `boolean \| ReactNode` | Whether to render or customize the submit button. |
 | `loading` | `boolean` | Display a global loading state for the form. |
-
----
-
-## 🧩 `FieldRendererResolverProps<TValues>`
-
-Used internally (and optionally by developers) to control how a field is rendered.
-
-```ts
-export type FieldRendererResolverProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = CustomRenderersConfig<TValues> & {
-  field: FieldSchema<TValues>;
-  form: UseFormReturnType<TValues>;
-  layout?: "vertical" | "horizontal" | "grid";
-};
-```
-
-### 🧠 Description of Properties
-
-| Prop | Type | Description |
-|------|------|--------------|
-| `field` | `FieldSchema<TValues>` | The field definition being rendered. |
-| `form` | `UseFormReturnType<TValues>` | Mantine form instance for accessing values and methods. |
-| `layout` | `"vertical" \| "horizontal" \| "grid"` | The layout applied to this field. |
-| `customFieldRenderers` | See below | Injected custom renderers from parent config. |
 
 ---
 
