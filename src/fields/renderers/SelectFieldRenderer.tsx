@@ -32,8 +32,8 @@ export function SelectFieldRenderer<
 
   return (
     <Select
-      {...inputProps}
       data={selectField.data}
+      {...inputProps}
       placeholder={selectField.placeholder}
       error={undefined}
       onChange={(val) => inputProps.onFieldChange(val)}

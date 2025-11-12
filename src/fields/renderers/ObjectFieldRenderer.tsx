@@ -3,6 +3,7 @@ import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { ObjectFieldSchema } from "../types";
 import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
 import { layoutStrategies } from "../utils/layout.utils";
+import { useRenderers } from "../context/RenderersContext";
 
 type ObjectFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
@@ -14,7 +15,7 @@ export function ObjectFieldRenderer<TValues extends Record<string, any>>({
   layout = "vertical",
 }: ObjectFieldRendererProps<TValues>) {
   const objectField = field as ObjectFieldSchema<TValues>;
-
+  const renderers = useRenderers();
   return layoutStrategies[layout](
     <>
       {objectField.fields?.map((innerField) => (
@@ -28,6 +29,7 @@ export function ObjectFieldRenderer<TValues extends Record<string, any>>({
               ...innerField,
               name: `${field.name}.${innerField.name}`,
             }}
+            {...renderers}
             form={form}
             layout={layout}
           />

@@ -8,31 +8,31 @@ import {
   useState,
 } from "react";
 
+import { RenderersProvider } from "@/fields/context/RenderersContext";
+import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
+import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
 import { layoutStrategies } from "@/fields/utils/layout.utils";
 import {
   generateInitialValues,
   validateRequiredFields,
 } from "@/fields/utils/values.utils";
 import { AutoFormProps, AutoFormRef } from "./AutoForm.types";
-import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
-import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
-import { RenderersProvider } from "@/fields/context/RenderersContext";
 
 export const AutoForm = forwardRef(function AutoForm<
   TValues extends Record<string, any> = Record<string, any>
 >(
   {
     schema,
-    values,
-    getInitialValues,
+    currentValues,
+    initialValues,
     layout = "vertical",
     readOnly,
     validate,
     onSubmit,
     onFieldChange,
     updateFieldSchema,
-    transformBeforeSubmit = (v) => v,
-    transformAfterSubmit = () => {},
+    prepareValues = (v) => v,
+    afterSubmit = () => {},
     submitButton = true,
     customFieldRenderers,
     customFieldTypes,
@@ -41,7 +41,7 @@ export const AutoForm = forwardRef(function AutoForm<
   }: AutoFormProps<TValues>,
   ref: React.Ref<AutoFormRef<TValues>>
 ) {
-  const [isFormLoading, setIsFormLoading] = useState(true);
+  const [isFormLoading, setIsFormLoading] = useState(false);
 
   const form = useForm<TValues>({
     validate,
@@ -57,13 +57,28 @@ export const AutoForm = forwardRef(function AutoForm<
 
   const Layout = layoutStrategies[layout];
 
+  const resolveSchema = (
+    schema: any[],
+    values: any,
+    updaters?: Record<string, any>
+  ): any[] => {
+    return schema.map((field) => {
+      if (field.type === "object" || field.type === "array") {
+        const innerUpdaters = updaters?.[field.name];
+        return {
+          ...field,
+          fields: resolveSchema(field.fields, values || {}, innerUpdaters),
+        };
+      }
+      const updater = updaters?.[field.name];
+      return updater ? updater(field, values) : field;
+    });
+  };
+
   const resolvedSchema = useMemo(() => {
     if (!updateFieldSchema) return schema;
     const values = form.getValues();
-    return schema.map((field) => {
-      const updater = updateFieldSchema[field.name];
-      return updater ? updater(field, values) : field;
-    });
+    return resolveSchema(schema, values, updateFieldSchema);
   }, [schema, form.values, updateFieldSchema]);
 
   const handleSubmit = form.onSubmit(async (vals) => {
@@ -72,18 +87,14 @@ export const AutoForm = forwardRef(function AutoForm<
       form.setErrors(requiredFields);
       return;
     }
-    const transformValuesBeforeSubmit = await transformBeforeSubmit(vals);
+    const transformValuesBeforeSubmit = await prepareValues(vals);
     await onSubmit(transformValuesBeforeSubmit);
-    transformAfterSubmit(transformValuesBeforeSubmit);
+    afterSubmit(transformValuesBeforeSubmit);
   });
 
   useImperativeHandle(ref, () => ({
     submit: () => handleSubmit(),
-    reset: (v) => {
-      const fullValues = generateInitialValues(schema, v);
-      form.setValues(fullValues);
-      form.setDirty(fullValues);
-    },
+    reset: (v) => applyValues(v),
     validate: () => {
       const res = form.validate();
       return Object.keys(res.errors).length === 0;
@@ -94,24 +105,34 @@ export const AutoForm = forwardRef(function AutoForm<
     setFieldValue: (path, value) => form.setFieldValue(path, value),
     isValid: () => Object.keys(form.validate().errors).length === 0,
     isDirty: () => form.isDirty(),
+    isLoading: () => isFormLoading,
   }));
 
-  useEffect(() => {
-    if (values) {
-      const fullValues = generateInitialValues(schema, values);
-      form.setValues(fullValues);
-      form.resetDirty(fullValues);
-    }
-  }, [values, schema]);
+  async function applyValues(source?: (() => any) | any) {
+    if (!source) return;
 
-  useEffect(() => {
-    async function loadInitialValues() {
-      const values = getInitialValues ? await getInitialValues() : {};
-      form.initialize(generateInitialValues(schema, values));
+    setIsFormLoading(true);
+    try {
+      const temp = typeof source === "function" ? await source() : source;
+      const formValues = generateInitialValues(schema, temp);
+      form.setValues(formValues);
+      form.setDirty(formValues);
+    } finally {
       setIsFormLoading(false);
     }
-    loadInitialValues();
-  }, [schema]);
+  }
+
+  useEffect(() => {
+    if (initialValues) {
+      applyValues(initialValues);
+    } else {
+      applyValues({});
+    }
+  }, []);
+
+  useEffect(() => {
+    applyValues(currentValues);
+  }, [currentValues]);
 
   return (
     <RenderersProvider
@@ -151,16 +172,20 @@ export const AutoForm = forwardRef(function AutoForm<
           </>
         )}
 
-        {typeof submitButton === "boolean" ? (
-          submitButton ? (
-            <Group justify="flex-end" mt="md">
-              <Button type="submit" loading={loading}>
-                Submit
-              </Button>
-            </Group>
-          ) : null
-        ) : (
-          submitButton
+        {!isFormLoading && (
+          <>
+            {typeof submitButton === "boolean" ? (
+              submitButton ? (
+                <Group justify="flex-end" mt="md">
+                  <Button type="submit" loading={loading}>
+                    Submit
+                  </Button>
+                </Group>
+              ) : null
+            ) : (
+              submitButton
+            )}
+          </>
         )}
       </form>
     </RenderersProvider>

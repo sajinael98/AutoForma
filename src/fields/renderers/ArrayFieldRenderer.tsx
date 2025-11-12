@@ -5,6 +5,7 @@ import { ArrayFieldSchema } from "../types";
 import { layoutStrategies } from "../utils/layout.utils";
 import { generateInitialValues } from "../utils/values.utils";
 import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver";
+import { useRenderers } from "../context/RenderersContext";
 
 type ArrayFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
@@ -14,6 +15,8 @@ export function ArrayFieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >({ field, form, layout = "grid" }: ArrayFieldRendererProps<TValues>) {
   const arrayField = field as ArrayFieldSchema<TValues>;
+
+  const renderers = useRenderers();
 
   const inputProps = form.getInputProps(arrayField.name);
   const arrayValue: Record<string, any>[] = inputProps.value ?? [];
@@ -58,6 +61,7 @@ export function ArrayFieldRenderer<
                   }}
                   form={form}
                   layout={layout}
+                  {...renderers}
                 />
               </FieldLayoutWrapper>
             ))

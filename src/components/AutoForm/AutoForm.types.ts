@@ -2,16 +2,21 @@ import { CustomRenderersConfig } from "@/fields/renderer.types";
 import { FieldSchema } from "@/fields/types";
 import { FormValidateInput, UseFormReturnType } from "@mantine/form";
 
+type ValueProvider<TValues> = () =>
+  | Partial<TValues>
+  | Promise<Partial<TValues>>;
+
 export type AutoFormProps<
   TValues extends Record<string, any> = Record<string, any>
 > = CustomRenderersConfig<TValues> & {
-  schema: FieldSchema<TValues>[];
-  values?: Partial<TValues>;
-  getInitialValues?: () => Partial<TValues> | Promise<Partial<TValues>>;
+  schema: (FieldSchema<TValues> & Record<string, any>)[];
 
+  initialValues?: ValueProvider<TValues>;
+  currentValues?: ValueProvider<TValues>;
+
+  prepareValues?: (values: TValues) => TValues | Promise<TValues>;
   onSubmit: (values: TValues) => void | Promise<void>;
-  transformBeforeSubmit?: (values: TValues) => TValues | Promise<TValues>;
-  transformAfterSubmit?: (values: TValues) => void | Promise<void>;
+  afterSubmit?: (values: TValues) => void | Promise<void>;
 
   validate?: FormValidateInput<TValues>;
   readOnly?: boolean;
@@ -59,4 +64,5 @@ export interface AutoFormRef<
 
   isValid: () => boolean;
   isDirty: () => boolean;
+  isLoading: () => boolean;
 }

@@ -1,5 +1,3 @@
-// src/fields/types.ts
-
 export type FieldType<TCustom extends string = never> =
   | "text"
   | "number"
@@ -13,120 +11,119 @@ export type FieldType<TCustom extends string = never> =
   | "switch"
   | "texteditor"
   | "tags"
-  | TCustom;
+  | TCustom
 
 export interface BaseFieldSchema<
-  TValues extends Record<string, any> = Record<string, any>
+  TValues extends Record<string, any> = Record<string, any>,
+  TCustom extends string = never
 > {
-  name: keyof TValues & string;
-  label: string;
-  type: FieldType;
-  description?: string;
-  placeholder?: string;
-  required?: boolean;
-  readOnly?: boolean;
-  disabled?: boolean;
-  visible?: boolean;
-  initialValue?: any;
-  column?: number;
-  meta?: Record<string, string>;
+  name: keyof TValues & string
+  label: string
+  type: FieldType<TCustom>
+  description?: string
+  placeholder?: string
+  required?: boolean
+  readOnly?: boolean
+  disabled?: boolean
+  visible?: boolean
+  initialValue?: any
+  column?: number
+  meta?: Record<string, string>
 }
 
 export interface TextFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "text";
+  type: "text"
 }
 
 export interface SelectFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "select";
-  data: { label: string; value: string }[];
+  type: "select"
+  data: { label: string; value: string }[]
 }
 
 export interface CheckboxFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "checkbox";
+  type: "checkbox"
 }
 
 export interface DateFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "date";
+  type: "date"
 }
 
 export interface ObjectFieldSchema<
   TValues extends Record<string, any> = Record<string, any>,
-  TInner extends Record<string, any> = Record<string, any>
-> extends BaseFieldSchema<TValues> {
-  type: "object";
-  fields: FieldSchema<TInner>[];
+  TInner extends Record<string, any> = Record<string, any>,
+  TCustom extends string = never
+> extends BaseFieldSchema<TValues, TCustom> {
+  type: "object"
+  fields: FieldSchema<TInner, TCustom>[]
 }
 
 export interface ArrayFieldSchema<
   TValues extends Record<string, any> = Record<string, any>,
-  TInner extends Record<string, any> = Record<string, any>
-> extends BaseFieldSchema<TValues> {
-  type: "array";
-  fields: FieldSchema<TInner>[];
+  TInner extends Record<string, any> = Record<string, any>,
+  TCustom extends string = never
+> extends BaseFieldSchema<TValues, TCustom> {
+  type: "array"
+  fields: FieldSchema<TInner, TCustom>[]
 }
 
 export interface SwitchFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "switch";
+  type: "switch"
 }
 
 export interface RichTextEditorFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "texteditor";
-}
-
-export interface RichTextEditorFieldSchema<
-  TValues extends Record<string, any> = Record<string, any>
-> extends BaseFieldSchema<TValues> {
-  type: "texteditor";
+  type: "texteditor"
 }
 
 export interface TimeFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "time";
+  type: "time"
 }
 
 export interface NumberFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "number";
+  type: "number"
 }
 
 export interface DateTimeFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "datetime";
+  type: "datetime"
 }
 
 export interface TagsFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
-  type: "tags";
+  type: "tags"
 }
 
 export type FieldSchema<
-  TValues extends Record<string, any> = Record<string, any>
+  TValues extends Record<string, any> = Record<string, any>,
+  TCustom extends string = never
 > =
   | TextFieldSchema<TValues>
   | SelectFieldSchema<TValues>
   | CheckboxFieldSchema<TValues>
   | DateFieldSchema<TValues>
-  | ObjectFieldSchema<TValues>
-  | ArrayFieldSchema<TValues>
+  | ObjectFieldSchema<TValues, any, TCustom>
+  | ArrayFieldSchema<TValues, any, TCustom>
   | SwitchFieldSchema<TValues>
-  | RichTextEditorFieldSchema
-  | TimeFieldSchema
-  | NumberFieldSchema
-  | DateTimeFieldSchema
-  | TagsFieldSchema;
+  | RichTextEditorFieldSchema<TValues>
+  | TimeFieldSchema<TValues>
+  | NumberFieldSchema<TValues>
+  | DateTimeFieldSchema<TValues>
+  | TagsFieldSchema<TValues>
+  | (BaseFieldSchema<TValues, TCustom>)
