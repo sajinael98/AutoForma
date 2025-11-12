@@ -65,19 +65,6 @@ const App = () => (
   <AutoForm
     schema={userFormSchema}
     onSubmit={(values) => console.log("Submitted:", values)}
-    updateFieldSchema={{
-      address: {
-        city: (field, values) => ({
-          ...field,
-          disabled: !values?.address?.country,
-        }),
-      },
-    }}
-    customFieldTypes={{
-      text: (field, form) => (
-        <input {...form.getInputProps(field.name)} />
-      ),
-    }}
   />
 );
 ```
