@@ -9,3 +9,4 @@ export type { FieldSchema } from "@/fields/types";
 export { FieldRendererResolver } from "@/fields/resolver/FieldRendererResolver";
 export { default as FieldLayoutWrapper } from "@/fields/FieldRenderer/FieldLayoutWrapper";
 export { default as DefaultFieldRender } from "@/fields/FieldRenderer/DefaultFieldRender";
+export { useRenderers } from "@/fields/context/RenderersContext";

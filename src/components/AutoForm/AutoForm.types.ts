@@ -45,6 +45,7 @@ export type OnFieldChangeMap<
   TValues extends Record<string, any> = Record<string, any>
 > = {
   [K in keyof TValues]?: (
+    path: string,
     value: TValues[K],
     form: UseFormReturnType<TValues>
   ) => void | Promise<void>;

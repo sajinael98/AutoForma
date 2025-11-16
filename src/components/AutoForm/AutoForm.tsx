@@ -49,7 +49,7 @@ export const AutoForm = forwardRef(function AutoForm<
       return {
         onFieldChange: async (value: any) => {
           payload.inputProps.onChange(value);
-          await onFieldChange?.[payload.field]?.(value, form);
+          await onFieldChange?.[payload.field.replace(/\.\d+\./g, '.')]?.(payload.field, value, form);
         },
       };
     },
