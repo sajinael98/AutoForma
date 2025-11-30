@@ -31,8 +31,9 @@ export const AutoForm = forwardRef(function AutoForm<
     onSubmit,
     onFieldChange,
     updateFieldSchema,
-    prepareValues = (v) => v,
-    afterSubmit = () => {},
+    preFill = (v) => v,
+    preSubmit = (v) => v,
+    postSubmit = () => {},
     submitButton = true,
     customFieldRenderers,
     customFieldTypes,
@@ -49,7 +50,11 @@ export const AutoForm = forwardRef(function AutoForm<
       return {
         onFieldChange: async (value: any) => {
           payload.inputProps.onChange(value);
-          await onFieldChange?.[payload.field.replace(/\.\d+\./g, '.')]?.(payload.field, value, form);
+          await onFieldChange?.[payload.field.replace(/\.\d+\./g, ".")]?.(
+            payload.field,
+            value,
+            form
+          );
         },
       };
     },
@@ -87,9 +92,9 @@ export const AutoForm = forwardRef(function AutoForm<
       form.setErrors(requiredFields);
       return;
     }
-    const transformValuesBeforeSubmit = await prepareValues(vals);
+    const transformValuesBeforeSubmit = await preSubmit(vals);
     await onSubmit(transformValuesBeforeSubmit);
-    afterSubmit(transformValuesBeforeSubmit);
+    postSubmit(transformValuesBeforeSubmit);
   });
 
   useImperativeHandle(ref, () => ({
@@ -114,7 +119,7 @@ export const AutoForm = forwardRef(function AutoForm<
     setIsFormLoading(true);
     try {
       const temp = typeof source === "function" ? await source() : source;
-      const formValues = generateInitialValues(schema, temp);
+      const formValues = await preFill(generateInitialValues(schema, temp));
       form.setValues(formValues);
       form.setDirty(formValues);
     } finally {

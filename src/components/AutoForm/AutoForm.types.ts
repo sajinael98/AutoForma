@@ -14,9 +14,10 @@ export type AutoFormProps<
   initialValues?: ValueProvider<TValues>;
   currentValues?: ValueProvider<TValues>;
 
-  prepareValues?: (values: TValues) => TValues | Promise<TValues>;
+  preFill?: (values: TValues) => TValues | Promise<TValues>;
+  preSubmit?: (values: TValues) => TValues | Promise<TValues>;
   onSubmit: (values: TValues) => void | Promise<void>;
-  afterSubmit?: (values: TValues) => void | Promise<void>;
+  postSubmit?: (values: TValues) => void | Promise<void>;
 
   validate?: FormValidateInput<TValues>;
   readOnly?: boolean;
