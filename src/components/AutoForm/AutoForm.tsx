@@ -118,10 +118,12 @@ export const AutoForm = forwardRef(function AutoForm<
 
     setIsFormLoading(true);
     try {
-      const temp = typeof source === "function" ? await source() : source;
-      const formValues = await preFill(generateInitialValues(schema, temp));
-      form.setValues(formValues);
-      form.setDirty(formValues);
+      const rawValues = typeof source === "function" ? await source() : source;
+      const preparedValues = await preFill(rawValues);
+      const initialValues = generateInitialValues(schema, preparedValues);
+
+      form.setValues(initialValues);
+      form.setDirty(initialValues);
     } finally {
       setIsFormLoading(false);
     }

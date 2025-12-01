@@ -1,6 +1,6 @@
 {
   "name": "autoforma",
-  "version": "1.0.67",
+  "version": "1.0.69",
   "description": "AutoForma is a dynamic form builder based on Mantine and React",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
