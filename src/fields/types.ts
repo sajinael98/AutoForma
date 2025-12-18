@@ -28,7 +28,7 @@ export interface BaseFieldSchema<
   visible?: boolean
   initialValue?: any
   column?: number
-  meta?: Record<string, string>
+  meta?: Record<string, any>
 }
 
 export interface TextFieldSchema<

@@ -1,53 +1,35 @@
-import { DateInput } from "@mantine/dates";
-import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
+import { DateInput } from '@mantine/dates'
+import { FieldRendererProps } from '../FieldRenderer/FieldRenderer.types'
+import dayjs from 'dayjs'
 
 type DateFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues>;
+> = FieldRendererProps<TValues>
 
 export function DateFieldRenderer<
   TValues extends Record<string, any> = Record<string, any>
 >({ field, form }: DateFieldRendererProps<TValues>) {
-  const inputProps = form.getInputProps(field.name);
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
+  const inputProps = form.getInputProps(field.name)
 
-  const currentValue = inputProps.value
-    ? typeof inputProps.value === "string"
-      ? new Date(inputProps.value)
-      : inputProps.value
-    : null;
+  const isReadOnly = field.readOnly === true
+  const isDisabled = field.disabled === true
 
   const handleChange = (value: Date | null) => {
-    const transformed = value ? value.toISOString() : null;
-    inputProps.onFieldChange(transformed);
-  };
-
-  if (isReadOnly || isDisabled) {
-    return (
-      <DateInput
-        valueFormat="YYYY-MMM-DD"
-        value={currentValue}
-        readOnly={isReadOnly}
-        disabled={isDisabled}
-        required={field.required}
-        placeholder={field.placeholder}
-        variant={isReadOnly ? "filled" : "default"}
-        error={undefined}
-      />
-    );
+    inputProps.onFieldChange(dayjs(value, 'YYYY-MM-DD').toDate());
   }
 
   return (
     <DateInput
-      valueFormat="YYYY-MMM-DD"
-      value={currentValue}
-      onChange={handleChange}
+      value={inputProps.value ?? null}
+      onChange={isReadOnly || isDisabled ? undefined : handleChange}
+      readOnly={isReadOnly}
+      disabled={isDisabled}
       required={field.required}
       placeholder={field.placeholder}
+      valueFormat="YYYY-MM-DD"
       error={undefined}
     />
-  );
+  )
 }
 
-export default DateFieldRenderer;
+export default DateFieldRenderer

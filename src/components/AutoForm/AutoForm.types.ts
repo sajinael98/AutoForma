@@ -67,4 +67,7 @@ export interface AutoFormRef<
   isValid: () => boolean;
   isDirty: () => boolean;
   isLoading: () => boolean;
+
+  watch: (callback: (values: any) => void) => () => void;
+
 }
