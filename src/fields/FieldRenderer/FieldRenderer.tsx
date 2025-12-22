@@ -1,92 +1,57 @@
-import ArrayFieldRenderer from "../renderers/ArrayFieldRenderer";
-import CheckBoxFieldRenderer from "../renderers/CheckBoxFieldRenderer";
-import DateFieldRenderer from "../renderers/DateFieldRenderer";
-import DateTimeFieldRenderer from "../renderers/DateTimeFieldRenderer";
-import NumberFieldRenderer from "../renderers/NumberFieldRenderer";
-import ObjectFieldRenderer from "../renderers/ObjectFieldRenderer";
-import RichTextEditorFieldRenderer from "../renderers/RichTextEditorFieldRenderer";
-import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
-import SwitchFieldRenderer from "../renderers/SwitchFieldRenderer";
-import TagsInputFieldRenderer from "../renderers/TagsFieldRenderer";
-import TextFieldRenderer from "../renderers/TextFieldRenderer";
-import TimeFieldRenderer from "../renderers/TimeFieldRenderer";
-import DefaultFieldRender from "./DefaultFieldRender";
-import { FieldRendererProps } from "./FieldRenderer.types";
+import { useFormContext } from "@/components/AutoForm/context/FormContext";
+import { useRenderers } from "@/components/AutoForm/context/RenderersContext";
+import { useUpdateFieldSchema } from "@/components/AutoForm/context/UpdateFieldSchemaContext";
+import { useEffect, useState } from "react";
+import { FieldSchema } from "../types";
 
-export function FieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->(props: FieldRendererProps<TValues>) {
-  const {
-    layout,
-    field: { required, ...field },
-    form,
-  } = props;
+const FieldRenderer = (props: { fieldSchema: FieldSchema }) => {
+  const { fieldSchema } = props;
 
-  let InputNode: React.ReactNode = null;
+  const chainCtx = useRenderers();
+  const updateFieldSchemaCtx = useUpdateFieldSchema();
+  const form = useFormContext();
 
-  switch (field.type) {
-    case "text":
-      InputNode = <TextFieldRenderer field={field} form={props.form} />;
-      break;
+  const [resolvedFieldSchema, setResolvedFieldSchema] =
+    useState<FieldSchema>(fieldSchema);
 
-    case "select":
-      InputNode = <SelectFieldRenderer field={field} form={props.form} />;
-      break;
+  useEffect(() => {
+    let cancelled = false;
 
-    case "object":
-      InputNode = (
-        <ObjectFieldRenderer field={field} form={form} layout={layout} />
-      );
-      break;
+    async function resolveSchema() {
+      const key = fieldSchema.name.replace(/\.\d+/g, "");
 
-    case "array":
-      InputNode = (
-        <ArrayFieldRenderer field={field} form={form} layout={layout} />
-      );
-      break;
+      const updater = updateFieldSchemaCtx?.[key];
 
-    case "checkbox":
-      InputNode = <CheckBoxFieldRenderer field={field} form={form} />;
-      break;
+      if (typeof updater === "function") {
+        const newSchema = await updater(
+          fieldSchema.name,
+          fieldSchema,
+          form.getValues()
+        );
+        if (!cancelled && newSchema) {
+          setResolvedFieldSchema(newSchema);
+        }
+        return;
+      }
 
-    case "number":
-      InputNode = <NumberFieldRenderer field={field} form={form} />;
-      break;
+      if (!cancelled) {
+        setResolvedFieldSchema(fieldSchema);
+      }
+    }
 
-    case "date":
-      InputNode = <DateFieldRenderer field={field} form={form} />;
-      break;
+    resolveSchema();
 
-    case "datetime":
-      InputNode = <DateTimeFieldRenderer field={field} form={form} />;
-      break;
+    return () => {
+      cancelled = true;
+    };
+  }, [fieldSchema, updateFieldSchemaCtx]);
 
-    case "switch":
-      InputNode = <SwitchFieldRenderer field={field} form={form} />;
-      break;
+  if (!resolvedFieldSchema) return null;
 
-    case "texteditor":
-      InputNode = <RichTextEditorFieldRenderer field={field} form={form} />;
-      break;
+  const Render = chainCtx?.resolve(resolvedFieldSchema);
+  if (!Render) return null;
 
-    case "time":
-      InputNode = <TimeFieldRenderer field={field} form={form} />;
-      break;
-
-    case "tags":
-      InputNode = <TagsInputFieldRenderer field={field} form={form} />;
-      break;
-
-    default:
-      InputNode = <div>Unsupported field type: {field.type}</div>;
-      break;
-  }
-
-  return (
-    <DefaultFieldRender field={field} form={form}>
-      {InputNode}
-    </DefaultFieldRender>
-  );
-}
+  return <Render field={resolvedFieldSchema} form={form} />;
+};
 
 export default FieldRenderer;

@@ -1,19 +1,31 @@
+import { Box, Stack, Text } from "@mantine/core";
+import CheckBoxFieldRenderer from "../renderers/CheckBoxFieldRenderer";
+import DateFieldRenderer from "../renderers/DateFieldRenderer";
+import DateTimeFieldRenderer from "../renderers/DateTimeFieldRenderer";
+import NumberFieldRenderer from "../renderers/NumberFieldRenderer";
+import RichTextEditorFieldRenderer from "../renderers/RichTextEditorFieldRenderer";
+import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
+import SwitchFieldRenderer from "../renderers/SwitchFieldRenderer";
+import TagsInputFieldRenderer from "../renderers/TagsFieldRenderer";
+import TextFieldRenderer from "../renderers/TextFieldRenderer";
+import TimeFieldRenderer from "../renderers/TimeFieldRenderer";
+import { DefaultFieldRendererProps } from "./FieldRenderer.types";
+import { FieldSchema } from "../types";
 import React from "react";
-import { Box, Text, Stack } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { FieldSchema } from "@/fields/types";
+import ObjectLayout from "./ObjectLayout";
+import ArrayLayout from "./ArrayLayout";
+import { useFormContext } from "@/components/AutoForm/context/FormContext";
 
-type DefaultFieldRenderProps<TValues extends Record<string, any>> = {
-  field: FieldSchema<TValues>;
-  form: UseFormReturnType<TValues>;
+interface DefaultFieldRenderWrapperProps {
+  field: FieldSchema;
   children: React.ReactNode;
-};
+}
 
-export function DefaultFieldRender<TValues extends Record<string, any>>({
+const DefaultFieldRenderWrapper = ({
   field,
-  form,
   children,
-}: DefaultFieldRenderProps<TValues>) {
+}: DefaultFieldRenderWrapperProps) => {
+  const form = useFormContext();
   const { error } = form.getInputProps(field.name);
 
   return (
@@ -51,6 +63,74 @@ export function DefaultFieldRender<TValues extends Record<string, any>>({
       )}
     </Stack>
   );
+};
+
+export function FieldRenderer<
+  TValues extends Record<string, any> = Record<string, any>
+>(props: DefaultFieldRendererProps<TValues>) {
+  const { layout, field, form } = props;
+
+  let InputNode: React.ReactNode = null;
+
+  switch (field.type) {
+    case "text":
+      InputNode = <TextFieldRenderer field={field} form={form} />;
+      break;
+
+    case "select":
+      InputNode = <SelectFieldRenderer field={field} form={form} />;
+      break;
+
+    case "object":
+      InputNode = <ObjectLayout field={field} form={form} layout={layout} />;
+      break;
+
+    case "array":
+      InputNode = <ArrayLayout field={field} form={form} layout={layout} />;
+      break;
+
+    case "checkbox":
+      InputNode = <CheckBoxFieldRenderer field={field} form={form} />;
+      break;
+
+    case "number":
+      InputNode = <NumberFieldRenderer field={field} form={form} />;
+      break;
+
+    case "date":
+      InputNode = <DateFieldRenderer field={field} form={form} />;
+      break;
+
+    case "datetime":
+      InputNode = <DateTimeFieldRenderer field={field} form={form} />;
+      break;
+
+    case "switch":
+      InputNode = <SwitchFieldRenderer field={field} form={form} />;
+      break;
+
+    case "texteditor":
+      InputNode = <RichTextEditorFieldRenderer field={field} form={form} />;
+      break;
+
+    case "time":
+      InputNode = <TimeFieldRenderer field={field} form={form} />;
+      break;
+
+    case "tags":
+      InputNode = <TagsInputFieldRenderer field={field} form={form} />;
+      break;
+
+    default:
+      InputNode = <div>Unsupported field type: {field.type}</div>;
+      break;
+  }
+
+  return (
+    <DefaultFieldRenderWrapper field={field}>
+      {InputNode}
+    </DefaultFieldRenderWrapper>
+  );
 }
 
-export default DefaultFieldRender;
+export default FieldRenderer;

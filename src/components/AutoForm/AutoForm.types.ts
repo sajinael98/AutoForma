@@ -1,46 +1,20 @@
-import { CustomRenderersConfig } from "@/fields/renderer.types";
 import { FieldSchema } from "@/fields/types";
-import { FormValidateInput, UseFormReturnType } from "@mantine/form";
+import { UseFormReturnType } from "@mantine/form";
 
-type ValueProvider<TValues> = () =>
-  | Partial<TValues>
-  | Promise<Partial<TValues>>;
+type FormValues = Record<string, any>;
 
-export type AutoFormProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = CustomRenderersConfig<TValues> & {
-  schema: (FieldSchema<TValues> & Record<string, any>)[];
-
-  initialValues?: ValueProvider<TValues>;
-  currentValues?: ValueProvider<TValues>;
-
-  preFill?: (values: TValues) => TValues | Promise<TValues>;
-  preSubmit?: (values: TValues) => TValues | Promise<TValues>;
-  onSubmit: (values: TValues) => void | Promise<void>;
-  postSubmit?: (values: TValues) => void | Promise<void>;
-
-  validate?: FormValidateInput<TValues>;
-  readOnly?: boolean;
-
-  onFieldChange?: OnFieldChangeMap<TValues>;
-
-  layout?: "vertical" | "horizontal" | "grid";
-
-  updateFieldSchema?: UpdateFieldSchemaMap<TValues>;
-
-  submitButton?: boolean | React.ReactNode;
-
-  loading?: boolean;
+export type UpdateFieldSchema = {
+  [key: string]: (
+    path: string,
+    fieldSchema: FieldSchema,
+    values: FormValues
+  ) => FieldSchema | Promise<FieldSchema>;
 };
 
-export type UpdateFieldSchemaMap<
-  TValues extends Record<string, any> = Record<string, any>
-> = {
-  [K in keyof TValues]?: (
-    schema: FieldSchema<TValues>,
-    values: TValues
-  ) => FieldSchema<TValues>;
-};
+export interface FieldRendererProps<TValues = any> {
+  field: FieldSchema;
+  form: UseFormReturnType<TValues>;
+}
 
 export type OnFieldChangeMap<
   TValues extends Record<string, any> = Record<string, any>
@@ -52,14 +26,68 @@ export type OnFieldChangeMap<
   ) => void | Promise<void>;
 };
 
-export interface AutoFormRef<
-  TValues extends Record<string, any> = Record<string, any>
+export interface AutoFormProps<
+  FormValues extends Record<string, any> = Record<string, any>
 > {
+  schema: FieldSchema[];
+
+  readOnly?: boolean;
+  disabled?: boolean;
+
+  layout?: "vertical" | "horizontal" | "grid";
+
+  primaryAction?: boolean;
+  submitLabel?: string;
+
+  loading?: boolean;
+
+  values?: () => FormValues | Promise<FormValues>;
+  initialValues?: () => FormValues | Promise<FormValues>;
+
+  onFieldChange?: OnFieldChangeMap<FormValues>;
+
+  updateFieldSchema?: UpdateFieldSchema;
+
+  validate?: (
+    values: FormValues
+  ) =>
+    | Partial<Record<string, string>>
+    | Promise<Partial<Record<string, string>>>;
+
+  preSubmit?: (values: FormValues) => FormValues | Promise<FormValues>;
+  onSubmit: (values: FormValues) => void | Promise<void>;
+  postSubmit?: (values: FormValues) => void | Promise<void>;
+
+  uiConfig?: {
+    layout?: {
+      gap?: number;
+      columns?: number;
+      align?: "start" | "center" | "end";
+    };
+
+    customTypeRenderer?: Record<
+      string,
+      React.ComponentType<FieldRendererProps<FormValues>>
+    >;
+
+    customFieldNameRenderer?: Record<
+      string,
+      React.ComponentType<FieldRendererProps<FormValues>>
+    >;
+
+    customFieldTypeRenderer?: Record<
+      string,
+      React.ComponentType<FieldRendererProps<FormValues>>
+    >;
+  };
+}
+
+export interface AutoFormRef {
   submit: () => void;
-  reset: (values?: Partial<TValues>) => void;
+  reset: (values?: Partial<FormValues>) => void;
   validate: () => boolean;
-  getValues: () => TValues;
-  setValues: (values: Partial<TValues>) => void;
+  getValues: () => FormValues;
+  setValues: (values: Partial<FormValues>) => void;
 
   getFieldValue: (path: string) => any;
   setFieldValue: (path: string, value: any) => void;
@@ -68,6 +96,8 @@ export interface AutoFormRef<
   isDirty: () => boolean;
   isLoading: () => boolean;
 
-  watch: (callback: (values: any) => void) => () => void;
-
+  watch: <Field extends string>(
+    path: Field,
+    subscriber: (value: any, previousValue: any) => void
+  ) => void;
 }

@@ -4,9 +4,5 @@ export type {
   AutoFormProps,
   AutoFormRef,
 } from "@/components/AutoForm/AutoForm.types";
-export type { FieldRendererProps } from "@/fields/FieldRenderer/FieldRenderer.types";
-export type { FieldSchema } from "@/fields/types";
-export { FieldRendererResolver } from "@/fields/resolver/FieldRendererResolver";
-export { default as FieldLayoutWrapper } from "@/fields/FieldRenderer/FieldLayoutWrapper";
-export { default as DefaultFieldRender } from "@/fields/FieldRenderer/DefaultFieldRender";
-export { useRenderers } from "@/fields/context/RenderersContext";
+export { default as FieldRenderer } from "@/fields/FieldRenderer/FieldRenderer";
+export type { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";

@@ -1,7 +1,7 @@
 import { UseFormReturnType } from "@mantine/form";
 import { FieldSchema } from "../types";
 
-export interface FieldRendererProps<
+export interface DefaultFieldRendererProps<
   TValues extends Record<string, any> = Record<string, any>
 > {
   field: FieldSchema<TValues>;

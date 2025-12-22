@@ -1,204 +1,190 @@
-'use client'
-
-import { Button, Group, LoadingOverlay } from "@mantine/core"
-import { useForm } from "@mantine/form"
+import { Box, Button, Group } from "@mantine/core";
 import {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useMemo,
   useState,
-} from "react"
+} from "react";
 
-import { RenderersProvider } from "@/fields/context/RenderersContext"
-import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper"
-import FieldRendererResolver from "@/fields/resolver/FieldRendererResolver"
-import { layoutStrategies } from "@/fields/utils/layout.utils"
+import FieldRenderer from "@/fields/FieldRenderer/FieldRenderer";
+import { BuiltInHandler } from "@/fields/renderer-resolver/BuiltInHandler";
+import { FieldNameHandler } from "@/fields/renderer-resolver/FieldNameHandler";
+import { FieldTypeHandler } from "@/fields/renderer-resolver/FieldTypeHandler";
+import { RendererResolverChain } from "@/fields/renderer-resolver/RendererResolverChain";
+
+import { layoutStrategies } from "@/fields/utils/layout.utils";
+import { makeSchemaReadOnly } from "@/fields/utils/schema.utils";
 import {
   generateInitialValues,
   validateRequiredFields,
-} from "@/fields/utils/values.utils"
-import { AutoFormProps, AutoFormRef } from "./AutoForm.types"
+} from "@/fields/utils/values.utils";
 
-const subscribers = new Set<(values: any) => void>()
+import { RendererProvider } from "@/components/AutoForm/context/RenderersContext";
+import { UpdateFieldSchemaProvider } from "@/components/AutoForm/context/UpdateFieldSchemaContext";
+import { AutoFormProps, AutoFormRef } from "./AutoForm.types";
+import { FormProvider, FormValues, useForm } from "./context/FormContext";
 
-export const AutoForm = forwardRef(function AutoForm<
-  TValues extends Record<string, any> = Record<string, any>
->(
-  {
+const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
+  const {
     schema,
-    currentValues,
-    initialValues,
-    layout = "vertical",
     readOnly,
-    validate,
-    onSubmit,
-    onFieldChange,
-    updateFieldSchema,
-    preFill = (v) => v,
+    primaryAction = true,
+    layout = "vertical",
+    loading = true,
+    values: getValues,
+    initialValues: getInitialValues,
     preSubmit = (v) => v,
+    onSubmit,
     postSubmit = () => {},
-    submitButton = true,
-    customFieldRenderers,
-    customFieldTypes,
-    customTypeRenderers,
-    loading,
-  }: AutoFormProps<TValues>,
-  ref: React.Ref<AutoFormRef<TValues>>
-) {
-  const [isFormLoading, setIsFormLoading] = useState(false)
+    updateFieldSchema = {},
+    uiConfig,
+    onFieldChange,
+  } = props;
 
-  const form = useForm<TValues>({
-    validate,
+  const finalSchema = useMemo(
+    () => (readOnly ? makeSchemaReadOnly(schema) : schema),
+    [schema, readOnly]
+  );
+
+  const [isFormLoading, setIsFormLoading] = useState(loading);
+
+  const form = useForm({
     enhanceGetInputProps(payload) {
       return {
         onFieldChange: async (value: any) => {
-          payload.inputProps.onChange(value)
+          payload.inputProps.onChange(value);
           await onFieldChange?.[payload.field.replace(/\.\d+\./g, ".")]?.(
             payload.field,
             value,
             form
-          )
+          );
         },
-      }
+      };
     },
-  })
+  });
 
-  const [internalValues, setInternalValues] = useState(form.getValues())
-
-  useEffect(() => {
-    setInternalValues(form.values)
-    subscribers.forEach((cb) => cb(form.values))
-  }, [form.values])
-
-  const Layout = layoutStrategies[layout]
-
-  const resolveSchema = (
-    schema: any[],
-    values: any,
-    updaters?: Record<string, any>
-  ): any[] => {
-    return schema.map((field) => {
-      if (field.type === "object" || field.type === "array") {
-        const innerUpdaters = updaters?.[field.name]
-        return {
-          ...field,
-          fields: resolveSchema(field.fields, values || {}, innerUpdaters),
-        }
-      }
-      const updater = updaters?.[field.name]
-      return updater ? updater(field, values) : field
-    })
-  }
-
-  const resolvedSchema = useMemo(() => {
-    if (!updateFieldSchema) return schema
-    const values = form.getValues()
-    return resolveSchema(schema, values, updateFieldSchema)
-  }, [schema, form.values, updateFieldSchema])
+  const rendererChain = useMemo(
+    () =>
+      new RendererResolverChain([
+        new FieldNameHandler(uiConfig?.customFieldNameRenderer ?? {}),
+        new FieldTypeHandler(uiConfig?.customTypeRenderer ?? {}),
+        new BuiltInHandler(layout),
+      ]),
+    [layout, uiConfig]
+  );
 
   const handleSubmit = form.onSubmit(async (vals) => {
-    const requiredFields = validateRequiredFields(schema, vals)
-    if (Object.keys(requiredFields).length) {
-      form.setErrors(requiredFields)
-      return
+    const errors = validateRequiredFields(schema, vals);
+    if (Object.keys(errors).length) {
+      form.setErrors(errors);
+      return;
     }
-    const transformValuesBeforeSubmit = await preSubmit(vals)
-    await onSubmit(transformValuesBeforeSubmit)
-    postSubmit(transformValuesBeforeSubmit)
-  })
 
-  useImperativeHandle(ref, () => ({
-    submit: () => handleSubmit(),
-    reset: (v) => applyValues(v),
-    validate: () => {
-      const res = form.validate()
-      return Object.keys(res.errors).length === 0
-    },
-    getValues: () => form.getValues(),
-    setValues: (v) => form.setValues(v),
-    getFieldValue: (path) => form.getInputProps(path).value,
-    setFieldValue: (path, value) => form.setFieldValue(path, value),
-    isValid: () => Object.keys(form.validate().errors).length === 0,
-    isDirty: () => form.isDirty(),
-    isLoading: () => isFormLoading,
-    watch: (callback) => {
-      subscribers.add(callback)
-      return () => subscribers.delete(callback)
-    },
-  }))
+    const prepared = await preSubmit(vals);
+    await onSubmit(prepared);
+    postSubmit(prepared);
+  });
 
-  async function applyValues(source?: (() => any) | any) {
-    if (!source) return
-    setIsFormLoading(true)
-    try {
-      const rawValues = typeof source === "function" ? await source() : source
-      const preparedValues = await preFill(rawValues)
-      const initial = generateInitialValues(schema, preparedValues)
-      form.setValues(initial)
-      form.setDirty(initial)
-    } finally {
-      setIsFormLoading(false)
-    }
-  }
+  const applyValues = (values?: FormValues) => {
+    const initial = generateInitialValues(finalSchema, values);
+    form.setValues(initial);
+    form.resetDirty(initial);
+  };
 
   useEffect(() => {
-    if (initialValues) applyValues(initialValues)
-    else applyValues({})
-  }, [])
+    let cancelled = false;
 
-  useEffect(() => {
-    applyValues(currentValues)
-  }, [currentValues])
+    const load = async () => {
+      try {
+        if (cancelled) return;
+
+        if (getValues) return applyValues(await getValues());
+        if (getInitialValues) return applyValues(await getInitialValues());
+        applyValues();
+      } finally {
+        setIsFormLoading(false);
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [finalSchema, getValues, getInitialValues]);
+
+  useImperativeHandle(
+    ref,
+    (): AutoFormRef => ({
+      submit: () => handleSubmit(),
+
+      reset: (values?: Partial<FormValues>) => {
+        if (values) {
+          applyValues(values);
+          return;
+        }
+        form.reset();
+      },
+
+      validate: () => {
+        const errors = validateRequiredFields(schema, form.values);
+        form.setErrors(errors);
+        return Object.keys(errors).length === 0;
+      },
+
+      getValues: () => form.values,
+
+      setValues: (values: FormValues) => {
+        form.setValues(values);
+      },
+
+      getFieldValue: (path: string) => form.getInputProps(path).value,
+
+      setFieldValue: (path: string, value: any) => {
+        form.setFieldValue(path, value);
+      },
+
+      isValid: () => Object.keys(form.errors).length === 0,
+
+      isDirty: () => form.isDirty(),
+
+      isLoading: () => isFormLoading,
+
+      watch: (
+        path: string,
+        subscriber: (value: any, previousValue: any) => void
+      ) => {
+        return form.watch(path as any, subscriber as any);
+      },
+    })
+  );
 
   return (
-    <RenderersProvider
-      value={{ customFieldRenderers, customTypeRenderers, customFieldTypes }}
-    >
-      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
-        <LoadingOverlay visible={isFormLoading || loading} />
+    <FormProvider form={form}>
+      <UpdateFieldSchemaProvider value={updateFieldSchema}>
+        <RendererProvider value={rendererChain}>
+          <Box>
+            {layoutStrategies[layout](
+              finalSchema.map((field) => (
+                <FieldRenderer key={field.name} fieldSchema={field} />
+              ))
+            )}
 
-        {Layout(
-          <>
-            {resolvedSchema.map((field) => {
-              const effectiveField = {
-                ...field,
-                readOnly: field.readOnly || readOnly,
-              }
-              if (effectiveField.visible === false) return null
-              return (
-                <FieldLayoutWrapper
-                  field={effectiveField}
-                  layout={layout}
-                  key={effectiveField.name}
-                >
-                  <FieldRendererResolver
-                    field={effectiveField}
-                    form={form}
-                    customFieldRenderers={customFieldRenderers}
-                    customTypeRenderers={customTypeRenderers}
-                    customFieldTypes={customFieldTypes}
-                    layout={layout}
-                  />
-                </FieldLayoutWrapper>
-              )
-            })}
-          </>
-        )}
+            {primaryAction && (
+              <Group justify="flex-end">
+                <Button loading={isFormLoading} onClick={() => handleSubmit()}>
+                  Submit
+                </Button>
+              </Group>
+            )}
+          </Box>
+        </RendererProvider>
+      </UpdateFieldSchemaProvider>
+    </FormProvider>
+  );
+});
 
-        {!isFormLoading &&
-          (typeof submitButton === "boolean"
-            ? submitButton && (
-                <Group justify="flex-end" mt="md">
-                  <Button type="submit" loading={loading}>
-                    Submit
-                  </Button>
-                </Group>
-              )
-            : submitButton)}
-      </form>
-    </RenderersProvider>
-  )
-})
+AutoForm.displayName = "AutoForm";
 
-export default AutoForm
+export default AutoForm;
