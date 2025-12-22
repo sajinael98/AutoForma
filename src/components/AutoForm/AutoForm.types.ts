@@ -59,23 +59,17 @@ export interface AutoFormProps<
   postSubmit?: (values: FormValues) => void | Promise<void>;
 
   uiConfig?: {
-    layout?: {
-      gap?: number;
-      columns?: number;
-      align?: "start" | "center" | "end";
-    };
-
-    customTypeRenderer?: Record<
+    customTypeRenderers?: Record<
       string,
       React.ComponentType<FieldRendererProps<FormValues>>
     >;
 
-    customFieldNameRenderer?: Record<
+    customFieldNameRenderers?: Record<
       string,
       React.ComponentType<FieldRendererProps<FormValues>>
     >;
 
-    customFieldTypeRenderer?: Record<
+    customFieldTypeRenderers?: Record<
       string,
       React.ComponentType<FieldRendererProps<FormValues>>
     >;

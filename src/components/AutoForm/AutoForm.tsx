@@ -24,6 +24,7 @@ import { RendererProvider } from "@/components/AutoForm/context/RenderersContext
 import { UpdateFieldSchemaProvider } from "@/components/AutoForm/context/UpdateFieldSchemaContext";
 import { AutoFormProps, AutoFormRef } from "./AutoForm.types";
 import { FormProvider, FormValues, useForm } from "./context/FormContext";
+import { FieldFieldTypeHandler } from "@/fields/renderer-resolver/FieldFieldTypeHandler";
 
 const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
   const {
@@ -67,8 +68,9 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
   const rendererChain = useMemo(
     () =>
       new RendererResolverChain([
-        new FieldNameHandler(uiConfig?.customFieldNameRenderer ?? {}),
-        new FieldTypeHandler(uiConfig?.customTypeRenderer ?? {}),
+        new FieldNameHandler(uiConfig?.customFieldNameRenderers ?? {}),
+        new FieldFieldTypeHandler(uiConfig?.customFieldTypeRenderers ?? {}),
+        new FieldTypeHandler(uiConfig?.customTypeRenderers ?? {}),
         new BuiltInHandler(layout),
       ]),
     [layout, uiConfig]

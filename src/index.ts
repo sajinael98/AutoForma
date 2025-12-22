@@ -6,3 +6,4 @@ export type {
 } from "@/components/AutoForm/AutoForm.types";
 export { default as FieldRenderer } from "@/fields/FieldRenderer/FieldRenderer";
 export type { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";
+export type { FieldSchema } from "@/fields/types";
