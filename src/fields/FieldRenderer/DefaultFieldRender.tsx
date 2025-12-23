@@ -1,4 +1,6 @@
-import { Box, Stack, Text } from "@mantine/core";
+import { useFormContext } from "@/components/AutoForm/context/FormContext";
+import { Stack, Text } from "@mantine/core";
+import React from "react";
 import CheckBoxFieldRenderer from "../renderers/CheckBoxFieldRenderer";
 import DateFieldRenderer from "../renderers/DateFieldRenderer";
 import DateTimeFieldRenderer from "../renderers/DateTimeFieldRenderer";
@@ -9,19 +11,18 @@ import SwitchFieldRenderer from "../renderers/SwitchFieldRenderer";
 import TagsInputFieldRenderer from "../renderers/TagsFieldRenderer";
 import TextFieldRenderer from "../renderers/TextFieldRenderer";
 import TimeFieldRenderer from "../renderers/TimeFieldRenderer";
-import { DefaultFieldRendererProps } from "./FieldRenderer.types";
 import { FieldSchema } from "../types";
-import React from "react";
-import ObjectLayout from "./ObjectLayout";
 import ArrayLayout from "./ArrayLayout";
-import { useFormContext } from "@/components/AutoForm/context/FormContext";
+import { DefaultFieldRendererProps } from "./FieldRenderer.types";
+import ObjectLayout from "./ObjectLayout";
 
 interface DefaultFieldRenderWrapperProps {
   field: FieldSchema;
   children: React.ReactNode;
+  layout?: "vertical" | "horizontal" | "grid";
 }
 
-const DefaultFieldRenderWrapper = ({
+export const DefaultFieldRenderWrapper = ({
   field,
   children,
 }: DefaultFieldRenderWrapperProps) => {
@@ -48,7 +49,7 @@ const DefaultFieldRenderWrapper = ({
         </Text>
       )}
 
-      <Box>{children}</Box>
+      {children}
 
       {field.description && (
         <Text size="xs" c="dimmed" mt={2} style={{ lineHeight: 1.4 }}>

@@ -25,6 +25,7 @@ import { UpdateFieldSchemaProvider } from "@/components/AutoForm/context/UpdateF
 import { AutoFormProps, AutoFormRef } from "./AutoForm.types";
 import { FormProvider, FormValues, useForm } from "./context/FormContext";
 import { FieldFieldTypeHandler } from "@/fields/renderer-resolver/FieldFieldTypeHandler";
+import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
 
 const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
   const {
@@ -169,7 +170,9 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
           <Box>
             {layoutStrategies[layout](
               finalSchema.map((field) => (
-                <FieldRenderer key={field.name} fieldSchema={field} />
+                <FieldLayoutWrapper layout={layout} field={field}>
+                  <FieldRenderer key={field.name} fieldSchema={field} />
+                </FieldLayoutWrapper>
               ))
             )}
 
