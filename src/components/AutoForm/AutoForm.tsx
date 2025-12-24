@@ -26,6 +26,7 @@ import { AutoFormProps, AutoFormRef } from "./AutoForm.types";
 import { FormProvider, FormValues, useForm } from "./context/FormContext";
 import { FieldFieldTypeHandler } from "@/fields/renderer-resolver/FieldFieldTypeHandler";
 import FieldLayoutWrapper from "@/fields/FieldRenderer/FieldLayoutWrapper";
+import { FormFieldSubscriber } from "@mantine/form";
 
 const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
   const {
@@ -42,6 +43,7 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
     updateFieldSchema = {},
     uiConfig,
     onFieldChange,
+    onValuesChange,
   } = props;
 
   const finalSchema = useMemo(
@@ -136,7 +138,7 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
         return Object.keys(errors).length === 0;
       },
 
-      getValues: () => form.values,
+      getValues: () => form.getValues(),
 
       setValues: (values: FormValues) => {
         form.setValues(values);
@@ -144,8 +146,13 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
 
       getFieldValue: (path: string) => form.getInputProps(path).value,
 
-      setFieldValue: (path: string, value: any) => {
+      setFieldValue: async (path: string, value: any) => {
         form.setFieldValue(path, value);
+        await onFieldChange?.[path.replace(/\.\d+\./g, ".")]?.(
+          path,
+          value,
+          form
+        );
       },
 
       isValid: () => Object.keys(form.errors).length === 0,
@@ -153,15 +160,12 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
       isDirty: () => form.isDirty(),
 
       isLoading: () => isFormLoading,
-
-      watch: (
-        path: string,
-        subscriber: (value: any, previousValue: any) => void
-      ) => {
-        return form.watch(path as any, subscriber as any);
-      },
     })
   );
+
+  useEffect(() => {
+    onValuesChange?.(form.getValues());
+  }, [form.getValues()]);
 
   return (
     <FormProvider form={form}>
@@ -170,8 +174,12 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
           <Box>
             {layoutStrategies[layout](
               finalSchema.map((field) => (
-                <FieldLayoutWrapper layout={layout} field={field}>
-                  <FieldRenderer key={field.name} fieldSchema={field} />
+                <FieldLayoutWrapper
+                  key={field.name}
+                  layout={layout}
+                  field={field}
+                >
+                  <FieldRenderer fieldSchema={field} />
                 </FieldLayoutWrapper>
               ))
             )}

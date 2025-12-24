@@ -46,8 +46,8 @@ const FieldRenderer = (props: { fieldSchema: FieldSchema }) => {
     };
   }, [fieldSchema, updateFieldSchemaCtx, form.getValues()]);
 
-  if (!fieldSchema.visible) return null;
-  
+  if (resolvedFieldSchema.visible === false) return null;
+
   if (!resolvedFieldSchema) return null;
 
   const Render = chainCtx?.resolve(resolvedFieldSchema);

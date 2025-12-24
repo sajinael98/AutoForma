@@ -58,6 +58,8 @@ export interface AutoFormProps<
   onSubmit: (values: FormValues) => void | Promise<void>;
   postSubmit?: (values: FormValues) => void | Promise<void>;
 
+  onValuesChange?: (values: FormValues) => void;
+
   uiConfig?: {
     customTypeRenderers?: Record<
       string,
@@ -89,9 +91,4 @@ export interface AutoFormRef {
   isValid: () => boolean;
   isDirty: () => boolean;
   isLoading: () => boolean;
-
-  watch: <Field extends string>(
-    path: Field,
-    subscriber: (value: any, previousValue: any) => void
-  ) => void;
 }
