@@ -1,211 +1,216 @@
-# 🚀 Introduction
+# AutoForma
 
-**AutoForma** is a modern, dynamic, and extensible **form builder for React** — built on top of [Mantine](https://mantine.dev/) and fully written in TypeScript.  
-It allows you to create powerful forms **entirely from JSON schema definitions**, removing repetitive boilerplate code and giving you full control over field behavior and layout.
-
-With AutoForma, you can:
-- 🧩 Define forms using schema objects — no manual wiring.
-- 🪄 Dynamically show, hide, or disable fields based on other values.
-- 🎨 Customize the UI with your own field renderers.
-- 🧠 Extend with new field types or layouts effortlessly.
-
-> 💡 AutoForma is perfect for dashboards, admin panels, and SaaS apps where flexibility and maintainability matter.
+AutoForma is a schema-driven form engine for React applications, built to create dynamic, scalable, and maintainable forms with minimal boilerplate.
 
 ---
 
-## 📦 Installation
+## What is AutoForma?
 
-Install **AutoForma** along with its required Mantine and React peer dependencies:
+AutoForma allows you to build complete forms declaratively using a structured schema instead of manually wiring inputs, state, and validation logic.
+
+It is designed for dynamic and data-driven applications such as admin dashboards, SaaS platforms, and complex systems where form structures evolve over time.
+
+AutoForma currently uses Mantine as its UI layer, while keeping form logic, schema resolution, and rendering clearly separated.
+
+---
+
+## Features
+
+- Schema-driven form rendering
+- Mantine-based UI layer
+- Dynamic schema updates at runtime
+- Support for nested objects and arrays
+- Extensible renderer resolution chain
+- Custom field renderers and field types
+- Multiple layout strategies (grid, vertical, horizontal)
+- Read-only and view modes
+- Automatic validation handling
+- TypeScript-first design
+- Built for dynamic, data-driven applications
+
+---
+
+## Installation
+
+AutoForma is currently distributed via **npm only**.
 
 ```bash
-npm install autoforma   @mantine/core@^8.3.2   @mantine/hooks@^8.3.2   @mantine/form@^8.3.2   @mantine/dates@^8.3.2   @mantine/tiptap@^8.3.2   @tiptap/react@^3.6.6   react@^19.0.0   react-dom@^19.0.0
+npm install autoforma
 ```
 
----
+### Peer Dependencies
 
-## ⚙️ Setup Requirements
+```bash
+npm install react react-dom   @mantine/core   @mantine/form   @mantine/hooks   @mantine/dates   @mantine/tiptap
+```
 
-Before using `AutoForma`, wrap your app with the `MantineProvider`  
-and import Mantine’s global styles and optional TipTap editor styles:
+AutoForma is built and tested with **React 19** and **Mantine 8**.
+
+### Styles Setup
+
+```ts
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+```
+
+### Mantine Provider
 
 ```tsx
 import { MantineProvider } from "@mantine/core";
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
-import "@mantine/tiptap/styles.css";
 
-const Root = () => (
-  <MantineProvider>
-    <App />
-  </MantineProvider>
-);
+<MantineProvider>
+  <App />
+</MantineProvider>
 ```
-
-> ⚠️ Without wrapping your app in `MantineProvider`,  
-> the components may not render or style correctly.
 
 ---
 
-# 🧩 Basic Usage
-
-Here’s a quick example of how you can generate a complete form instantly using **AutoForma**.  
-Just define your schema and pass it to the `AutoForm` component — it handles layout, validation, and submission automatically.
+## Quick Start
 
 ```tsx
+import { useRef } from "react";
+import { MantineProvider, Button } from "@mantine/core";
 import AutoForm from "autoforma";
-import { userFormSchema } from "./schema";
+import { FieldSchema, AutoFormRef } from "autoforma";
 
-const App = () => (
-  <AutoForm
-    schema={userFormSchema}
-    onSubmit={(values) => console.log("Submitted:", values)}
-  />
-);
+interface UserForm {
+  firstName: string;
+  lastName: string;
+  fullName: string;
+}
+
+const schema: FieldSchema<UserForm>[] = [
+  { type: "text", name: "firstName", label: "First Name" },
+  { type: "text", name: "lastName", label: "Last Name" },
+  { type: "text", name: "fullName", label: "Full Name", visible: false },
+];
+
+export function App() {
+  const formRef = useRef<AutoFormRef>(null);
+
+  return (
+    <MantineProvider>
+      <Button onClick={() => formRef.current?.setFieldValue("firstName", "Saji")}>
+        Fill First Name
+      </Button>
+
+      <AutoForm
+        ref={formRef}
+        schema={schema}
+        onSubmit={(values) => console.log(values)}
+        updateFieldSchema={{
+          fullName: (_, field, values) =>
+            values.firstName && values.lastName
+              ? { ...field, visible: true }
+              : field,
+        }}
+        onFieldChange={{
+          firstName: (_, value, form) =>
+            form.setFieldValue(
+              "fullName",
+              `${value} ${form.values.lastName ?? ""}`
+            ),
+          lastName: (_, value, form) =>
+            form.setFieldValue(
+              "fullName",
+              `${form.values.firstName ?? ""} ${value}`
+            ),
+        }}
+      />
+    </MantineProvider>
+  );
+}
 ```
 
-> ✅ AutoForma automatically generates labels, validation, and layouts based on your schema.
+---
+
+## Field Types
+
+AutoForma determines how each field is rendered using a string-based `type` property.
+
+### Built-in Field Types
+
+- `text`
+- `number`
+- `select`
+- `checkbox`
+- `switch`
+- `date`
+- `datetime`
+- `time`
+- `tags`
+- `texteditor`
+- `object`
+- `array`
 
 ---
 
-# 🎨 Customization & Field Types
+## AutoForm Props
 
-AutoForma gives you full control over how your form behaves and looks.  
-You can **dynamically update field properties** (like visibility, enabled state, or placeholder)  
-and even **inject your own custom field types** using `customFieldTypes`.
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| schema | FieldSchema[] | Yes | Defines the structure of the form |
+| readOnly | boolean | No | Renders the form in read-only mode |
+| disabled | boolean | No | Disables all form inputs |
+| layout | vertical \| horizontal \| grid | No | Controls field layout |
+| primaryAction | boolean | No | Marks submit as the primary action |
+| submitLabel | string | No | Custom submit button label |
+| loading | boolean | No | Enables loading state |
+| values | () => FormValues \| Promise<FormValues> | No | Dynamically resolved values |
+| initialValues | () => FormValues \| Promise<FormValues> | No | Initial form values |
+| onFieldChange | OnFieldChangeMap | No | Field-level change handlers |
+| updateFieldSchema | UpdateFieldSchema | No | Dynamic schema updates |
+| validate | (values) => errors | No | Form-level validation |
+| preSubmit | (values) => values | No | Pre-submit transformation |
+| onSubmit | (values) => void | Yes | Submit handler |
+| postSubmit | (values) => void | No | Post-submit side effects |
+| onValuesChange | (values) => void | No | Global change listener |
+| uiConfig | object | No | UI customization config |
 
 ---
 
-## 🧠 Supported Field Types
+## AutoFormRef API
 
-Out of the box, AutoForma supports a rich set of field types:
+| Method | Type | Description |
+|---|---|---|
+| submit | () => void | Triggers form submission |
+| reset | (values?) => void | Resets form state |
+| validate | () => boolean | Runs validation |
+| getValues | () => FormValues | Returns current values |
+| setValues | (values) => void | Updates multiple values |
+| getFieldValue | (path) => any | Returns field value |
+| setFieldValue | (path, value) => void | Updates field value |
+| isValid | () => boolean | Returns validity state |
+| isDirty | () => boolean | Returns dirty state |
+| isLoading | () => boolean | Returns loading state |
 
-| Type | Description |
-|------|--------------|
-| `text` | Standard text input |
-| `number` | Numeric input |
-| `select` | Dropdown list |
-| `checkbox` | Boolean checkbox |
-| `date` | Date picker |
-| `datetime` | Combined date & time picker |
-| `time` | Time-only picker |
-| `object` | Nested object field (grouped sub-fields) |
-| `array` | Repeating array of fields |
-| `switch` | Toggle switch |
-| `texteditor` | Rich text editor (TipTap powered) |
-| `tags` | Multi-value tag input |
-| `TCustom` | Any custom type you define via `customFieldTypes` |
+---
 
-You can define your own type like this:
+## Customization
+
+AutoForma supports customization through custom field renderers and schema configuration.
 
 ```tsx
 <AutoForm
   schema={schema}
-  customFieldTypes={{
-    colorPicker: (field, form) => (
-      <input
-        type="color"
-        {...form.getInputProps(field.name)}
-      />
-    ),
+  uiConfig={{
+    customTypeRenderers: {
+      text: CustomTextRenderer,
+    },
   }}
 />
 ```
 
----
-
-# ⚙️ API Reference
-
-AutoForma exposes several TypeScript interfaces and configuration objects that make it fully type-safe and flexible.  
-Below are the main types you can use to configure and extend the library.
-
-## 🧩 `AutoFormProps<TValues>`
-
-The main props accepted by the `AutoForm` component.
-
-```ts
-export type AutoFormProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = CustomRenderersConfig<TValues> & {
-  schema: (FieldSchema<TValues> & Record<string, any>)[];
-
-  initialValues?: ValueProvider<TValues>;
-  currentValues?: ValueProvider<TValues>;
-
-  prepareValues?: (values: TValues) => TValues | Promise<TValues>;
-  onSubmit: (values: TValues) => void | Promise<void>;
-  afterSubmit?: (values: TValues) => void | Promise<void>;
-
-  validate?: FormValidateInput<TValues>;
-  readOnly?: boolean;
-
-  onFieldChange?: OnFieldChangeMap<TValues>;
-
-  layout?: "vertical" | "horizontal" | "grid";
-
-  updateFieldSchema?: UpdateFieldSchemaMap<TValues>;
-
-  submitButton?: boolean | React.ReactNode;
-
-  loading?: boolean;
-};
-```
-
-### 🧠 Description of Properties
-
-| Prop | Type | Description |
-|------|------|--------------|
-| `schema` | `FieldSchema[]` | The main schema defining all form fields. |
-| `initialValues` | `ValueProvider<TValues>` | Function or object returning the **initial form values** (called once). |
-| `currentValues` | `ValueProvider<TValues>` | Function or object providing **current values** (reactively updated). |
-| `prepareValues` | `(values) => TValues \| Promise<TValues>` | Modify or sanitize values before submit. |
-| `onSubmit` | `(values) => void \| Promise<void>` | Called when the form is submitted. |
-| `afterSubmit` | `(values) => void \| Promise<void>` | Called after successful submission (for side effects). |
-| `validate` | `FormValidateInput<TValues>` | Mantine validation config or validation schema. |
-| `readOnly` | `boolean` | Makes the entire form read-only. |
-| `onFieldChange` | `OnFieldChangeMap<TValues>` | Map of field-specific change handlers. |
-| `layout` | `"vertical" \| "horizontal" \| "grid"` | Form layout type. |
-| `updateFieldSchema` | `UpdateFieldSchemaMap<TValues>` | Dynamically modify schema based on values. |
-| `submitButton` | `boolean \| ReactNode` | Whether to render or customize the submit button. |
-| `loading` | `boolean` | Display a global loading state for the form. |
+For advanced customization examples, visit the Storybook.
 
 ---
 
-## 🧩 `CustomRenderersConfig<TValues>`
+## Documentation
 
-Defines all the ways you can override the default rendering logic.
+Storybook: https://sajinael98.github.io/AutoForma
 
-```ts
-export type CustomRenderersConfig<
-  TValues extends Record<string, any> = Record<string, any>
-> = {
-  customFieldRenderers?: Record<
-    string,
-    (
-      field: FieldSchema<TValues>,
-      form: UseFormReturnType<TValues>
-    ) => React.ReactNode
-  >;
-  customTypeRenderers?: Record<
-    string,
-    (
-      field: FieldSchema<TValues>,
-      form: UseFormReturnType<TValues>
-    ) => React.ReactNode
-  >;
-  customFieldTypes?: Record<
-    string,
-    (
-      field: FieldSchema<TValues>,
-      form: UseFormReturnType<TValues>
-    ) => React.ReactNode
-  >;
-};
-```
+---
 
-### 🧠 Description of Properties
+## License
 
-| Prop | Type | Description |
-|------|------|--------------|
-| `customFieldRenderers` | `Record<string, (field, form) => ReactNode>` | Override rendering for specific **field names**. |
-| `customTypeRenderers` | `Record<string, (field, form) => ReactNode>` | Override rendering for specific **field types** (like `select`, `text`, etc.). |
-| `customFieldTypes` | `Record<string, (field, form) => ReactNode>` | Register completely new **custom field types**. |
+MIT
