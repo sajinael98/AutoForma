@@ -49,14 +49,16 @@ const ArrayLayout = (props: DefaultFieldRendererProps<FormValues>) => {
                   />
                 );
               })}
-              <Button
-                size="compact-md"
-                color="red"
-                w={120}
-                onClick={() => handleRemoveRow(index)}
-              >
-                Delete row
-              </Button>
+              {allowedAdd && (
+                <Button
+                  size="compact-md"
+                  color="red"
+                  w={120}
+                  onClick={() => handleRemoveRow(index)}
+                >
+                  Delete row
+                </Button>
+              )}
             </React.Fragment>
           );
         })
