@@ -184,7 +184,7 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
               ))
             )}
 
-            {primaryAction && (
+            {primaryAction && !readOnly && (
               <Group justify="flex-end">
                 <Button loading={isFormLoading} onClick={() => handleSubmit()}>
                   Submit
