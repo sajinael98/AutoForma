@@ -1,20 +1,14 @@
 import { TimeInput } from "@mantine/dates";
-import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { useRef } from "react";
 import { ActionIcon } from "@mantine/core";
+import { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";
 
-type TimeFieldRendererProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues>;
-
-export function TimeFieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->({ field, form }: TimeFieldRendererProps<TValues>) {
+const TimeFieldRenderer = ({ field, form }: FieldRendererProps) => {
   const inputProps = form.getInputProps(field.name);
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
+  
+  const isReadOnly = field.readOnly;
+  const isDisabled = field.disabled;
 
-  // تأكد القيمة دايمًا string بصيغة HH:mm
   const currentValue =
     typeof inputProps.value === "string" ? inputProps.value : "";
 
@@ -30,20 +24,6 @@ export function TimeFieldRenderer<
     </ActionIcon>
   );
 
-  if (isReadOnly || isDisabled) {
-    return (
-      <TimeInput
-        value={currentValue}
-        readOnly={isReadOnly}
-        disabled={isDisabled}
-        required={field.required}
-        placeholder={field.placeholder}
-        variant={isReadOnly ? "filled" : "default"}
-        error={undefined}
-      />
-    );
-  }
-
   return (
     <TimeInput
       value={currentValue}
@@ -53,8 +33,10 @@ export function TimeFieldRenderer<
       error={undefined}
       ref={ref}
       rightSection={pickerControl}
+      readOnly={isReadOnly}
+      disabled={isDisabled}
     />
   );
-}
+};
 
 export default TimeFieldRenderer;

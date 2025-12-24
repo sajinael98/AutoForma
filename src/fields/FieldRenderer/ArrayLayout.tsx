@@ -14,8 +14,8 @@ const ArrayLayout = (props: DefaultFieldRendererProps<FormValues>) => {
 
   const rows = (inputProps?.value ?? []) as Record<string, any>[];
 
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
+  const isReadOnly = field.readOnly;
+  const isDisabled = field.disabled;
 
   const allowedAdd = !isReadOnly && !isDisabled;
 

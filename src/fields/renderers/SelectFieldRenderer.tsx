@@ -1,34 +1,14 @@
 import { Select } from "@mantine/core";
-import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 import { SelectFieldSchema } from "../types";
+import { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";
 
-type SelectFieldRendererProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues>;
-
-export function SelectFieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->({ field, form }: SelectFieldRendererProps<TValues>) {
-  const selectField = field as SelectFieldSchema<TValues>;
+const SelectFieldRenderer = ({ field, form }: FieldRendererProps) => {
+  const selectField = field as SelectFieldSchema;
 
   const inputProps = form.getInputProps(selectField.name as any);
-  const isReadOnly = selectField.readOnly === true;
-  const isDisabled = selectField.disabled === true;
 
-  if (isReadOnly || isDisabled) {
-    return (
-      <Select
-        data={selectField.data}
-        value={inputProps.value}
-        disabled={isDisabled || isReadOnly}
-        readOnly={isReadOnly}
-        placeholder={selectField.placeholder}
-        required={selectField.required}
-        variant={isReadOnly ? "filled" : "default"}
-        error={undefined}
-      />
-    );
-  }
+  const isReadOnly = selectField.readOnly;
+  const isDisabled = selectField.disabled;
 
   return (
     <Select
@@ -37,8 +17,10 @@ export function SelectFieldRenderer<
       placeholder={selectField.placeholder}
       error={undefined}
       onChange={(val) => inputProps.onFieldChange(val)}
+      disabled={isDisabled}
+      readOnly={isReadOnly}
     />
   );
-}
+};
 
 export default SelectFieldRenderer;

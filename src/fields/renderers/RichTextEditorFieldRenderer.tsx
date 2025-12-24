@@ -7,18 +7,13 @@ import Superscript from "@tiptap/extension-superscript";
 import SubScript from "@tiptap/extension-subscript";
 import Link from "@tiptap/extension-link";
 import { RichTextEditor } from "@mantine/tiptap";
-import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
+import { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";
 
-type RichTextEditorFieldRendererProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues>;
-
-export function RichTextEditorFieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->({ field, form }: RichTextEditorFieldRendererProps<TValues>) {
+const RichTextEditorFieldRenderer = ({ field, form }: FieldRendererProps) => {
   const inputProps = form.getInputProps(field.name);
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
+  
+  const isReadOnly = field.readOnly;
+  const isDisabled = field.disabled;
 
   const editor = useEditor({
     editable: !isReadOnly && !isDisabled,
@@ -87,6 +82,6 @@ export function RichTextEditorFieldRenderer<
       <RichTextEditor.Content />
     </RichTextEditor>
   );
-}
+};
 
 export default RichTextEditorFieldRenderer;

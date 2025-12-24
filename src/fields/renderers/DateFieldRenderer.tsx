@@ -1,27 +1,21 @@
-import { DateInput } from '@mantine/dates'
-import { FieldRendererProps } from '../FieldRenderer/FieldRenderer.types'
-import dayjs from 'dayjs'
+import { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";
+import { DateInput } from "@mantine/dates";
+import dayjs from "dayjs";
 
-type DateFieldRendererProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues>
+const DateFieldRenderer = ({ field, form }: FieldRendererProps) => {
+  const inputProps = form.getInputProps(field.name);
 
-export function DateFieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->({ field, form }: DateFieldRendererProps<TValues>) {
-  const inputProps = form.getInputProps(field.name)
-
-  const isReadOnly = field.readOnly === true
-  const isDisabled = field.disabled === true
+  const isReadOnly = field.readOnly;
+  const isDisabled = field.disabled;
 
   const handleChange = (value: Date | null) => {
-    inputProps.onFieldChange(dayjs(value, 'YYYY-MM-DD').toDate());
-  }
+    inputProps.onFieldChange(dayjs(value, "YYYY-MM-DD").toDate());
+  };
 
   return (
     <DateInput
       value={inputProps.value ?? null}
-      onChange={isReadOnly || isDisabled ? undefined : handleChange}
+      onChange={handleChange}
       readOnly={isReadOnly}
       disabled={isDisabled}
       required={field.required}
@@ -29,7 +23,7 @@ export function DateFieldRenderer<
       valueFormat="YYYY-MM-DD"
       error={undefined}
     />
-  )
-}
+  );
+};
 
-export default DateFieldRenderer
+export default DateFieldRenderer;

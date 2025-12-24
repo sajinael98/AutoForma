@@ -1,31 +1,11 @@
+import { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";
 import { Checkbox } from "@mantine/core";
-import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
-type CheckBoxFieldRendererProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues>;
-
-export function CheckBoxFieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->({ field, form }: CheckBoxFieldRendererProps<TValues>) {
+const CheckBoxFieldRenderer = ({ field, form }: FieldRendererProps) => {
   const inputProps = form.getInputProps(field.name);
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
-
-  if (isReadOnly || isDisabled) {
-    return (
-      <Checkbox
-        value={inputProps.value}
-        readOnly={isReadOnly}
-        disabled={isDisabled}
-        required={field.required}
-        placeholder={field.placeholder}
-        variant={isReadOnly ? "filled" : "default"}
-        error={undefined}
-        checked={inputProps.value}
-      />
-    );
-  }
+  
+  const isReadOnly = field.readOnly;
+  const isDisabled = field.disabled;
 
   return (
     <Checkbox
@@ -35,8 +15,10 @@ export function CheckBoxFieldRenderer<
       required={field.required}
       placeholder={field.placeholder}
       error={undefined}
+      disabled={isDisabled}
+      readOnly={isReadOnly}
     />
   );
-}
+};
 
 export default CheckBoxFieldRenderer;

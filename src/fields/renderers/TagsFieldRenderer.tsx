@@ -1,30 +1,11 @@
+import { FieldRendererProps } from "@/components/AutoForm/AutoForm.types";
 import { TagsInput } from "@mantine/core";
-import { FieldRendererProps } from "../FieldRenderer/FieldRenderer.types";
 
-type TagsInputFieldRendererProps<
-  TValues extends Record<string, any> = Record<string, any>
-> = FieldRendererProps<TValues>;
-
-export function TagsInputFieldRenderer<
-  TValues extends Record<string, any> = Record<string, any>
->({ field, form }: TagsInputFieldRendererProps<TValues>) {
+const TagsInputFieldRenderer = ({ field, form }: FieldRendererProps) => {
   const inputProps = form.getInputProps(field.name);
-  const isReadOnly = field.readOnly === true;
-  const isDisabled = field.disabled === true;
-
-  if (isReadOnly || isDisabled) {
-    return (
-      <TagsInput
-        value={inputProps.value || []}
-        readOnly={isReadOnly}
-        disabled={isDisabled}
-        required={field.required}
-        placeholder={field.placeholder}
-        variant={isReadOnly ? "filled" : "default"}
-        error={undefined}
-      />
-    );
-  }
+  
+  const isReadOnly = field.readOnly;
+  const isDisabled = field.disabled;
 
   return (
     <TagsInput
@@ -33,8 +14,10 @@ export function TagsInputFieldRenderer<
       required={field.required}
       placeholder={field.placeholder}
       error={undefined}
+      readOnly={isReadOnly}
+      disabled={isDisabled}
     />
   );
-}
+};
 
 export default TagsInputFieldRenderer;
