@@ -48,11 +48,11 @@
     "vitest": "vitest run",
     "vitest:watch": "vitest",
     "test": "npm run typecheck && npm run prettier && npm run lint && npm run vitest && npm run build",
+    "dev": "vite --config vite.config.dev.ts",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "predeploy": "npm run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static",
-    "dev": "vite --config vite.config.dev.ts"
+    "predeploy": "npm run storybook:build",
+    "deploy-storybook": "gh-pages -d storybook-static"
   },
   "dependencies": {
     "@mantine/dates": "^8.3.2",
