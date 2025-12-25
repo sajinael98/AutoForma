@@ -1,0 +1,16 @@
+import { default as AutoForm } from '../components/AutoForm/AutoForm';
+import { Meta, StoryObj } from '@storybook/react';
+declare const meta: Meta<typeof AutoForm>;
+export default meta;
+type Story = StoryObj<typeof AutoForm>;
+export declare const Text: Story;
+export declare const Number: Story;
+export declare const Checkbox: Story;
+export declare const Switch: Story;
+export declare const Date: Story;
+export declare const Time: Story;
+export declare const DateTime: Story;
+export declare const Select: Story;
+export declare const Tags: Story;
+export declare const ObjectField: Story;
+export declare const ArrayField: Story;
