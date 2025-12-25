@@ -5,16 +5,21 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "jsx": "react-jsx",
     "strict": true,
-    "esModuleInterop": false,
-    "moduleResolution": "Node",
+
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": false,
+
     "resolveJsonModule": true,
     "isolatedModules": true,
+
     "noEmit": false,
     "declaration": true,
     "declarationDir": "dist",
     "outDir": "dist",
+
     "types": ["vite/client"],
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

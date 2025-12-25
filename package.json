@@ -58,20 +58,13 @@
     "@mantine/dates": "^8.3.2",
     "@mantine/form": "^8.3.2",
     "@mantine/hooks": "^8.3.2",
-    "@mantine/tiptap": "^8.3.2",
-    "@tiptap/extension-highlight": "^3.6.6",
-    "@tiptap/extension-link": "^3.6.6",
-    "@tiptap/extension-subscript": "^3.6.6",
-    "@tiptap/extension-superscript": "^3.6.6",
-    "@tiptap/extension-text-align": "^3.6.6",
-    "@tiptap/extension-underline": "^3.6.6",
-    "@tiptap/pm": "^3.6.6",
-    "@tiptap/react": "^3.6.6",
-    "@tiptap/starter-kit": "^3.6.6",
     "dayjs": "^1.11.13",
-    "react-router-dom": "^7.4.0"
+    "react-router-dom": "^7.4.0",
+    "storybook": "^10.1.10"
   },
   "devDependencies": {
+    "@storybook/addon-docs": "^10.1.10",
+    "@storybook/react-vite": "^10.1.10",
     "@types/node": "^24.10.1",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
@@ -87,7 +80,6 @@
     "@mantine/dates": "^8.3.2",
     "@mantine/form": "^8.3.2",
     "@mantine/hooks": "^8.3.2",
-    "@mantine/tiptap": "^8.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

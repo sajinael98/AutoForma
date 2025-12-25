@@ -1,5 +1,5 @@
 import { FieldSchema } from "@/fields/types";
-import { UseFormReturnType } from "@mantine/form";
+import { FormValidateInput, UseFormReturnType } from "@mantine/form";
 
 type FormValues = Record<string, any>;
 
@@ -29,10 +29,9 @@ export type OnFieldChangeMap<
 export interface AutoFormProps<
   FormValues extends Record<string, any> = Record<string, any>
 > {
-  schema: FieldSchema[];
+  schema: FieldSchema<any, any>[];
 
   readOnly?: boolean;
-  disabled?: boolean;
 
   layout?: "vertical" | "horizontal" | "grid";
 
@@ -48,11 +47,7 @@ export interface AutoFormProps<
 
   updateFieldSchema?: UpdateFieldSchema;
 
-  validate?: (
-    values: FormValues
-  ) =>
-    | Partial<Record<string, string>>
-    | Promise<Partial<Record<string, string>>>;
+  validate?: FormValidateInput<FormValues>;
 
   preSubmit?: (values: FormValues) => FormValues | Promise<FormValues>;
   onSubmit: (values: FormValues) => void | Promise<void>;

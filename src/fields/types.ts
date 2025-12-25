@@ -80,12 +80,6 @@ export interface SwitchFieldSchema<
   type: "switch"
 }
 
-export interface RichTextEditorFieldSchema<
-  TValues extends Record<string, any> = Record<string, any>
-> extends BaseFieldSchema<TValues> {
-  type: "texteditor"
-}
-
 export interface TimeFieldSchema<
   TValues extends Record<string, any> = Record<string, any>
 > extends BaseFieldSchema<TValues> {
@@ -121,7 +115,6 @@ export type FieldSchema<
   | ObjectFieldSchema<TValues, any, TCustom>
   | ArrayFieldSchema<TValues, any, TCustom>
   | SwitchFieldSchema<TValues>
-  | RichTextEditorFieldSchema<TValues>
   | TimeFieldSchema<TValues>
   | NumberFieldSchema<TValues>
   | DateTimeFieldSchema<TValues>

@@ -1,190 +1,424 @@
-import { Meta, StoryObj } from '@storybook/react';
-import { Button, Grid, Group } from '@mantine/core';
-import AutoForm from '@/components/AutoForm';
-import { FieldSchema } from '@/types/field';
-
-
-// ------------------------------
-// Schema Definitions
-// ------------------------------
-const textFieldSchema: FieldSchema[] = [
-  {
-    type: 'text',
-    name: 'firstName',
-    label: 'First Name',
-    initialValue: 'John',
-  },
-];
-
-const numberFieldSchema: FieldSchema[] = [
-  {
-    type: 'number',
-    name: 'age',
-    label: 'Age',
-    initialValue: 30,
-  },
-];
-
-const selectFieldSchema: FieldSchema[] = [
-  {
-    type: 'select',
-    name: 'gender',
-    label: 'Gender',
-    data: [
-      { label: 'Male', value: 'male' },
-      { label: 'Female', value: 'female' },
-    ],
-    initialValue: 'male',
-  },
-];
-
-const checkFieldSchema: FieldSchema[] = [
-  {
-    type: 'check',
-    name: 'enabled',
-    label: 'Enabled',
-    initialValue: true,
-  },
-];
-
-const dateFieldSchema: FieldSchema[] = [
-  {
-    type: 'date',
-    name: 'birthDate',
-    label: 'Birth Date',
-    initialValue: new Date(),
-  },
-];
-
-const arrayFieldSchema: FieldSchema[] = [
-  {
-    type: 'array',
-    name: 'tags',
-    label: 'Tags',
-    fields: [
-      {
-        type: 'text',
-        name: 'tag',
-        label: 'Tag',
-      },
-    ],
-  },
-];
-
-const objectFieldSchema: FieldSchema[] = [
-  {
-    type: 'object',
-    name: 'address',
-    label: 'Address',
-    fields: [
-      {
-        type: 'text',
-        name: 'street',
-        label: 'Street',
-      },
-      {
-        type: 'text',
-        name: 'city',
-        label: 'City',
-      },
-    ],
-  },
-];
-
-// ------------------------------
-// Storybook Meta
-// ------------------------------
+import AutoForm from "@/components/AutoForm/AutoForm";
+import { FieldSchema } from "@/fields/types";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof AutoForm> = {
-  title: 'components/Fields',
+  title: "AutoForm/03-Fields",
   component: AutoForm,
-  tags: ['autodocs'],
-  args: {
-    onSubmit: (values) => alert(JSON.stringify(values, null, 2)),
-    container: (form, onSubmit, readOnly) => (
-      <>
-        <Grid>{form}</Grid>
-        {!readOnly && (
-          <Group justify="flex-end">
-            <Button onClick={onSubmit}>Submit</Button>
-          </Group>
-        )}
-      </>
-    ),
-    fieldContainer: (field, fieldSchema) => (
-      <Grid.Col span={{ base: 12, md: fieldSchema.type === 'object' ? 12 : 6 }}>{field}</Grid.Col>
-    ),
+  tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+This section demonstrates all built-in field types supported by AutoForm.
+
+Each story focuses on a single field type and shows
+the minimal configuration required to use it.
+        `,
+      },
+    },
   },
   argTypes: {
-    onSubmit: {
-      table: {
-        disable: true,
-      },
-    },
-    container: {
-      table: {
-        disable: true,
-      },
-    },
-    fieldContainer: {
-      table: {
-        disable: true,
-      },
-    },
-    schema: {
-      description:
-        'Array of field definitions used to render the form. Each item defines one input field.',
-      control: false,
-    },
+    onSubmit: { action: "submit" },
   },
 };
 
 export default meta;
 
-// ------------------------------
-// Stories
-// ------------------------------
-
 type Story = StoryObj<typeof AutoForm>;
 
-export const TextField: Story = {
+export const Text: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Basic text input field with validation support.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "title",
+      label: "Title",
+      type: "text",
+      placeholder: "Enter title",
+      required: true,
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
   args: {
-    schema: textFieldSchema,
+    schema: [
+      {
+        name: "title",
+        label: "Title",
+        type: "text",
+        placeholder: "Enter title",
+        required: true,
+      },
+    ] as FieldSchema[],
   },
 };
 
-export const NumberField: Story = {
+export const Number: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Numeric input field for numbers only.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "quantity",
+      label: "Quantity",
+      type: "number",
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
   args: {
-    schema: numberFieldSchema,
+    schema: [
+      {
+        name: "quantity",
+        label: "Quantity",
+        type: "number",
+      },
+    ] as FieldSchema[],
   },
 };
 
-export const SelectField: Story = {
+export const Checkbox: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Boolean field rendered as a checkbox.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "published",
+      label: "Published",
+      type: "checkbox",
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
   args: {
-    schema: selectFieldSchema,
+    schema: [
+      {
+        name: "published",
+        label: "Published",
+        type: "checkbox",
+      },
+    ] as FieldSchema[],
   },
 };
 
-export const CheckField: Story = {
+export const Switch: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Boolean field rendered as a switch.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "enabled",
+      label: "Enabled",
+      type: "switch",
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
   args: {
-    schema: checkFieldSchema,
+    schema: [
+      {
+        name: "enabled",
+        label: "Enabled",
+        type: "switch",
+      },
+    ] as FieldSchema[],
   },
 };
 
-export const DateField: Story = {
+export const Date: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Date picker field.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "startDate",
+      label: "Start Date",
+      type: "date",
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
   args: {
-    schema: dateFieldSchema,
+    schema: [
+      {
+        name: "startDate",
+        label: "Start Date",
+        type: "date",
+      },
+    ] as FieldSchema[],
   },
 };
 
-export const ArrayField: Story = {
+export const Time: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Time picker field.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "startTime",
+      label: "Start Time",
+      type: "time",
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
   args: {
-    schema: arrayFieldSchema,
+    schema: [
+      {
+        name: "startTime",
+        label: "Start Time",
+        type: "time",
+      },
+    ] as FieldSchema[],
+  },
+};
+
+export const DateTime: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Combined date and time field.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "eventDate",
+      label: "Event Date & Time",
+      type: "datetime",
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
+  args: {
+    schema: [
+      {
+        name: "eventDate",
+        label: "Event Date & Time",
+        type: "datetime",
+      },
+    ] as FieldSchema[],
+  },
+};
+
+export const Select: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Dropdown select field with predefined options.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "status",
+      label: "Status",
+      type: "select",
+      data: [
+        { label: "Draft", value: "draft" },
+        { label: "Published", value: "published" },
+      ],
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
+  args: {
+    schema: [
+      {
+        name: "status",
+        label: "Status",
+        type: "select",
+        data: [
+          { label: "Draft", value: "draft" },
+          { label: "Published", value: "published" },
+        ],
+      },
+    ] as FieldSchema[],
+  },
+};
+
+export const Tags: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Tags input field for multiple string values.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "tags",
+      label: "Tags",
+      type: "tags",
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
+  args: {
+    schema: [
+      {
+        name: "tags",
+        label: "Tags",
+        type: "tags",
+      },
+    ] as FieldSchema[],
   },
 };
 
 export const ObjectField: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Nested object field with its own internal schema.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "profile",
+      label: "Profile",
+      type: "object",
+      fields: [
+        { name: "firstName", label: "First Name", type: "text" },
+        { name: "lastName", label: "Last Name", type: "text" },
+      ],
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
   args: {
-    schema: objectFieldSchema,
+    schema: [
+      {
+        name: "profile",
+        label: "Profile",
+        type: "object",
+        fields: [
+          {
+            name: "firstName",
+            label: "First Name",
+            type: "text",
+          },
+          {
+            name: "lastName",
+            label: "Last Name",
+            type: "text",
+          },
+        ],
+      },
+    ] as FieldSchema[],
+  },
+};
+
+export const ArrayField: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Repeating array field with nested item schema.",
+      },
+      source: {
+        code: `
+<AutoForm
+  schema={[
+    {
+      name: "items",
+      label: "Items",
+      type: "array",
+      fields: [
+        { name: "name", label: "Item Name", type: "text" },
+        { name: "price", label: "Price", type: "number" },
+      ],
+    },
+  ]}
+/>
+        `,
+      },
+    },
+  },
+  args: {
+    schema: [
+      {
+        name: "items",
+        label: "Items",
+        type: "array",
+        fields: [
+          {
+            name: "name",
+            label: "Item Name",
+            type: "text",
+          },
+          {
+            name: "price",
+            label: "Price",
+            type: "number",
+          },
+        ],
+      },
+    ] as FieldSchema[],
   },
 };

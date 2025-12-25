@@ -44,6 +44,8 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
     uiConfig,
     onFieldChange,
     onValuesChange,
+    submitLabel = "Submit",
+    validate
   } = props;
 
   const finalSchema = useMemo(
@@ -54,6 +56,7 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
   const [isFormLoading, setIsFormLoading] = useState(loading);
 
   const form = useForm({
+    validate,
     enhanceGetInputProps(payload) {
       return {
         onFieldChange: async (value: any) => {
@@ -187,7 +190,7 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
             {primaryAction && !readOnly && (
               <Group justify="flex-end">
                 <Button loading={isFormLoading} onClick={() => handleSubmit()}>
-                  Submit
+                  {submitLabel}
                 </Button>
               </Group>
             )}

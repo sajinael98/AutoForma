@@ -5,7 +5,6 @@ import CheckBoxFieldRenderer from "../renderers/CheckBoxFieldRenderer";
 import DateFieldRenderer from "../renderers/DateFieldRenderer";
 import DateTimeFieldRenderer from "../renderers/DateTimeFieldRenderer";
 import NumberFieldRenderer from "../renderers/NumberFieldRenderer";
-import RichTextEditorFieldRenderer from "../renderers/RichTextEditorFieldRenderer";
 import SelectFieldRenderer from "../renderers/SelectFieldRenderer";
 import SwitchFieldRenderer from "../renderers/SwitchFieldRenderer";
 import TagsInputFieldRenderer from "../renderers/TagsFieldRenderer";
@@ -110,9 +109,6 @@ export function FieldRenderer<
       InputNode = <SwitchFieldRenderer field={field} form={form} />;
       break;
 
-    case "texteditor":
-      InputNode = <RichTextEditorFieldRenderer field={field} form={form} />;
-      break;
 
     case "time":
       InputNode = <TimeFieldRenderer field={field} form={form} />;
