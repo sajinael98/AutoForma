@@ -69,6 +69,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "gh-pages": "^6.3.0",
     "postcss-preset-mantine": "^1.18.0",
     "typescript": "^5.8.2",
     "vite": "^6.2.2",
