@@ -72,7 +72,8 @@ import { useRef } from "react";
 import { MantineProvider, Button } from "@mantine/core";
 import AutoForm from "autoforma";
 import { FieldSchema, AutoFormRef } from "autoforma";
-
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 interface UserForm {
   firstName: string;
   lastName: string;
