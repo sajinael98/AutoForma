@@ -70,10 +70,10 @@ import { MantineProvider } from "@mantine/core";
 ```tsx
 import { useRef } from "react";
 import { MantineProvider, Button } from "@mantine/core";
-import AutoForm from "autoforma";
-import { FieldSchema, AutoFormRef } from "autoforma";
+import { AutoForm, type AutoFormRef, type FieldSchema } from "autoforma";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+
 interface UserForm {
   firstName: string;
   lastName: string;
@@ -86,12 +86,14 @@ const schema: FieldSchema<UserForm>[] = [
   { type: "text", name: "fullName", label: "Full Name", visible: false },
 ];
 
-export function App() {
+const App = () => {
   const formRef = useRef<AutoFormRef>(null);
 
   return (
     <MantineProvider>
-      <Button onClick={() => formRef.current?.setFieldValue("firstName", "Saji")}>
+      <Button
+        onClick={() => formRef.current?.setFieldValue("firstName", "Saji")}
+      >
         Fill First Name
       </Button>
 
@@ -120,7 +122,10 @@ export function App() {
       />
     </MantineProvider>
   );
-}
+};
+
+export default App;
+
 ```
 
 ---
