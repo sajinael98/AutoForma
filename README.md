@@ -41,7 +41,7 @@ npm install autoforma
 ### Peer Dependencies
 
 ```bash
-npm install react react-dom   @mantine/core   @mantine/form   @mantine/hooks   @mantine/dates   @mantine/tiptap
+npm install @mantine/core
 ```
 
 AutoForma is built and tested with **React 19** and **Mantine 8**.
