@@ -36,6 +36,9 @@
     "react-forms",
     "typescript"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "vite build",
     "preview": "vite preview",
@@ -54,14 +57,7 @@
     "predeploy": "npm run storybook:build",
     "deploy-storybook": "gh-pages -d storybook-static"
   },
-  "dependencies": {
-    "@mantine/dates": "^8.3.2",
-    "@mantine/form": "^8.3.2",
-    "@mantine/hooks": "^8.3.2",
-    "dayjs": "^1.11.13",
-    "react-router-dom": "^7.4.0",
-    "storybook": "^10.1.10"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@storybook/addon-docs": "^10.1.10",
     "@storybook/react-vite": "^10.1.10",
@@ -69,6 +65,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "@mantine/core": "^8.3.2",
     "gh-pages": "^6.3.0",
     "postcss-preset-mantine": "^1.18.0",
     "typescript": "^5.8.2",
@@ -78,11 +75,12 @@
   },
   "peerDependencies": {
     "@mantine/core": "^8.3.2",
-    "@mantine/dates": "^8.3.2",
-    "@mantine/form": "^8.3.2",
-    "@mantine/hooks": "^8.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
-  "packageManager": "yarn@4.9.1"
+  "peerDependenciesMeta": {
+    "@mantine/core": {
+      "optional": false
+    }
+  }
 }
