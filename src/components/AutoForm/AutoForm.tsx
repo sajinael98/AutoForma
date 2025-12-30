@@ -45,7 +45,7 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
     onFieldChange,
     onValuesChange,
     submitLabel = "Submit",
-    validate
+    validate,
   } = props;
 
   const finalSchema = useMemo(
@@ -57,6 +57,7 @@ const AutoForm = forwardRef<AutoFormRef, AutoFormProps>((props, ref) => {
 
   const form = useForm({
     validate,
+    mode: "uncontrolled",
     enhanceGetInputProps(payload) {
       return {
         onFieldChange: async (value: any) => {
