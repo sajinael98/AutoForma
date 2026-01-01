@@ -32,7 +32,7 @@ const ArrayLayout = (props: { fieldSchema: ArrayFieldSchema }) => {
           </React.Fragment>
         );
       })}
-      <button onClick={handleAddRow}>Add Row</button>
+      {fieldSchema.readonly !== true && <button onClick={handleAddRow}>Add Row</button>}
     </div>
   );
 };

@@ -1,9 +1,10 @@
-import React, { useEffect, useImperativeHandle, useRef } from "react";
+import React, { useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { FormRef, FormProps } from "../types";
 import { FormProvider, useForm } from "react-hook-form";
 import { generateInitialValues, renderSchema } from "../utils";
 import FormSideEffects from "./FormSideEffects";
 import { AutoFormRenderContextProvider } from "../context/AutoFormRenderContext";
+import { makeSchemaReadOnly } from "../utils/makeSchemaReadOnly";
 
 const AutoForm = React.forwardRef<FormRef, FormProps>((props, ref) => {
   const {
@@ -20,7 +21,8 @@ const AutoForm = React.forwardRef<FormRef, FormProps>((props, ref) => {
     onDirtyChange = (isDirty) => {},
     onValuesChange = (values) => {},
     resolver,
-  } = props;
+    readonly
+    } = props;
 
   const form = useForm({
     reValidateMode: "onSubmit",
@@ -31,6 +33,14 @@ const AutoForm = React.forwardRef<FormRef, FormProps>((props, ref) => {
   const initializedRef = useRef(false);
 
   const handleSubmit = form.handleSubmit(onSubmit);
+
+  const formSchema = useMemo(() => {
+    let finalSchema = schema
+    if(readonly){
+      finalSchema = makeSchemaReadOnly(finalSchema)
+    }
+    return finalSchema
+  },[readonly, schema])
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -70,7 +80,9 @@ const AutoForm = React.forwardRef<FormRef, FormProps>((props, ref) => {
     },
   }));
 
-  const fields = renderSchema(schema);
+  const fields = useMemo(() => renderSchema(formSchema),[formSchema]);
+
+  const hideSubmitBtn = hideSubmit || readonly
 
   return (
     <FormProvider {...form}>
@@ -97,7 +109,7 @@ const AutoForm = React.forwardRef<FormRef, FormProps>((props, ref) => {
 
         {layout === "custom" && fields}
 
-        {!hideSubmit && (
+        {!hideSubmitBtn && (
           <button style={{ marginTop: "1rem" }} onClick={handleSubmit}>
             Submit
           </button>

@@ -20,7 +20,7 @@ export interface BaseFieldSchema {
   dependsOn?: string[];
   initialValue?: any;
   visible?: boolean;
-  disabled?: boolean;
+  readonly?: boolean;
   meta?: Record<string, any>;
 }
 
