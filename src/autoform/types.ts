@@ -36,7 +36,12 @@ export interface ObjectFieldSchema extends HasFields {
   type: "object";
 }
 
-export type FieldSchema = BaseFieldSchema | HasFields;
+export interface SelectFieldSchema extends BaseFieldSchema{
+  type: "select",
+  options: {label: string;value:string}[]
+}
+
+export type FieldSchema = BaseFieldSchema | SelectFieldSchema |HasFields ;
 
 export type Schema = FieldSchema[];
 

@@ -3,6 +3,7 @@ import { useAutoFormRenderContext } from "../context/useAutoFormRenderContext";
 import DefaultInput from "../fields/DefaultInput";
 import { normalizeFieldPath } from "../utils";
 import { FieldProps } from "../types";
+import DefaultSelect from "../fields/DefaultSelect";
 
 const FieldRenderer = ({ fieldSchema }: FieldProps) => {
   const renderCtx = useAutoFormRenderContext();
@@ -27,7 +28,11 @@ const FieldRenderer = ({ fieldSchema }: FieldProps) => {
     return <TypeRenderer fieldSchema={fieldSchema} register={registerProps} />;
   }
 
-  return <DefaultInput fieldSchema={fieldSchema} />;
+  if(fieldSchema.type === "select"){
+    return <DefaultSelect fieldSchema={fieldSchema} />
+  }else{
+    return <DefaultInput fieldSchema={fieldSchema} />;
+  }
 };
 
 export default FieldRenderer;
