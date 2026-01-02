@@ -13,7 +13,7 @@ AutoForma focuses on form logic, while leaving UI rendering fully in your contro
 - **Schema-driven forms** — build forms from a single schema definition
 - **Powered by React Hook Form** — fast, performant, and reliable
 - **Dynamic field behavior** — fields can react to other field values
-- **Read-only & disabled modes** — easily lock forms or fields
+- **Read-only** — easily lock forms or fields
 - **Object & array support** — nested and repeatable fields
 - **Immutable & predictable** — no hidden side effects
 - **UI-agnostic** — works with any design system or custom components
