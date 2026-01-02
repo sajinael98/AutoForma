@@ -9,9 +9,9 @@ import {
 } from "../utils";
 import FieldRenderer from "./FieldRenderer";
 
-const WatchedField = ({ fieldSchema }: FieldProps) => {
+const WatchedField = <TCustom extends string = never>({ fieldSchema }: FieldProps<TCustom>) => {
   const { control } = useFormContext();
-  const renderCtx = useAutoFormRenderContext();
+  const renderCtx = useAutoFormRenderContext<TCustom>();
 
   const dependsOn = fieldSchema.dependsOn ?? [];
 
@@ -26,7 +26,7 @@ const WatchedField = ({ fieldSchema }: FieldProps) => {
   });
 
   const [resolvedSchema, setResolvedSchema] =
-    useState<FieldSchema>(fieldSchema);
+    useState<FieldSchema<TCustom>>(fieldSchema);
 
   useEffect(() => {
     if (!dependsOn.length) return;

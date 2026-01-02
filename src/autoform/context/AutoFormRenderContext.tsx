@@ -1,24 +1,21 @@
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { Layout, UiConfig, UpdateFieldSchema } from "../types";
 
-export interface AutoFormRenderContextProps {
+export interface AutoFormRenderContextProps<TCustom extends string = never> {
   layout?: Layout;
-  uiConfig?: UiConfig;
-  updateFieldSchema?: UpdateFieldSchema;
+  uiConfig?: UiConfig<TCustom>;
+  updateFieldSchema?: UpdateFieldSchema<TCustom>;
 }
 
-export const AutoFormRenderContext = createContext<AutoFormRenderContextProps | null>(
-  null
-);
+export const AutoFormRenderContext =
+  createContext<AutoFormRenderContextProps<any> | null>(null);
 
-
-
-export const AutoFormRenderContextProvider = ({
+export const AutoFormRenderContextProvider = <TCustom extends string = never>({
   children,
   layout = "vertical",
   uiConfig,
   updateFieldSchema,
-}: PropsWithChildren<AutoFormRenderContextProps>) => {
+}: PropsWithChildren<AutoFormRenderContextProps<TCustom>>) => {
   const value = useMemo(
     () => ({
       layout,

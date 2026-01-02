@@ -2,8 +2,9 @@ import { FormValues, HasFields, Schema } from "../types";
 import { getDefaultValueForField } from "./getDefaultValueForField";
 
 export function generateInitialValues<
-  TValues extends FormValues = Record<string, any>
->(schema: Schema, initialValues: Partial<TValues> = {}): TValues {
+  TValues extends FormValues = Record<string, any>,
+  TCustom extends string = never
+>(schema: Schema<TCustom>, initialValues: Partial<TValues> = {}): TValues {
   const result: Record<string, any> = {};
 
   for (const field of schema) {

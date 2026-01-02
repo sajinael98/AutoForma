@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import { FieldProps } from "../types";
 
-const DefaultInput = (props: FieldProps) => {
+const DefaultInput = <TCustom extends string = never>(props: FieldProps<TCustom>) => {
   const { fieldSchema } = props;
   const { register } = useFormContext();
 

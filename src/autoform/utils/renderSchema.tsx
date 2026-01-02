@@ -3,12 +3,11 @@ import FieldLayout from "../layouts/FieldLayout";
 import ObjectLayout from "../layouts/ObjectLayout";
 import {
   ArrayFieldSchema,
-  HasFields,
   ObjectFieldSchema,
-  Schema,
+  Schema
 } from "../types";
 
-export function renderSchema(schema: Schema) {
+export function renderSchema<TCustom extends string = never>(schema: Schema<TCustom>) {
   return schema.map((fieldSchema) => {
     switch (fieldSchema.type) {
       case "array":

@@ -1,6 +1,6 @@
 import { FieldType } from "../types";
 
-export const getDefaultValueForField = (type: FieldType): any => {
+export function getDefaultValueForField<TCustom extends string = never>(type: FieldType<TCustom>): any {
   switch (type) {
     case "text":
       return "";

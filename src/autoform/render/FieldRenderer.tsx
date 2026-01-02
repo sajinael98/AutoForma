@@ -5,8 +5,8 @@ import { normalizeFieldPath } from "../utils";
 import { FieldProps } from "../types";
 import DefaultSelect from "../fields/DefaultSelect";
 
-const FieldRenderer = ({ fieldSchema }: FieldProps) => {
-  const renderCtx = useAutoFormRenderContext();
+const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldProps<TCustom>) => {
+  const renderCtx = useAutoFormRenderContext<TCustom>();
   const uiConfig = renderCtx.uiConfig;
   const { register } = useFormContext();
 

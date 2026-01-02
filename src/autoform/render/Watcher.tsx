@@ -2,7 +2,7 @@ import { FieldProps } from "../types";
 import UnWatchedField from "./UnWatchedField";
 import WatchedField from "./WatchedField";
 
-const Watcher = (props: FieldProps) => {
+const Watcher = <TCustom extends string = never>(props: FieldProps<TCustom>) => {
   const { fieldSchema } = props;
 
   if (fieldSchema.dependsOn?.length) {
