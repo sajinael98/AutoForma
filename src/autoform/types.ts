@@ -1,17 +1,22 @@
 import { Resolver, UseFormRegisterReturn } from "react-hook-form";
 
 export type FormValues = Record<string, any>;
-export type FieldType<TCustom extends string = never> =
-  | "text"
-  | "number"
-  | "checkbox"
-  | "select"
-  | "date"
-  | "datetime-local"
-  | "time"
-  | "array"
-  | "object"
-  | TCustom;
+
+export const BUILT_IN_FIELD_TYPES = [
+  "text",
+  "number",
+  "checkbox",
+  "select",
+  "date",
+  "datetime-local",
+  "time",
+  "array",
+  "object",
+] as const;
+
+export type BuiltInFieldType = typeof BUILT_IN_FIELD_TYPES[number];
+
+export type FieldType<TCustom extends string = never> = BuiltInFieldType | TCustom;
 
 export interface BaseFieldSchema<TCustom extends string = never> {
   type: FieldType<TCustom>;
@@ -71,7 +76,7 @@ export type CustomRender<TCustom extends string = never> = Record<
   React.ComponentType<CustomFieldRendererProps<TCustom>>
 >;
 
-export type UiConfig<TCustom extends string = never> ={
+export type UiConfig<TCustom extends string = never> = {
   renderersByName?: CustomRender<TCustom>;
   renderersByType?: CustomRender<TCustom>;
 }
