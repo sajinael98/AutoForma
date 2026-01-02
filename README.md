@@ -101,8 +101,8 @@ AutoForma supports the following built-in field types:
 | `schema` | `Schema` | ✅ Yes | Form schema definition used to build the form dynamically | `schema={[{ type: "text", name: "title", label: "Title" }]}` |
 | `onSubmit` | `(values: FormValues) => void` | ✅ Yes | Callback triggered when the form is submitted | `onSubmit={(values) => console.log(values)}` |
 | `layout` | `"vertical" \| "horizontal" \| "custom"` | ❌ No | Layout strategy for rendering fields | `layout="vertical"` |
-| `uiConfig` | `UiConfig` | ❌ No | Configure custom field renderers by name or type | `uiConfig={{ renderersByType: { text: TextRenderer } }}` |
-| `updateFieldSchema` | `UpdateFieldSchema` | ❌ No | Dynamically update field schema based on form values | `updateFieldSchema={{ price: updaterFn }}` |
+| `uiConfig` | `UiConfig` | ❌ No | Configure custom field renderers by name or type | `uiConfig={{renderersByName: {firstName: ({fieldSchema, register}) => {return <div>firstName</div>}}}}` |
+| `updateFieldSchema` | `UpdateFieldSchema` | ❌ No | Dynamically update field schema based on form values | ` updateFieldSchema={{firstName: (path, fieldSchema, values) => {if(values.lastName === "TEST"){return {...fieldSchema,label: "FIRST NAME"}}return fieldSchema}}}` |
 | `values` | `() => FormValues \| Promise<FormValues>` | ❌ No | Async or sync function to load initial form values | `values={() => fetchData()}` |
 | `hideSubmit` | `boolean` | ❌ No | Hide the default submit button | `hideSubmit` |
 | `onDirtyChange` | `(isDirty: boolean) => void` | ❌ No | Triggered when form dirty state changes | `onDirtyChange={(dirty) => setDirty(dirty)}` |
