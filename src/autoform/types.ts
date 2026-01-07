@@ -1,4 +1,4 @@
-import { Resolver, UseFormRegisterReturn } from "react-hook-form";
+import { Control, Resolver, UseFormRegisterReturn } from "react-hook-form";
 
 export type FormValues = Record<string, any>;
 
@@ -69,6 +69,7 @@ export type UpdateFieldSchema<TCustom extends string = never> = {
 export type CustomFieldRendererProps<TCustom extends string = never> = {
   fieldSchema: FieldSchema<TCustom>;
   register: UseFormRegisterReturn<string>;
+  control: Control<FormValues>;
 };
 
 export type CustomRender<TCustom extends string = never> = Record<

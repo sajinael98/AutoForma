@@ -1,10 +1,19 @@
-import React, { useEffect, useImperativeHandle, useMemo, useRef } from "react";
-import { FormRef, FormProps } from "../types";
+import React, {
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { FormRef, FormProps } from "../types";
 import { generateInitialValues, renderSchema } from "../utils";
 import FormSideEffects from "./FormSideEffects";
 import { AutoFormRenderContextProvider } from "../context/AutoFormRenderContext";
 import { makeSchemaReadOnly } from "../utils/makeSchemaReadOnly";
+
+type AutoFormComponent = <TCustom extends string = never>(
+  props: FormProps<TCustom> & React.RefAttributes<FormRef>
+) => React.ReactElement;
 
 const AutoForm = React.forwardRef(
   <TCustom extends string = never>(
@@ -115,7 +124,6 @@ const AutoForm = React.forwardRef(
       </FormProvider>
     );
   }
-);
-
+) as AutoFormComponent;
 
 export default AutoForm;

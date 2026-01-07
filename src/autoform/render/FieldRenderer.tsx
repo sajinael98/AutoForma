@@ -8,7 +8,7 @@ import DefaultSelect from "../fields/DefaultSelect";
 const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldProps<TCustom>) => {
   const renderCtx = useAutoFormRenderContext<TCustom>();
   const uiConfig = renderCtx.uiConfig;
-  const { register } = useFormContext();
+  const { register, control } = useFormContext();
 
   const key = normalizeFieldPath(fieldSchema.name);
   const registerProps = register(fieldSchema.name);
@@ -19,13 +19,13 @@ const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldPro
   const NameRenderer = uiConfig?.renderersByName?.[key];
 
   if (NameRenderer) {
-    return <NameRenderer fieldSchema={fieldSchema} register={registerProps} />;
+    return <NameRenderer fieldSchema={fieldSchema} control={control} register={registerProps} />;
   }
 
   const TypeRenderer = uiConfig?.renderersByType?.[fieldSchema.type];
 
   if (TypeRenderer) {
-    return <TypeRenderer fieldSchema={fieldSchema} register={registerProps} />;
+    return <TypeRenderer fieldSchema={fieldSchema} control={control} register={registerProps} />;
   }
 
   if (BUILT_IN_FIELD_TYPES.includes(fieldSchema.type as BuiltInFieldType)) {
