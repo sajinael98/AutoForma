@@ -87,8 +87,8 @@ export interface FormProps<TCustom extends string = never> {
   schema: Schema<TCustom>;
   onSubmit: (values: FormValues) => void;
   layout?: Layout;
-  uiConfig?: UiConfig;
-  updateFieldSchema?: UpdateFieldSchema;
+  uiConfig?: UiConfig<TCustom>;
+  updateFieldSchema?: UpdateFieldSchema<TCustom>;
   values?: () => FormValues | Promise<FormValues>;
   hideSubmit?: boolean;
   onDirtyChange?: (isDirty: boolean) => void;
