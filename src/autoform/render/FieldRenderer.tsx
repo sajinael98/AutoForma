@@ -2,7 +2,15 @@ import { useFormContext } from 'react-hook-form';
 import { useAutoFormRenderContext } from '../context/useAutoFormRenderContext';
 import DefaultInput from '../fields/DefaultInput';
 import DefaultSelect from '../fields/DefaultSelect';
-import { BUILT_IN_FIELD_TYPES, BuiltInFieldType, FieldProps } from '../types';
+import ArrayLayout from '../layouts/ArrayLayout';
+import ObjectLayout from '../layouts/ObjectLayout';
+import {
+  ArrayFieldSchema,
+  BUILT_IN_FIELD_TYPES,
+  BuiltInFieldType,
+  FieldProps,
+  ObjectFieldSchema,
+} from '../types';
 import { normalizeFieldPath } from '../utils';
 
 const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldProps<TCustom>) => {
@@ -13,9 +21,6 @@ const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldPro
   const key = normalizeFieldPath(fieldSchema.name);
   const registerProps = register(fieldSchema.name);
 
-  if (fieldSchema.visible === false) {
-    return;
-  }
   const NameRenderer = uiConfig?.renderersByName?.[key];
 
   if (NameRenderer) {
@@ -31,9 +36,13 @@ const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldPro
   if (BUILT_IN_FIELD_TYPES.includes(fieldSchema.type as BuiltInFieldType)) {
     if (fieldSchema.type === 'select') {
       return <DefaultSelect fieldSchema={fieldSchema} />;
+    } else if (fieldSchema.type === 'array') {
+      return <ArrayLayout fieldSchema={fieldSchema as ArrayFieldSchema} />;
+    } else if (fieldSchema.type === 'object') {
+      return <ObjectLayout fieldSchema={fieldSchema as ObjectFieldSchema} />;
     } else {
       return <DefaultInput fieldSchema={fieldSchema} />;
-    } 
+    }
   }
 
   throw new Error(

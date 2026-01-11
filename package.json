@@ -1,6 +1,6 @@
 {
   "name": "autoforma",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "AutoForma is a headless dynamic form builder based on React Hook Form",
   "type": "module",
   "sideEffects": false,
