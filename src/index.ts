@@ -11,3 +11,7 @@ export type {
   UpdateFieldSchema,
   CustomRender,
 } from './autoform/types';
+
+export * from './autoform/utils';
+
+export { default as SchemaRenderer } from './autoform/render/SchemaRenderer';
