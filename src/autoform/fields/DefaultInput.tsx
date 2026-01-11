@@ -1,5 +1,5 @@
-import { useFormContext } from "react-hook-form";
-import { FieldProps } from "../types";
+import { useFormContext } from 'react-hook-form';
+import { FieldProps } from '../types';
 
 const DefaultInput = <TCustom extends string = never>(props: FieldProps<TCustom>) => {
   const { fieldSchema } = props;
@@ -8,7 +8,7 @@ const DefaultInput = <TCustom extends string = never>(props: FieldProps<TCustom>
   const registerProps = register(fieldSchema.name);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <label>{fieldSchema.label}</label>
       <input type={fieldSchema.type} {...registerProps} readOnly={fieldSchema.readonly} />
     </div>

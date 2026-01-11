@@ -1,26 +1,28 @@
-import { FieldType } from "../types";
+import { FieldType } from '../types';
 
-export function getDefaultValueForField<TCustom extends string = never>(type: FieldType<TCustom>): any {
+export function getDefaultValueForField<TCustom extends string = never>(
+  type: FieldType<TCustom>
+): any {
   switch (type) {
-    case "text":
-      return "";
-    case "number":
+    case 'text':
+      return '';
+    case 'number':
       return 0;
-    case "array":
+    case 'array':
       return [];
-    case "checkbox":
+    case 'checkbox':
       return false;
-    case "object":
+    case 'object':
       return {};
-    case "select":
+    case 'select':
       return null;
-    case "date":
+    case 'date':
       return new Date().toISOString().slice(0, 10);
-    case "datetime-local":
+    case 'datetime-local':
       return new Date().toISOString().slice(0, 16);
-    case "time":
+    case 'time':
       return new Date().toISOString().slice(11, 16);
     default:
-      return "";
+      return '';
   }
-};
+}

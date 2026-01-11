@@ -1,25 +1,18 @@
-import React, {
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { FormRef, FormProps } from "../types";
-import { generateInitialValues, renderSchema } from "../utils";
-import FormSideEffects from "./FormSideEffects";
-import { AutoFormRenderContextProvider } from "../context/AutoFormRenderContext";
-import { makeSchemaReadOnly } from "../utils/makeSchemaReadOnly";
+import React, { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { AutoFormRenderContextProvider } from '../context/AutoFormRenderContext';
+import SchemaRenderer from '../render/SchemaRenderer';
+import { FormProps, FormRef } from '../types';
+import { generateInitialValues, renderSchema } from '../utils';
+import { makeSchemaReadOnly } from '../utils/makeSchemaReadOnly';
+import FormSideEffects from './FormSideEffects';
 
 type AutoFormComponent = <TCustom extends string = never>(
   props: FormProps<TCustom> & React.RefAttributes<FormRef>
 ) => React.ReactElement;
 
 const AutoForm = React.forwardRef(
-  <TCustom extends string = never>(
-    props: FormProps<TCustom>,
-    ref: React.Ref<FormRef>
-  ) => {
+  <TCustom extends string = never>(props: FormProps<TCustom>, ref: React.Ref<FormRef>) => {
     const {
       schema,
       onSubmit,
@@ -28,7 +21,7 @@ const AutoForm = React.forwardRef(
         renderersByType: {},
       },
       updateFieldSchema = {},
-      layout = "vertical",
+      layout = 'vertical',
       values = () => ({}),
       hideSubmit = false,
       onDirtyChange = () => {},
@@ -38,14 +31,14 @@ const AutoForm = React.forwardRef(
     } = props;
 
     const form = useForm({
-      reValidateMode: "onSubmit",
-      criteriaMode: "all",
+      reValidateMode: 'onSubmit',
+      criteriaMode: 'all',
       resolver,
     });
 
     const initializedRef = useRef(false);
     const handleSubmit = form.handleSubmit(onSubmit);
-
+    console.log('?');
     const formSchema = useMemo(() => {
       let finalSchema = schema;
       if (readonly) {
@@ -87,36 +80,43 @@ const AutoForm = React.forwardRef(
       },
     }));
 
-    const fields = useMemo(() => renderSchema(formSchema), [formSchema]);
     const hideSubmitBtn = hideSubmit || readonly;
+
+    const stableUiConfig = useMemo(() => uiConfig, [uiConfig]);
+    const stableUpdateFieldSchema = useMemo(() => updateFieldSchema, [updateFieldSchema]);
+    const contextValue = useMemo(
+      () => ({
+        layout,
+        uiConfig,
+        updateFieldSchema,
+      }),
+      [layout, uiConfig, updateFieldSchema]
+    );
 
     return (
       <FormProvider {...form}>
-        <FormSideEffects
-          onDirtyChange={onDirtyChange}
-          onValuesChange={onValuesChange}
-        />
+        <FormSideEffects onDirtyChange={onDirtyChange} onValuesChange={onValuesChange} />
 
         <AutoFormRenderContextProvider
-          layout={layout}
-          uiConfig={uiConfig}
-          updateFieldSchema={updateFieldSchema}
+          layout={contextValue.layout}
+          uiConfig={stableUiConfig}
+          updateFieldSchema={stableUpdateFieldSchema}
         >
-          {["vertical", "horizontal"].includes(layout) && (
+          {['vertical', 'horizontal'].includes(layout) && (
             <div
               style={{
-                display: "flex",
-                flexDirection: layout === "vertical" ? "column" : "row",
+                display: 'flex',
+                flexDirection: layout === 'vertical' ? 'column' : 'row',
               }}
             >
-              {fields}
+              {<SchemaRenderer schema={formSchema} />}
             </div>
           )}
 
-          {layout === "custom" && fields}
+          {layout === 'custom' && <SchemaRenderer schema={formSchema} />}
 
           {!hideSubmitBtn && (
-            <button style={{ marginTop: "1rem" }} onClick={handleSubmit}>
+            <button style={{ marginTop: '1rem' }} onClick={handleSubmit}>
               Submit
             </button>
           )}

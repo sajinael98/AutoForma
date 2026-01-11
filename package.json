@@ -45,28 +45,29 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "react-hook-form": "^7.69.0",
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "react-hook-form": "^7.69.0"
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@storybook/addon-docs": "^10.1.10",
+    "@storybook/react-vite": "^10.1.10",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.20.0",
+    "gh-pages": "^6.3.0",
+    "prettier": "^3.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.69.0",
-    "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.0",
-    "@types/node": "^24.10.1",
     "typescript": "^5.8.2",
     "vite": "^6.2.2",
-    "@vitejs/plugin-react": "^4.3.4",
     "vite-plugin-dts": "^4.5.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.0",
-    "@storybook/react-vite": "^10.1.10",
-    "@storybook/addon-docs": "^10.1.10",
-    "gh-pages": "^6.3.0",
-    "eslint": "^9.20.0",
-    "prettier": "^3.4.2"
+    "vitest": "^2.1.0"
   },
   "scripts": {
     "dev": "vite --config vite.config.dev.ts",

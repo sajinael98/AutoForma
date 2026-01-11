@@ -1,4 +1,4 @@
-export { default as AutoForm } from "./autoform/core/AutoForm";
+export { default as AutoForm } from './autoform/core/AutoForm';
 
 export type {
   FieldSchema,
@@ -10,4 +10,4 @@ export type {
   UiConfig,
   UpdateFieldSchema,
   CustomRender,
-} from "./autoform/types";
+} from './autoform/types';

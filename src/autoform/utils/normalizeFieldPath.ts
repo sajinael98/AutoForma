@@ -1,3 +1,3 @@
 export function normalizeFieldPath(path: string): string {
-  return path.replace(/\.\d+\./g, ".");
+  return path.replace(/\.\d+\./g, '.');
 }

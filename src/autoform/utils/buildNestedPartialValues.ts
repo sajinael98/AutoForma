@@ -1,11 +1,8 @@
-export function buildNestedPartialValues(
-  paths: string[],
-  values: any[]
-): Record<string, any> {
+export function buildNestedPartialValues(paths: string[], values: any[]): Record<string, any> {
   const result: Record<string, any> = {};
 
   paths.forEach((path, index) => {
-    const parts = path.split(".");
+    const parts = path.split('.');
     let current = result;
 
     parts.forEach((part, i) => {

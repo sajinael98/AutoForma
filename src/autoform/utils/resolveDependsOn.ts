@@ -1,5 +1,5 @@
 export function resolveDependsOnNew(fieldPath: string, dependsOn: string[]): string[] {
-  const fieldParts = fieldPath.split(".");
+  const fieldParts = fieldPath.split('.');
 
   const indexPositions: Array<{ pos: number; value: string }> = [];
 
@@ -10,7 +10,7 @@ export function resolveDependsOnNew(fieldPath: string, dependsOn: string[]): str
   });
 
   return dependsOn.map((dep) => {
-    const depParts = dep.split(".");
+    const depParts = dep.split('.');
     const resolved = [...depParts];
 
     indexPositions.forEach(({ pos, value }) => {
@@ -19,6 +19,6 @@ export function resolveDependsOnNew(fieldPath: string, dependsOn: string[]): str
       }
     });
 
-    return resolved.join(".");
+    return resolved.join('.');
   });
 }

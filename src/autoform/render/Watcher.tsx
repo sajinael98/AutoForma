@@ -1,6 +1,6 @@
-import { FieldProps } from "../types";
-import UnWatchedField from "./UnWatchedField";
-import WatchedField from "./WatchedField";
+import { FieldProps } from '../types';
+import UnWatchedField from './UnWatchedField';
+import WatchedField from './WatchedField';
 
 const Watcher = <TCustom extends string = never>(props: FieldProps<TCustom>) => {
   const { fieldSchema } = props;

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Preview } from '@storybook/react';
 import { MantineProvider } from '@mantine/core';
-
+import { Preview } from '@storybook/react';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 

@@ -1,13 +1,9 @@
-import { useFormContext, useWatch } from "react-hook-form";
-import { FieldProps, FieldSchema } from "../types";
-import { useAutoFormRenderContext } from "../context/useAutoFormRenderContext";
-import { useEffect, useMemo, useState } from "react";
-import {
-  buildNestedPartialValues,
-  normalizeFieldPath,
-  resolveDependsOnNew,
-} from "../utils";
-import FieldRenderer from "./FieldRenderer";
+import { useEffect, useMemo, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useAutoFormRenderContext } from '../context/useAutoFormRenderContext';
+import { FieldProps, FieldSchema } from '../types';
+import { buildNestedPartialValues, normalizeFieldPath, resolveDependsOnNew } from '../utils';
+import FieldRenderer from './FieldRenderer';
 
 const WatchedField = <TCustom extends string = never>({ fieldSchema }: FieldProps<TCustom>) => {
   const { control } = useFormContext();
@@ -25,8 +21,7 @@ const WatchedField = <TCustom extends string = never>({ fieldSchema }: FieldProp
     name: resolvedDependsOn,
   });
 
-  const [resolvedSchema, setResolvedSchema] =
-    useState<FieldSchema<TCustom>>(fieldSchema);
+  const [resolvedSchema, setResolvedSchema] = useState<FieldSchema<TCustom>>(fieldSchema);
 
   useEffect(() => {
     if (!dependsOn.length) return;
@@ -36,10 +31,7 @@ const WatchedField = <TCustom extends string = never>({ fieldSchema }: FieldProp
     const run = async () => {
       const key = normalizeFieldPath(fieldSchema.name);
 
-      const partialValues = buildNestedPartialValues(
-        resolvedDependsOn,
-        watchedValues ?? []
-      );
+      const partialValues = buildNestedPartialValues(resolvedDependsOn, watchedValues ?? []);
 
       const updater = renderCtx?.updateFieldSchema?.[key];
 
