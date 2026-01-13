@@ -23,6 +23,6 @@ export function getDefaultValueForField<TCustom extends string = never>(
     case 'time':
       return new Date().toISOString().slice(11, 16);
     default:
-      return '';
+      return null;
   }
 }

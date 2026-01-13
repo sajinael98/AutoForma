@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { AutoFormRenderContextProvider } from '../context/AutoFormRenderContext';
 import SchemaRenderer from '../render/SchemaRenderer';
 import { FormProps, FormRef } from '../types';
-import { generateInitialValues, renderSchema } from '../utils';
+import { generateInitialValues } from '../utils';
 import { makeSchemaReadOnly } from '../utils/makeSchemaReadOnly';
 import FormSideEffects from './FormSideEffects';
 
@@ -38,7 +38,7 @@ const AutoForm = React.forwardRef(
 
     const initializedRef = useRef(false);
     const handleSubmit = form.handleSubmit(onSubmit);
-    console.log('?');
+    
     const formSchema = useMemo(() => {
       let finalSchema = schema;
       if (readonly) {
