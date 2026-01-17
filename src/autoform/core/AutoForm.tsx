@@ -28,6 +28,7 @@ const AutoForm = React.forwardRef(
       onValuesChange = () => {},
       resolver,
       readonly,
+      onFieldChange = {},
     } = props;
 
     const form = useForm({
@@ -95,7 +96,11 @@ const AutoForm = React.forwardRef(
 
     return (
       <FormProvider {...form}>
-        <FormSideEffects onDirtyChange={onDirtyChange} onValuesChange={onValuesChange} />
+        <FormSideEffects
+          onDirtyChange={onDirtyChange}
+          onValuesChange={onValuesChange}
+          onFieldChange={onFieldChange}
+        />
 
         <AutoFormRenderContextProvider
           layout={contextValue.layout}

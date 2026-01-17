@@ -63,7 +63,6 @@ export type UpdateFieldSchema<TCustom extends string = never> = {
   ) => FieldSchema<TCustom> | Promise<FieldSchema<TCustom>>;
 };
 
-
 export type CustomFieldRendererProps<TCustom extends string = never> = {
   fieldSchema: FieldSchema<TCustom>;
   register: UseFormRegisterReturn<string>;
@@ -94,6 +93,7 @@ export interface FormProps<TCustom extends string = never> {
   onValuesChange?: (values: FormValues) => void;
   resolver?: Resolver<FormValues, any, FormValues>;
   readonly?: boolean;
+  onFieldChange?: Record<string, (path: string, value: any, values: FormValues) => void>;
 }
 
 export interface FormRef {
