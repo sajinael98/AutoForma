@@ -1,17 +1,10 @@
-import React from 'react';
-import { MantineProvider } from '@mantine/core';
-import { Preview } from '@storybook/react';
-import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css';
+import type { Preview } from '@storybook/react'
+import React from 'react'
 
 const preview: Preview = {
   decorators: [
-    (Story) => (
-      <MantineProvider>
-        <Story />
-      </MantineProvider>
-    ),
+    (Story) => <Story />,
   ],
-};
+}
 
-export default preview;
+export default preview

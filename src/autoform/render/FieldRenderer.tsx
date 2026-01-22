@@ -23,6 +23,10 @@ const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldPro
 
   const NameRenderer = uiConfig?.renderersByName?.[key];
 
+  if (fieldSchema.visible === false) {
+    return null;
+  }
+
   if (NameRenderer) {
     return <NameRenderer fieldSchema={fieldSchema} control={control} register={registerProps} />;
   }

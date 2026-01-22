@@ -1,6 +1,6 @@
 {
   "name": "autoforma",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "AutoForma is a headless dynamic form builder based on React Hook Form",
   "type": "module",
   "sideEffects": false,
@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@storybook/addon-actions": "^9.0.8",
     "@storybook/addon-docs": "^10.1.10",
     "@storybook/react-vite": "^10.1.10",
     "@types/node": "^24.10.1",
