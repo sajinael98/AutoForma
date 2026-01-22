@@ -1,0 +1,12 @@
+import { Meta, StoryObj } from '@storybook/react';
+declare const meta: Meta;
+export default meta;
+type Story = StoryObj;
+export declare const FormPropsDocumentation: Story;
+export declare const BasicForm: Story;
+export declare const FormWithInitialValues: Story;
+export declare const ReadonlyForm: Story;
+export declare const FormWithoutSubmit: Story;
+export declare const FormWithLifecycle: Story;
+export declare const DynamicForm: Story;
+export declare const FormWithRef: Story;
