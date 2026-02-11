@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoFormRenderContextProvider } from '../context/AutoFormRenderContext';
 import SchemaRenderer from '../render/SchemaRenderer';
@@ -16,19 +16,28 @@ const AutoForm = React.forwardRef(
     const {
       schema,
       onSubmit,
+
       uiConfig = {
         renderersByName: {},
         renderersByType: {},
       },
+
       updateFieldSchema = {},
       layout = 'vertical',
+
       values = () => ({}),
+
       hideSubmit = false,
+
       onDirtyChange = () => {},
       onValuesChange = () => {},
+
       resolver,
       readonly,
+
       onFieldChange = {},
+
+      loadingComponent,
     } = props;
 
     const form = useForm({
@@ -38,13 +47,18 @@ const AutoForm = React.forwardRef(
     });
 
     const initializedRef = useRef(false);
+
+    const [ready, setReady] = useState(false);
+
     const handleSubmit = form.handleSubmit(onSubmit);
-    
+
     const formSchema = useMemo(() => {
       let finalSchema = schema;
+
       if (readonly) {
         finalSchema = makeSchemaReadOnly(finalSchema);
       }
+
       return finalSchema;
     }, [readonly, schema]);
 
@@ -54,11 +68,16 @@ const AutoForm = React.forwardRef(
       let cancelled = false;
 
       const loadValues = async () => {
+        setReady(false);
+
         const resolvedValues = await values();
+
         if (cancelled) return;
 
         form.reset(generateInitialValues(schema, resolvedValues));
+
         initializedRef.current = true;
+        setReady(true);
       };
 
       loadValues();
@@ -66,16 +85,19 @@ const AutoForm = React.forwardRef(
       return () => {
         cancelled = true;
       };
-    }, [values, schema]);
+    }, [schema]);
 
     useImperativeHandle(ref, () => ({
       submit: async () => {
         await form.handleSubmit(onSubmit)();
       },
+
       reset: (values?: any) => {
         form.reset(values ? generateInitialValues(schema, values) : undefined);
       },
+
       getValues: () => form.getValues(),
+
       setValue: (name, value) => {
         form.setValue(name, value);
       },
@@ -84,7 +106,9 @@ const AutoForm = React.forwardRef(
     const hideSubmitBtn = hideSubmit || readonly;
 
     const stableUiConfig = useMemo(() => uiConfig, [uiConfig]);
+
     const stableUpdateFieldSchema = useMemo(() => updateFieldSchema, [updateFieldSchema]);
+
     const contextValue = useMemo(
       () => ({
         layout,
@@ -93,6 +117,25 @@ const AutoForm = React.forwardRef(
       }),
       [layout, uiConfig, updateFieldSchema]
     );
+
+    if (!ready) {
+      return (
+        <>
+          {loadingComponent ?? (
+            <div
+              style={{
+                padding: '2rem',
+                textAlign: 'center',
+                color: '#666',
+                fontSize: '0.9rem',
+              }}
+            >
+              Loading form...
+            </div>
+          )}
+        </>
+      );
+    }
 
     return (
       <FormProvider {...form}>
@@ -114,7 +157,7 @@ const AutoForm = React.forwardRef(
                 flexDirection: layout === 'vertical' ? 'column' : 'row',
               }}
             >
-              {<SchemaRenderer schema={formSchema} />}
+              <SchemaRenderer schema={formSchema} />
             </div>
           )}
 

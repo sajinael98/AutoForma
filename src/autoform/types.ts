@@ -94,6 +94,7 @@ export interface FormProps<TCustom extends string = never> {
   resolver?: Resolver<FormValues, any, FormValues>;
   readonly?: boolean;
   onFieldChange?: Record<string, (path: string, value: any, values: FormValues) => void>;
+  loadingComponent?: React.ReactNode
 }
 
 export interface FormRef {
