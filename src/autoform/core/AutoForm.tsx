@@ -61,13 +61,14 @@ const AutoForm = React.forwardRef(
 
       return finalSchema;
     }, [readonly, schema]);
-
     useEffect(() => {
-      if (initializedRef.current) return;
+      if (!values) return;
 
       let cancelled = false;
 
       const loadValues = async () => {
+        if (initializedRef.current) return;
+
         setReady(false);
 
         const resolvedValues = await values();
@@ -77,6 +78,7 @@ const AutoForm = React.forwardRef(
         form.reset(generateInitialValues(schema, resolvedValues));
 
         initializedRef.current = true;
+
         setReady(true);
       };
 
@@ -85,7 +87,7 @@ const AutoForm = React.forwardRef(
       return () => {
         cancelled = true;
       };
-    }, [schema]);
+    }, [schema, values]);
 
     useImperativeHandle(ref, () => ({
       submit: async () => {
