@@ -61,6 +61,7 @@ const AutoForm = React.forwardRef(
 
       return finalSchema;
     }, [readonly, schema]);
+
     useEffect(() => {
       if (!values) return;
 
@@ -75,7 +76,11 @@ const AutoForm = React.forwardRef(
 
         if (cancelled) return;
 
-        form.reset(generateInitialValues(schema, resolvedValues));
+        form.reset(generateInitialValues(schema, resolvedValues), {
+          keepErrors: true,
+          keepDirty: false,
+          keepTouched: false,
+        });
 
         initializedRef.current = true;
 
