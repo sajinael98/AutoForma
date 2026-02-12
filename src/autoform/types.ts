@@ -1,22 +1,34 @@
+import React from 'react';
 import { Control, Resolver, UseFormRegisterReturn } from 'react-hook-form';
+
+/* ===============================
+   Core
+================================ */
 
 export type FormValues = Record<string, any>;
 
-export const BUILT_IN_FIELD_TYPES = [
-  'text',
-  'number',
-  'checkbox',
-  'select',
-  'date',
-  'datetime-local',
-  'time',
-  'array',
-  'object',
-] as const;
+/* ===============================
+   Built-in Field Types
+================================ */
 
-export type BuiltInFieldType = (typeof BUILT_IN_FIELD_TYPES)[number];
+export type BuiltInFieldType =
+  | 'text'
+  | 'number'
+  | 'checkbox'
+  | 'select'
+  | 'date'
+  | 'datetime-local'
+  | 'time'
+  | 'array'
+  | 'object';
 
-export type FieldType<TCustom extends string = never> = BuiltInFieldType | TCustom;
+export type FieldType<TCustom extends string = never> =
+  | BuiltInFieldType
+  | TCustom;
+
+/* ===============================
+   Base Schemas
+================================ */
 
 export interface BaseFieldSchema<TCustom extends string = never> {
   type: FieldType<TCustom>;
@@ -29,31 +41,56 @@ export interface BaseFieldSchema<TCustom extends string = never> {
   meta?: Record<string, any>;
 }
 
-export interface HasFields<TCustom extends string = never> extends BaseFieldSchema<TCustom> {
+/* ===============================
+   Composite Schemas
+================================ */
+
+export interface HasFields<TCustom extends string = never>
+  extends BaseFieldSchema<TCustom> {
   fields: FieldSchema<TCustom>[];
 }
 
-export interface ArrayFieldSchema<TCustom extends string = never> extends HasFields<TCustom> {
+export interface ArrayFieldSchema<TCustom extends string = never>
+  extends HasFields<TCustom> {
   type: 'array';
 }
 
-export interface ObjectFieldSchema<TCustom extends string = never> extends HasFields<TCustom> {
+export interface ObjectFieldSchema<TCustom extends string = never>
+  extends HasFields<TCustom> {
   type: 'object';
 }
 
-export interface SelectFieldSchema<
-  TCustom extends string = never,
-> extends BaseFieldSchema<TCustom> {
+export interface SelectFieldSchema<TCustom extends string = never>
+  extends BaseFieldSchema<TCustom> {
   type: 'select';
   options: { label: string; value: string }[];
 }
 
-export type FieldSchema<TCustom extends string = never> =
-  | BaseFieldSchema<TCustom>
-  | SelectFieldSchema<TCustom>
-  | HasFields<TCustom>;
+/* ===============================
+   🔥 Extensible Registry
+================================ */
 
-export type Schema<TCustom extends string = never> = FieldSchema<TCustom>[];
+export interface FieldSchemaRegistry<TCustom extends string = never> {
+  base: BaseFieldSchema<TCustom>;
+  select: SelectFieldSchema<TCustom>;
+  hasFields: HasFields<TCustom>;
+  array: ArrayFieldSchema<TCustom>;
+  object: ObjectFieldSchema<TCustom>;
+}
+
+/* ===============================
+   Public Schema Type
+================================ */
+
+export type FieldSchema<TCustom extends string = never> =
+  FieldSchemaRegistry<TCustom>[keyof FieldSchemaRegistry<TCustom>];
+
+export type Schema<TCustom extends string = never> =
+  FieldSchema<TCustom>[];
+
+/* ===============================
+   Update Hooks
+================================ */
 
 export type UpdateFieldSchema<TCustom extends string = never> = {
   [key: string]: (
@@ -62,6 +99,10 @@ export type UpdateFieldSchema<TCustom extends string = never> = {
     values: FormValues
   ) => FieldSchema<TCustom> | Promise<FieldSchema<TCustom>>;
 };
+
+/* ===============================
+   Custom Renderers
+================================ */
 
 export type CustomFieldRendererProps<TCustom extends string = never> = {
   fieldSchema: FieldSchema<TCustom>;
@@ -79,23 +120,48 @@ export type UiConfig<TCustom extends string = never> = {
   renderersByType?: CustomRender<TCustom>;
 };
 
+/* ===============================
+   Layout
+================================ */
+
 export type Layout = 'vertical' | 'horizontal' | 'custom';
+
+/* ===============================
+   Form Props
+================================ */
 
 export interface FormProps<TCustom extends string = never> {
   schema: Schema<TCustom>;
   onSubmit: (values: FormValues) => void;
+
   layout?: Layout;
   uiConfig?: UiConfig<TCustom>;
+
   updateFieldSchema?: UpdateFieldSchema<TCustom>;
+
   values?: () => FormValues | Promise<FormValues>;
+
   hideSubmit?: boolean;
+
   onDirtyChange?: (isDirty: boolean) => void;
+
   onValuesChange?: (values: FormValues) => void;
+
   resolver?: Resolver<FormValues, any, FormValues>;
+
   readonly?: boolean;
-  onFieldChange?: Record<string, (path: string, value: any, values: FormValues) => void>;
-  loadingComponent?: React.ReactNode
+
+  onFieldChange?: Record<
+    string,
+    (path: string, value: any, values: FormValues) => void
+  >;
+
+  loadingComponent?: React.ReactNode;
 }
+
+/* ===============================
+   Form Ref
+================================ */
 
 export interface FormRef {
   submit: VoidFunction;
@@ -103,6 +169,10 @@ export interface FormRef {
   getValues: () => FormValues;
   reset: (values: FormValues) => void;
 }
+
+/* ===============================
+   Field Props
+================================ */
 
 export interface FieldProps<TCustom extends string = never> {
   fieldSchema: FieldSchema<TCustom>;
