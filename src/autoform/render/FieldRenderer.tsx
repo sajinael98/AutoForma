@@ -4,13 +4,7 @@ import DefaultInput from '../fields/DefaultInput';
 import DefaultSelect from '../fields/DefaultSelect';
 import ArrayLayout from '../layouts/ArrayLayout';
 import ObjectLayout from '../layouts/ObjectLayout';
-import {
-  ArrayFieldSchema,
-  BUILT_IN_FIELD_TYPES,
-  BuiltInFieldType,
-  FieldProps,
-  ObjectFieldSchema,
-} from '../types';
+import { ArrayFieldSchema, BuiltInFieldType, FieldProps, ObjectFieldSchema } from '../types';
 import { normalizeFieldPath } from '../utils';
 
 const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldProps<TCustom>) => {
@@ -37,22 +31,30 @@ const FieldRenderer = <TCustom extends string = never>({ fieldSchema }: FieldPro
     return <TypeRenderer fieldSchema={fieldSchema} control={control} register={registerProps} />;
   }
 
-  if (BUILT_IN_FIELD_TYPES.includes(fieldSchema.type as BuiltInFieldType)) {
-    if (fieldSchema.type === 'select') {
+  switch (fieldSchema.type) {
+    case 'select':
       return <DefaultSelect fieldSchema={fieldSchema} />;
-    } else if (fieldSchema.type === 'array') {
-      return <ArrayLayout fieldSchema={fieldSchema as ArrayFieldSchema} />;
-    } else if (fieldSchema.type === 'object') {
-      return <ObjectLayout fieldSchema={fieldSchema as ObjectFieldSchema} />;
-    } else {
-      return <DefaultInput fieldSchema={fieldSchema} />;
-    }
-  }
 
-  throw new Error(
-    `AutoForm: No renderer found for field "${fieldSchema.name}" with type "${fieldSchema.type}". ` +
-      `If this is a custom field type, make sure to register a renderer via uiConfig.renderersByType.`
-  );
+    case 'array':
+      return <ArrayLayout fieldSchema={fieldSchema as ArrayFieldSchema} />;
+
+    case 'object':
+      return <ObjectLayout fieldSchema={fieldSchema as ObjectFieldSchema} />;
+
+    case 'text':
+    case 'number':
+    case 'checkbox':
+    case 'date':
+    case 'datetime-local':
+    case 'time':
+      return <DefaultInput fieldSchema={fieldSchema} />;
+
+    default:
+      throw new Error(
+        `AutoForm: No renderer found for field "${fieldSchema.name}" with type "${fieldSchema.type}". ` +
+          `If this is a custom field type, make sure to register a renderer via uiConfig.renderersByType.`
+      );
+  }
 };
 
 export default FieldRenderer;
